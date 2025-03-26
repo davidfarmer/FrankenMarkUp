@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Parsing test interface</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            vertical-align: top
+        }
+        @font-face {
+            font-family: HK Grotesk;
+            src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
+            format("opentype");
+        }
+        @font-face {
+            font-family: HK Grotesk;
+            font-weight: bold;
+            src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
+            format("opentype");
+        }
+        body {
+            font-family: HK Grotesk, sans-serif;
+        }
+    </style>
+<link href="spacemath.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>FrankenMarkUp</h1>
+
+
+    <textarea rows="8" cols="60" id=sourceTextArea placeholder="Type in this box."></textarea>
+
+    <div id=mathmlDisplayArea disabled=true></div>
+
+    <div id=speechTextArea disabled=true placeholder="How it will be spoken"></div>
+
+    <textarea rows="8" cols="60" id=mathmlTextArea disabled=true placeholder="MathML version"></textarea>
+<!--
+    <textarea rows="8" cols="60" id=pretextTextArea disabled=true placeholder="PreTeXt version"></textarea>
+-->
+<!--
+    <textarea rows="8" cols="60" id=XXmathmlTextArea disabled=true placeholder="MathML version"></textarea>
+-->
+
+    <textarea rows="8" cols="60" id=echosourceTextArea disabled=true placeholder="What you typed, in LaTeX"></textarea>
+<!--
+    <textarea rows="8" cols="60" id=PreTeXtTextArea disabled=true placeholder="PreTeXt version"></textarea>
+-->
+
+<!--
+<p id="MathJaxArea"></p>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"] },
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { fonts: ["TeX"] }
+  });
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js">
+</script>
+-->
+
+
+<script src="parsing/mysplitAtDelimiters.js"></script>
+<script src="parsing/reassemble.js"></script>
+<script src="parsing/parse.js"></script>
+
+<!--
+<script src="conversion.js"></script>
+<script src="convert.js"></script>
+-->
+
+<!-- when running locally
+-->
+
+<!--
+<script src="dictionary.js"></script>
+
+<script src="M2LConvert.js"></script>
+<script src="M2TreeConvert.js"></script>
+<script src="combineTree2Latex.js"></script>
+<script src="tree.js"></script>
+-->
+
+</body>
+</html>
