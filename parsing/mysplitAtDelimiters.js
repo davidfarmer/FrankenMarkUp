@@ -63,8 +63,9 @@ console.log("readt to parse", element);
           const this_text = element.content.split(/\n{2,}/);
 console.log("found ", this_text.length, " pieces, which are:", this_text);
           this_text.forEach( (element) => {
-              const this_new_text = current_new_text.concat(element);
+              const this_new_text = current_new_text + element;
               if (this_new_text) {  // skip empty paragraphs
+console.log("made this_new_text", this_new_text);
                 const this_new_paragraph = {tag:"p", content: this_new_text};
                 newnodelist.push(this_new_paragraph)
               }
@@ -76,14 +77,14 @@ console.log("found ", this_text.length, " pieces, which are:", this_text);
     return newnodelist
 }
 
-const splitAtDelimiters = function(parse_me, delimiters, targetnodes = ['p']) {
+const splitAtDelimiters = function(parse_me, delimiters, targetnodes = ['p'], spacelike=false) {
 
     // splitting a text node means replacing it by a list of nodes
     // splitting a non-text node (which is represented by a list)
     // means replacing its content by a list of nodes
 
     parsecount += 1;
-    console.log("parsecount", parsecount);
+    console.log("parsecount", parsecount, "   spaceline:", spacelike);
 
     let newnodelist = [];
 
@@ -96,12 +97,15 @@ console.log("parsing", index);
 
 console.log("readt to parse", element);
 
-          const this_element_parsed = splitAtDelimiters(element, delimiters, targetnodes);
+console.log("from:", element);
+          const this_element_parsed = splitAtDelimiters(element, delimiters, targetnodes, spacelike);
+console.log("to:", this_element_parsed);
 
           if (false && Array.isArray(this_element_parsed)) {
             newnodelist.push(...this_element_parsed)
           } else {
 console.log("    CAN THIS HAPPEN?", typeof this_element_parsed, "XX", this_element_parsed);
+console.log("    content:", this_element_parsed.content);
             newnodelist.push(this_element_parsed)
           }
         });
@@ -113,18 +117,27 @@ console.log("    CAN THIS HAPPEN?", typeof this_element_parsed, "XX", this_eleme
 console.log("about to split: ", parse_me, " using ", delimiters);
 
         if (typeof parse_me == 'string') {
-           const new_content = splitTextAtDelimiters(parse_me, delimiters);
+           let new_content;
+           if (spacelike == 'spacelike') { new_content = recastSpacedDelimiters(parse_me, delimiters) }
+           else { new_content = splitTextAtDelimiters(parse_me, delimiters) }
+
            if (new_content.length == 1 && new_content[0].tag == 'text') {
                return new_content[0].content
            } else { return new_content }
            return splitTextAtDelimiters(parse_me, delimiters);
         } else if (parse_me.tag == 'text' || parse_me.tag == 'p') {
       ///  wrong     parse_me.content = splitTextAtDelimiters(parse_me.content, delimiters);
-           parse_me.content = splitAtDelimiters(parse_me.content, delimiters);
+// if(parse_me.content.startsWith("00")) {console.log("startswith 000", parse_me.content)}
+           parse_me.content = splitAtDelimiters(parse_me.content, delimiters, targetnodes, spacelike);
+// if(parse_me.content.startsWith("00")) {console.log("00000 now is", parse_me.content)}
+// die();
        //    return splitTextAtDelimiters(parse_me.content, delimiters);
            return parse_me;
-        } else if (targetnodes.includes(parse_me.tag)) {
-           const new_content = splitTextAtDelimiters(parse_me.content, delimiters);
+        } else if (targetnodes.includes(parse_me.tag)) {  // note: not text or p, so probably wrong parsing
+                                                          // could be blockquote
+// alert("wrong parsing?", parse_me);
+//            const new_content = splitTextAtDelimiters(parse_me.content, delimiters);
+           const new_content = splitAtDelimiters(parse_me.content, delimiters, targetnodes, spacelike);
            var new_node = parse_me;
            if (new_content.length == 1 && new_content[0].tag == 'text') {
                new_node.content = new_content[0].content
@@ -139,7 +152,7 @@ console.log("about to split: ", parse_me, " using ", delimiters);
 
 }
 
-const splitTextAtDelimiters = function(this_content, delimiters, spacelike=false) {
+const splitTextAtDelimiters = function(this_content, delimiters, spacelike="") {
 
     var text = this_content;
     let index;
@@ -196,4 +209,22 @@ console.log("regexLeft",regexLeft);
     return data
 };
 
-// export default splitAtDelimiters;
+const recastSpacedDelimiters = function(this_content, delimiters) {
+
+    let the_text = this_content;
+
+console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
+
+//    delimiters.forEach( (element, index) => {
+// need to do this properly, from spacelike_inline_delimiters
+// example:   {left:"_", right:"_", tag:"term"},
+//        const regexp = 
+    the_text = the_text.replace(/(^|\s)\$([^\$\n]+)\$(\s|$|[.,!?;:])/mg, "$1<m>$2</m>$3");
+    the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
+    the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
+    the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
+    the_text = the_text.replace(/(^|\s)\`([^`\n]+)\`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
+
+    return the_text
+
+}

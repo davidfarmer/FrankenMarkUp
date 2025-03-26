@@ -30,11 +30,12 @@ fetch("dictionary.json").then(
 
 var theSpaceMathInML;
 
-var thisEnvironment = "";  // bad idea, not used
-
 const paragraph_peer_delimiters = [
           {left:"\\begin{equation}", right:"\\end{equation}", tag:"md"},
           {left:"$$", right:"$$", tag:"md"},
+          {left:"\\[", right:"\\]", tag:"md"},
+          {left:"<ol>", right:"</ol>", tag:"ol"},
+          {left:"<ul>", right:"</ul>", tag:"ul"},
           {left:"<figure>", right:"</figure>", tag:"figure"},
           {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
       ];
@@ -44,19 +45,23 @@ paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 
 console.log("paragraph_peers", paragraph_peers);
 
-const ordinary_inline_delimiters = [
-          {left:"<q>", right:"</q>", tag:"q"},
-          {left:"|", right:"|", tag:"placeholder"},
-      ];
-
-const more_ordinary_inline_delimiters = [
+let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"m"},
-          {left:"<q>", right:"</q>", tag:"q"},
-          {left:"|", right:"|", tag:"placeholder"},
+          {left:"|", right:"|", tag:"placeholder"}  // just for testing
       ];
 
-const spacey_inline_delimiters = [
-          {left:"$", right:"$", tag:"m"},
+const  inline_ptx_tags = [  //meaning: don't add space around them
+    "m", "c", "q", "em", "term", "alert"
+    ];
+
+inline_ptx_tags.forEach( (el) => {
+    asymmetric_inline_delimiters.push(
+        {left:"<" + el + ">", right:"</" + el + ">", tag:el},
+    )
+});
+
+const spacelike_inline_delimiters = [
+          {left:"\$", right:"\$", tag:"m"},
           {left:"_", right:"_", tag:"term"},
           {left:"`", right:"`", tag:"c"},
           {left:"'", right:"'", tag:"q"},
@@ -69,34 +74,30 @@ const do_nothing_markup = {begin_tag: "", end_tag: "",
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
 
-const outputtags = {
-    "p": {begin_tag: "<p>", end_tag: "</p>",
-         before_begin: "\n", after_begin: "\n",
-         before_end: "\n", after_end: "\n"},
+const outputtags = {  // start with the quirky ones
     "text" : do_nothing_markup,
     "placeholder" : do_nothing_markup,
-    "m": {begin_tag: "<m>", end_tag: "</m>",
-         before_begin: "", after_begin: "",
-         before_end: "", after_end: ""},
-    "md": {begin_tag: "<md>", end_tag: "</md>",
-         before_begin: "\n", after_begin: "\n",
-         before_end: "\n", after_end: "\n"},
-    "blockquote": {begin_tag: "<blockquote>", end_tag: "</blockquote>",
-         before_begin: "\n", after_begin: "\n",
-         before_end: "\n", after_end: "\n"},
-    "q": {begin_tag: "<q>", end_tag: "</q>",
-         before_begin: "", after_begin: "",
-         before_end: "", after_end: ""},
+    "title": {begin_tag: "<title>", end_tag: "</title>",
+         before_begin: "\n", after_begin: "",
+         before_end: "", after_end: "\n"},
     };
 
-const strip_surrounding_lines = ["p", "blockquote", "md", "m"];
+inline_ptx_tags.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
+    before_begin: "", after_begin: "",
+    before_end: "", after_end: ""}
+    });
 
-const inline_tags = ["m", "q", "em", "term", "alert"];
+const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote"];
+
+alone_on_line_tags.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
+    before_begin: "\n", after_begin: "\n",
+    before_end: "\n", after_end: "\n"}
+    });
 
 if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
-/*
-*/
 
       var tmp = splitTextAtDelimiters(sourceTextArea.value, paragraph_peer_delimiters);
 
@@ -105,49 +106,29 @@ if (sourceTextArea.addEventListener) {
       var tmp1 = splitIntoParagraphs(tmp);
 
       console.log("tmp1",tmp1);
+      console.log("tmp1[0].content",tmp1[0].content);
 
-      var tmp1p = reassemblePreTeXt(tmp1);
+//      var tmp1p = reassemblePreTeXt(tmp1);
+//
+//      console.log("       XXXXXXXXXXXXXXXXXXXXXXXX    tmp1p",tmp1p);
 
-      console.log("tmp1p",tmp1p);
-
-      const tmp2 = splitAtDelimiters(tmp1, more_ordinary_inline_delimiters, ['p', 'q', 'blockquote']);
+      const tmp2 = splitAtDelimiters(tmp1, asymmetric_inline_delimiters, ['p', 'q', 'blockquote']);
 
       console.log("tmp2:",tmp2); 
+      console.log("tmp2[0].content:",tmp2[0].content); 
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, more_ordinary_inline_delimiters, ['p', 'q', 'blockquote']);
+      const tmp3 = splitAtDelimiters(tmp2, "currently unused", ['p','q',  'text', 'blockquote'],"spacelike");
+      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, ['p', 'q', 'blockquote']);
 
       console.log("tmp2 again",tmp2); 
       console.log("tmp3:",tmp3); 
-      console.log(tmp3 == tmp2); 
 
-      const tmp3p = reassemblePreTeXt(tmp3);
-      console.log("tmp3 again:",tmp3);
+      const tmp4p = reassemblePreTeXt(tmp4);
+      console.log("tmp4",tmp4);
 
-      console.log("tmp3p:",tmp3p);
-
-/*
-      const tmp2 = tmp.map(node => {
-
-        if (node.tag === 'text') {
-
-          var thiscontentparsed = splitAtDelimiters(node.content,  ordinary_inline_delimiters);
-          console.log("thiscontentparsed", thiscontentparsed);
-
-          if (thiscontentparsed.length > 1) { 
-            console.log("found sub-content");
-            return { ...node, content: splitAtDelimiters(node.content,  ordinary_inline_delimiters)};
-          } else {
-            return node;
-         }
-
-        } else {
-          return node;
-        }
-
-       });
-*/
+      console.log("tmp4p:",tmp4p);
 
 /*
       if(echosourceTextArea) {
