@@ -117,28 +117,22 @@ console.log("    content:", this_element_parsed.content);
 console.log("about to split: ", parse_me, " using ", delimiters);
 
         if (typeof parse_me == 'string') {
-           let new_content;
-           if (spacelike == 'spacelike') { new_content = recastSpacedDelimiters(parse_me, delimiters) }
-           else { new_content = splitTextAtDelimiters(parse_me, delimiters) }
+           let new_content = parse_me;
+           if (spacelike == 'spacelike') { new_content = recastSpacedDelimiters(new_content, delimiters) }
+           else { new_content = splitTextAtDelimiters(new_content, delimiters) }
 
            if (new_content.length == 1 && new_content[0].tag == 'text') {
                return new_content[0].content
            } else { return new_content }
-           return splitTextAtDelimiters(parse_me, delimiters);
+           return splitTextAtDelimiters(new_content, delimiters);
         } else if (parse_me.tag == 'text' || parse_me.tag == 'p') {
-      ///  wrong     parse_me.content = splitTextAtDelimiters(parse_me.content, delimiters);
-// if(parse_me.content.startsWith("00")) {console.log("startswith 000", parse_me.content)}
-           parse_me.content = splitAtDelimiters(parse_me.content, delimiters, targetnodes, spacelike);
-// if(parse_me.content.startsWith("00")) {console.log("00000 now is", parse_me.content)}
-// die();
-       //    return splitTextAtDelimiters(parse_me.content, delimiters);
-           return parse_me;
-        } else if (targetnodes.includes(parse_me.tag)) {  // note: not text or p, so probably wrong parsing
-                                                          // could be blockquote
-// alert("wrong parsing?", parse_me);
-//            const new_content = splitTextAtDelimiters(parse_me.content, delimiters);
-           const new_content = splitAtDelimiters(parse_me.content, delimiters, targetnodes, spacelike);
-           var new_node = parse_me;
+           let new_content = {...parse_me};  // should copy object?
+           new_content.content = splitAtDelimiters(new_content.content, delimiters, targetnodes, spacelike);
+           return new_content;
+        } else if (targetnodes.includes(parse_me.tag)) {  // note: not text or p, so probably wrong parsing,
+                                                          // or could be blockquote
+           let new_node = {...parse_me};  // should copy object? 
+           new_content = splitAtDelimiters(new_node.content, delimiters, targetnodes, spacelike);
            if (new_content.length == 1 && new_content[0].tag == 'text') {
                new_node.content = new_content[0].content
            } else {
@@ -165,6 +159,7 @@ const splitTextAtDelimiters = function(this_content, delimiters, spacelike="") {
 console.log("regexLeft",regexLeft);
 
     while (true) {
+//console.log("text", text);
         index = text.search(regexLeft);
         if (index === -1) {
             break;
@@ -176,7 +171,7 @@ console.log("regexLeft",regexLeft);
             });
             text = text.slice(index); // now text starts with delimiter
         }
-        // ... so this always succeeds:
+        //  so this always succeeds:
         const i = delimiters.findIndex((delim) => text.startsWith(delim.left));
         index = findEndOfMath(delimiters[i].right, text, delimiters[i].left.length);
         if (index === -1) {
@@ -223,11 +218,7 @@ console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
-    the_text = the_text.replace(/(^|\s)\`([^`\n]+)\`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
-
-   the_text = the_text.replace(/\\('|"|^|`|~|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
-   the_text = the_text.replace(/\\('|"|^|`|~|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
-//    the_text = the_text.replace(/\\(')([a-zA-Z])/mg, accentedASCII);
+    the_text = the_text.replace(/(^|\s)`([^`\n]+)`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
 
     return the_text
 }
@@ -237,29 +228,48 @@ const accentedASCII = function(fullstring, accent, letter) {
     return toUnicode[accent + letter]
 }
 
-const extract_lists = function(this_content, action="do_nothing") {
+const extract_lists = function(this_content, action="do_nothing", this_tag = "") {
     
     let newnodelist = [];
 
     let current_new_text = "";
 
     if (Array.isArray(this_content)) {
-console.log("found an array, of length", this_content.length);
+console.log("found an array, length", this_content.length);
 
         this_content.forEach( (element, index) => {
 
-          let this_node = {...element};
-          if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action) }
+          let this_node;
+          if (typeof element == "object") { this_node = {...element} }
+          else { this_node = element}
+          if (action == "do_nothing") { this_node = extract_lists(this_node, action) }
+          else { this_node = extract_lists(this_node, action) }
 
           newnodelist.push(this_node)
 
         })
 
+    } else if (typeof this_content == "object") {
+
+          let this_node = {...this_content};
+          if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action, this_node.tag) }
+          else { this_node.content = extract_lists(this_node.content, action, this_node.tag) }
+
+          return this_node
+
     } else {
 
       if (typeof this_content != "string") { alert("non-array non-string: ", this_content) }
 
+console.log("this_tag", this_tag, text_like_tags.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
+      else if (action == "fonts" && text_like_tags.includes(this_tag)) {
+        let new_text = "";
+        new_text = this_content.replace(/\\('|"|\^|`|~|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
+        new_text = new_text.replace(/\\('|"|\^|`|~|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
+console.log("found genuine text:", this_content, "which is now",new_text);
+        return new_text
+      } else { return this_content }
     }
 
     return newnodelist

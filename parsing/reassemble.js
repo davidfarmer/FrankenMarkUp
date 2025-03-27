@@ -11,7 +11,7 @@ const reassemblePreTeXt = function(content) {
 
       let this_element_text = "";
       const this_tag = element.tag;
-console.log("assembling a ", this_tag);
+console.log("assembling a ", this_tag, "from", element);
       const these_tags = outputtags[this_tag];
 
       this_element_text = this_element_text + 

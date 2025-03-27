@@ -65,6 +65,7 @@ inline_ptx_tags.forEach( (el) => {
     )
 });
 
+/* current;y not used.  See recastSpacedDelimiters
 const spacelike_inline_delimiters = [
           {left:"\$", right:"\$", tag:"m"},
           {left:"_", right:"_", tag:"term"},
@@ -74,6 +75,7 @@ const spacelike_inline_delimiters = [
           {left:"*", right:"*", tag:"em"},
           {left:"**", right:"**", tag:"alert"},
       ];
+*/
 
 const do_nothing_markup = {begin_tag: "", end_tag: "",
          before_begin: "", after_begin: "",
@@ -117,29 +119,38 @@ if (sourceTextArea.addEventListener) {
 //
 //      console.log("       XXXXXXXXXXXXXXXXXXXXXXXX    tmp1p",tmp1p);
 
-      const tmp2 = splitAtDelimiters(tmp1, asymmetric_inline_delimiters, ['p', 'q', 'blockquote']);
+      const tmp2 = splitAtDelimiters(tmp1, asymmetric_inline_delimiters, ['p', 'q', 'blockquote', 'text']);
 
       console.log("tmp2:",tmp2); 
-      console.log("tmp2[0].content:",tmp2[0].content); 
+      console.log("tmp2[1].content:",tmp2[1].content); 
+      console.log("tmp2[1].content as String:",JSON.stringify(tmp2[1].content)); 
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
       const tmp3 = splitAtDelimiters(tmp2, "currently unused", ['p','q',  'text', 'blockquote'],"spacelike");
+      console.log("tmp3:",tmp3);
+      console.log("tmp3[1].content:",tmp3[1].content);
+      console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
+
+
+console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, ['p', 'q', 'blockquote']);
 
       console.log("tmp2 again",tmp2); 
       console.log("tmp3:",tmp3); 
 
       const tmp4p = reassemblePreTeXt(tmp4);
-      console.log("tmp4",tmp4);
 
-      console.log("tmp4p:",tmp4p);
+//      console.log("tmp4p:",tmp4p);
 
-      const tmp5 = extract_lists(tmp4, "do_nothing");
+      const tmp5 = extract_lists(tmp4, "fonts");
       console.log("tmp4 == tmp5", JSON.stringify(tmp4) == JSON.stringify(tmp5), "   ", JSON.stringify(tmp4) == JSON.stringify(tmp));
 
-      console.log( tmp4 );
-      console.log( tmp5 );
+      console.log("tmp2 again",tmp2 );
+      console.log("tmp4",tmp4 );
+      console.log("tmp5",tmp5 );
+      const tmp5p = reassemblePreTeXt(tmp5);
+      console.log("tmp5p",tmp5p);
 /*
       if(echosourceTextArea) {
           echosourceTextArea.value = convert(sourceTextArea.value, "LaTeX");
