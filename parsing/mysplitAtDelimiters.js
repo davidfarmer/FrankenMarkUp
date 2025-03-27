@@ -190,7 +190,7 @@ console.log("regexLeft",regexLeft);
     //        type: "math",
             tag: delimiters[i].tag,
             content: mathcontent,
-            rawData,
+     //       rawData,
         });
         text = text.slice(index + delimiters[i].right.length);
     }
@@ -225,6 +225,43 @@ console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
     the_text = the_text.replace(/(^|\s)\`([^`\n]+)\`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
 
+   the_text = the_text.replace(/\\('|"|^|`|~|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
+   the_text = the_text.replace(/\\('|"|^|`|~|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
+//    the_text = the_text.replace(/\\(')([a-zA-Z])/mg, accentedASCII);
+
     return the_text
+}
+
+const accentedASCII = function(fullstring, accent, letter) {
+
+    return toUnicode[accent + letter]
+}
+
+const extract_lists = function(this_content, action="do_nothing") {
+    
+    let newnodelist = [];
+
+    let current_new_text = "";
+
+    if (Array.isArray(this_content)) {
+console.log("found an array, of length", this_content.length);
+
+        this_content.forEach( (element, index) => {
+
+          let this_node = {...element};
+          if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action) }
+
+          newnodelist.push(this_node)
+
+        })
+
+    } else {
+
+      if (typeof this_content != "string") { alert("non-array non-string: ", this_content) }
+
+      if (action == "do_nothing") { return this_content + "X"}
+    }
+
+    return newnodelist
 
 }

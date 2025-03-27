@@ -50,9 +50,14 @@ let asymmetric_inline_delimiters = [
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
       ];
 
-const  inline_ptx_tags = [  //meaning: don't add space around them
+const text_like_tags = [  // contain just text
+    "q", "em", "term", "alert",
+    "p", "text", "blockquote", "title"
+];
+
+const inline_ptx_tags = [  //meaning: don't add space around them
     "m", "c", "q", "em", "term", "alert"
-    ];
+];
 
 inline_ptx_tags.forEach( (el) => {
     asymmetric_inline_delimiters.push(
@@ -130,6 +135,11 @@ console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
       console.log("tmp4p:",tmp4p);
 
+      const tmp5 = extract_lists(tmp4, "do_nothing");
+      console.log("tmp4 == tmp5", JSON.stringify(tmp4) == JSON.stringify(tmp5), "   ", JSON.stringify(tmp4) == JSON.stringify(tmp));
+
+      console.log( tmp4 );
+      console.log( tmp5 );
 /*
       if(echosourceTextArea) {
           echosourceTextArea.value = convert(sourceTextArea.value, "LaTeX");
@@ -167,3 +177,72 @@ console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
   });
 }
 */
+
+
+// move to a data file
+
+const toUnicode = {
+    "'a" : "á",
+    "`a" : "à",
+    '"a' : "ä",
+    "^a" : "â",
+    "~a" : "ã",
+    "-a" : "ā",
+    "'A" : "Á",
+    "`A" : "À",
+    '"A' : "Ä",
+    "^A" : "Â",
+    "~A" : "Ã",
+    "cc" : "ç",
+    "cC" : "Ç",
+    "'e" : "é",
+    "`e" : "è",
+    '"e' : "ë",
+    "^e" : "ê",
+    "-e" : "ē",
+    "'E" : "É",
+    "`E" : "È",
+    '"E' : "Ë",
+    "^E" : "Ê",
+    "-E" : "Ē",
+    "-g" : "ḡ",
+    "ug" : "ğ",
+    "vg" : "ǧ",
+    "-G" : "Ḡ",
+    "uG" : "Ğ",
+    "vG" : "Ǧ",
+    "'i" : "í",
+    "`i" : "ì",
+    '"i' : "ï",
+    "^i" : "î",
+    "-i" : "ī",
+    "'I" : "Í",
+    "`I" : "Ì",
+    '"I' : "Ï",
+    "^I" : "Î",
+    "-I" : "Ī",
+    "~n" : "ñ",
+    "~N" : "Ñ",
+    "'o" : "ó",
+    "`o" : "ò",
+    '"o' : "ö",
+    "^o" : "ô",
+    "-o" : "ō",
+    "~o" : "õ",
+    "Ho" : "ő",
+    "'O" : "Ó",
+    "`O" : "Ò",
+    '"O' : "Ö",
+    "^O" : "Ô",
+    "-O" : "Ō",
+    "~O" : "Õ",
+    "HO" : "ő",
+    "'u" : "ú",
+    "`u" : "ù",
+    '"u' : "ü",
+    "^u" : "û",
+    "'U" : "Ú",
+    "`U" : "Ù",
+    '"U' : "Ü",
+    "^U" : "Û",
+}
