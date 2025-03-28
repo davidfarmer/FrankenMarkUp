@@ -31,14 +31,30 @@ fetch("dictionary.json").then(
 var theSpaceMathInML;
 
 const paragraph_peer_delimiters = [
+          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"\\begin{equation}", right:"\\end{equation}", tag:"md"},
           {left:"$$", right:"$$", tag:"md"},
           {left:"\\[", right:"\\]", tag:"md"},
           {left:"<ol>", right:"</ol>", tag:"ol"},
           {left:"<ul>", right:"</ul>", tag:"ul"},
           {left:"<figure>", right:"</figure>", tag:"figure"},
+          {left:"\\begin{quote}", right:"\\end{quote}", tag:"blockquote"},
           {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
-      ];
+];
+
+const paragraph_peer_ptx_and_latex = [
+    "theorem", "proposition", "lemma", "corollary", "conjecture",
+    "principle", "claim", "remark", "note", "example", "proof"
+];
+
+paragraph_peer_ptx_and_latex.forEach( (el) => {
+    paragraph_peer_delimiters.push(
+        {left:"<" + el + ">", right:"</" + el + ">", tag:el}
+    );
+    paragraph_peer_delimiters.push(
+        {left:"\\begin{" + el + "}", right:"\\end{" + el + "}", tag:el}
+    );
+});
 
 let paragraph_peers = Array.from(paragraph_peer_delimiters, ({ tag }) => tag);
 paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
@@ -48,10 +64,10 @@ console.log("paragraph_peers", paragraph_peers);
 let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"m"},
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
-      ];
+];
 
 const text_like_tags = [  // contain just text
-    "q", "em", "term", "alert",
+    "q", "em", "term", "alert", "li", // what if the content of an li is a p?
     "p", "text", "blockquote", "title"
 ];
 
@@ -61,7 +77,7 @@ const inline_ptx_tags = [  //meaning: don't add space around them
 
 inline_ptx_tags.forEach( (el) => {
     asymmetric_inline_delimiters.push(
-        {left:"<" + el + ">", right:"</" + el + ">", tag:el},
+        {left:"<" + el + ">", right:"</" + el + ">", tag:el}
     )
 });
 
@@ -95,13 +111,23 @@ inline_ptx_tags.forEach( (el) => {
     before_end: "", after_end: ""}
     });
 
-const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote"];
+const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote", "statement"];
 
 alone_on_line_tags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: "\n",
     before_end: "\n", after_end: "\n"}
     });
+paragraph_peer_ptx_and_latex.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + ">" + "\n" + "<statement>",
+                       end_tag: "</statement>" + "</" + el + ">",
+    before_begin: "\n", after_begin: "\n",
+    before_end: "\n", after_end: "\n"}
+    });
+
+
+
+
 
 if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
@@ -151,6 +177,10 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
       console.log("tmp5p",tmp5p);
+
+      if(echosourceTextArea) {
+          echosourceTextArea.innerText = tmp5p
+      }
 /*
       if(echosourceTextArea) {
           echosourceTextArea.value = convert(sourceTextArea.value, "LaTeX");
@@ -247,7 +277,7 @@ const toUnicode = {
     "^O" : "Ô",
     "-O" : "Ō",
     "~O" : "Õ",
-    "HO" : "ő",
+    "HO" : "Ő",
     "'u" : "ú",
     "`u" : "ù",
     '"u' : "ü",

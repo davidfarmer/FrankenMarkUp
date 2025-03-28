@@ -206,6 +206,7 @@ console.log("regexLeft",regexLeft);
 
 const recastSpacedDelimiters = function(this_content, delimiters) {
 
+    if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
 
 console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
@@ -263,10 +264,11 @@ console.log("found an array, length", this_content.length);
 
 console.log("this_tag", this_tag, text_like_tags.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
-      else if (action == "fonts" && text_like_tags.includes(this_tag)) {
+      else if (action == "fonts" && text_like_tags.includes(this_tag)) {  // note: this_content already known
+                                                                          // to be a string
         let new_text = "";
-        new_text = this_content.replace(/\\('|"|\^|`|~|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
-        new_text = new_text.replace(/\\('|"|\^|`|~|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
+        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
+        new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
 console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
       } else { return this_content }

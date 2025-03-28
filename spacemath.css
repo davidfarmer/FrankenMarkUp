@@ -22,6 +22,15 @@ h1 {
     background: #eef;
     color: black;
 }
+#echosourceTextArea {
+    font-size: 90%;
+    font-family: monospace;
+    white-space: pre;
+    margin-top: 1em;
+    background: #ffe;
+    padding: 1em;
+    border: 0.2em solid blue;
+}
 #mathmlDisplayArea {
     margin-top: 1em;
     padding: 0.5em 0;
