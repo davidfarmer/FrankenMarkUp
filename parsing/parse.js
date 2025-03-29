@@ -37,19 +37,32 @@ const paragraph_peer_delimiters = [
           {left:"\\[", right:"\\]", tag:"md"},
           {left:"<ol>", right:"</ol>", tag:"ol"},
           {left:"<ul>", right:"</ul>", tag:"ul"},
-          {left:"<figure>", right:"</figure>", tag:"figure"},
           {left:"\\begin{quote}", right:"\\end{quote}", tag:"blockquote"},
           {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
 ];
 
-const paragraph_peer_ptx_and_latex = [
+const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline  markup
+                                             // oops: what about lists and display math?
     "theorem", "proposition", "lemma", "corollary", "conjecture",
     "principle", "claim", "remark", "note", "example", "proof"
 ];
+const paragraph_peer_ptx_and_latex_other = [
+    "figure"
+];
 
-paragraph_peer_ptx_and_latex.forEach( (el) => {
+// Note: no ">" in opening, because could have attributes,
+// which are parsed later
+paragraph_peer_ptx_and_latex_text.forEach( (el) => {
     paragraph_peer_delimiters.push(
-        {left:"<" + el + ">", right:"</" + el + ">", tag:el}
+        {left:"<" + el + "", right:"</" + el + ">", tag:el}
+    );
+    paragraph_peer_delimiters.push(
+        {left:"\\begin{" + el + "}", right:"\\end{" + el + "}", tag:el}
+    );
+});
+paragraph_peer_ptx_and_latex_other.forEach( (el) => {
+    paragraph_peer_delimiters.push(
+        {left:"<" + el + "", right:"</" + el + ">", tag:el}
     );
     paragraph_peer_delimiters.push(
         {left:"\\begin{" + el + "}", right:"\\end{" + el + "}", tag:el}
@@ -66,7 +79,7 @@ let asymmetric_inline_delimiters = [
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 
-const text_like_tags = [  // contain just text
+const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
     "p", "text", "blockquote", "title"
 ];
@@ -113,14 +126,21 @@ inline_ptx_tags.forEach( (el) => {
 
 const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote", "statement"];
 
+// need to handle attributes on output tags
 alone_on_line_tags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: "\n",
     before_end: "\n", after_end: "\n"}
     });
-paragraph_peer_ptx_and_latex.forEach( (el) => {
+paragraph_peer_ptx_and_latex_text.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">" + "\n" + "<statement>",
-                       end_tag: "</statement>" + "</" + el + ">",
+                       end_tag: "</statement>" + "\n" + "</" + el + ">",
+    before_begin: "\n", after_begin: "\n",
+    before_end: "\n", after_end: "\n"}
+    });
+paragraph_peer_ptx_and_latex_other.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + ">",
+                       end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: "\n",
     before_end: "\n", after_end: "\n"}
     });
@@ -132,20 +152,48 @@ paragraph_peer_ptx_and_latex.forEach( (el) => {
 if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
 
-      var tmp = splitTextAtDelimiters(sourceTextArea.value, paragraph_peer_delimiters);
+      var tmpfirstsplit = splitTextAtDelimiters(sourceTextArea.value, paragraph_peer_delimiters);
 
-      console.log("tmp",tmp);
+      console.log("tmpfirstsplit",tmpfirstsplit);
 
-      var tmp1 = splitIntoParagraphs(tmp);
+      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplit, "all", paragraph_peers);
 
-      console.log("tmp1",tmp1);
-      console.log("tmp1[0].content",tmp1[0].content);
+      console.log("tmp1firstsplitP[2]",tmp1firstsplitP[2]);
+      console.log("tmp1[2].content",tmp1firstsplitP[2].content);
 
-//      var tmp1p = reassemblePreTeXt(tmp1);
-//
-//      console.log("       XXXXXXXXXXXXXXXXXXXXXXXX    tmp1p",tmp1p);
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
 
-      const tmp2 = splitAtDelimiters(tmp1, asymmetric_inline_delimiters, ['p', 'q', 'blockquote', 'text']);
+      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, paragraph_peers);
+//      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peers);
+
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("tmp1secondsplit",tmp1secondsplit);
+      console.log("tmp1secondsplit[2]",tmp1secondsplit[2]);
+
+      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
+
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+      console.log("");
+
+      console.log("tmp1secondsplitP",tmp1secondsplitP);
+      console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
+
+
+      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, ['p', 'q', 'blockquote', 'text']);
 
       console.log("tmp2:",tmp2); 
       console.log("tmp2[1].content:",tmp2[1].content); 
@@ -153,7 +201,7 @@ if (sourceTextArea.addEventListener) {
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, "currently unused", ['p','q',  'text', 'blockquote'],"spacelike");
+      const tmp3 = splitAtDelimiters(tmp2, "unused for spacelike?", ['p','q',  'text', 'blockquote'],"spacelike");
       console.log("tmp3:",tmp3);
       console.log("tmp3[1].content:",tmp3[1].content);
       console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
@@ -170,13 +218,13 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 //      console.log("tmp4p:",tmp4p);
 
       const tmp5 = extract_lists(tmp4, "fonts");
-      console.log("tmp4 == tmp5", JSON.stringify(tmp4) == JSON.stringify(tmp5), "   ", JSON.stringify(tmp4) == JSON.stringify(tmp));
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
       console.log("tmp5p",tmp5p);
+      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));
 
       if(echosourceTextArea) {
           echosourceTextArea.innerText = tmp5p

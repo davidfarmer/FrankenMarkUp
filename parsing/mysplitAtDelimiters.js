@@ -35,7 +35,7 @@ const amsRegex = /^\\AAAAAAAbegin{/;
 
 var parsecount = 0;
 
-const splitIntoParagraphs = function(nodelist) {
+const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
     let newnodelist = [];
 
@@ -50,7 +50,7 @@ console.log("readt to parse", element);
       // if we have a content node which is a paragraph peer,
       // end and save the current paragraph (if nonempty),
       // and save the new content node
-      if (paragraph_peers.includes(element.tag)) {
+      if (peernodes.includes(element.tag)) {
           if (current_new_text) {
             newnodelist.push({tag: "p", content: current_new_text});
             current_new_text = "";
@@ -84,7 +84,7 @@ const splitAtDelimiters = function(parse_me, delimiters, targetnodes = ['p'], sp
     // means replacing its content by a list of nodes
 
     parsecount += 1;
-    console.log("parsecount", parsecount, "   spaceline:", spacelike);
+//    console.log("parsecount", parsecount, "   spaceline:", spacelike);
 
     let newnodelist = [];
 
@@ -114,26 +114,29 @@ console.log("    content:", this_element_parsed.content);
 
     } else {
 
-console.log("about to split: ", parse_me, " using ", delimiters);
+if (parse_me.tag == "theorem") {
+console.log("about to split: theorem ", parse_me, " using ", delimiters);
+}
 
         if (typeof parse_me == 'string') {
            let new_content = parse_me;
            if (spacelike == 'spacelike') { new_content = recastSpacedDelimiters(new_content, delimiters) }
            else { new_content = splitTextAtDelimiters(new_content, delimiters) }
 
-           if (new_content.length == 1 && new_content[0].tag == 'text') {
+           if (false && new_content.length == 1 && new_content[0].tag == 'text') {
                return new_content[0].content
            } else { return new_content }
-           return splitTextAtDelimiters(new_content, delimiters);
+//  unreachable           return splitTextAtDelimiters(new_content, delimiters);
         } else if (parse_me.tag == 'text' || parse_me.tag == 'p') {
            let new_content = {...parse_me};  // should copy object?
            new_content.content = splitAtDelimiters(new_content.content, delimiters, targetnodes, spacelike);
            return new_content;
         } else if (targetnodes.includes(parse_me.tag)) {  // note: not text or p, so probably wrong parsing,
-                                                          // or could be blockquote
+                                                          // or could be blockquote, theorem, etc
+console.log("found a target node", parse_me.tag);
            let new_node = {...parse_me};  // should copy object? 
            new_content = splitAtDelimiters(new_node.content, delimiters, targetnodes, spacelike);
-           if (new_content.length == 1 && new_content[0].tag == 'text') {
+           if (false && new_content.length == 1 && new_content[0].tag == 'text') {
                new_node.content = new_content[0].content
            } else {
                new_node.content = new_content
@@ -146,8 +149,9 @@ console.log("about to split: ", parse_me, " using ", delimiters);
 
 }
 
-const splitTextAtDelimiters = function(this_content, delimiters, spacelike="") {
+const splitTextAtDelimiters = function(this_content, delimiters) {
 
+    if (typeof this_content != "string") { alert("expected string in splitTextAtDelimiters", this_content) }
     var text = this_content;
     let index;
     const data = [];
