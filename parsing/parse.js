@@ -31,7 +31,7 @@ fetch("dictionary.json").then(
 var theSpaceMathInML;
 
 const paragraph_peer_delimiters = [
-          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
+//          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"\\begin{equation}", right:"\\end{equation}", tag:"md"},
           {left:"$$", right:"$$", tag:"md"},
           {left:"\\[", right:"\\]", tag:"md"},
@@ -87,6 +87,7 @@ const text_like_tags = [  // contain just text  (includes inline markup)
 const inline_ptx_tags = [  //meaning: don't add space around them
     "m", "c", "q", "em", "term", "alert"
 ];
+// need to handle self-closing tags
 
 inline_ptx_tags.forEach( (el) => {
     asymmetric_inline_delimiters.push(
@@ -168,7 +169,7 @@ if (sourceTextArea.addEventListener) {
       console.log("");
       console.log("");
 
-      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, paragraph_peers);
+      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
 //      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peers);
 
       console.log("");
@@ -180,7 +181,8 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit[2]",tmp1secondsplit[2]);
 
-      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
+      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", paragraph_peers);
+ //     var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
 
       console.log("");
       console.log("");
@@ -193,7 +195,7 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
 
 
-      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, ['p', 'q', 'blockquote', 'text']);
+      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", ['text', 'p', 'q', 'blockquote', 'text']);
 
       console.log("tmp2:",tmp2); 
       console.log("tmp2[1].content:",tmp2[1].content); 
@@ -201,23 +203,20 @@ if (sourceTextArea.addEventListener) {
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, "unused for spacelike?", ['p','q',  'text', 'blockquote'],"spacelike");
+      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", ['text', 'p','q','blockquote']);
       console.log("tmp3:",tmp3);
       console.log("tmp3[1].content:",tmp3[1].content);
       console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
 
 
 console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
-      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, ['p', 'q', 'blockquote']);
+      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", ['text', 'p', 'q', 'blockquote']);
 
-      console.log("tmp2 again",tmp2); 
-      console.log("tmp3:",tmp3); 
-
-      const tmp4p = reassemblePreTeXt(tmp4);
+ //     const tmp4p = reassemblePreTeXt(tmp4);
 
 //      console.log("tmp4p:",tmp4p);
 
-      const tmp5 = extract_lists(tmp4, "fonts");
+      const tmp5 = extract_lists(tmp4, "fonts", text_like_tags);
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
