@@ -18,7 +18,7 @@ let mathJaxArea = document.getElementById("MathJaxArea");
 // let translateTable = new TranslateTable();
 
 /*
-var dictionary;    
+var dictionary;
 fetch("dictionary.json").then(
         function(u){ return u.json();}
       ).then(
@@ -197,9 +197,9 @@ if (sourceTextArea.addEventListener) {
 
       const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", ['text', 'p', 'q', 'blockquote', 'text']);
 
-      console.log("tmp2:",tmp2); 
-      console.log("tmp2[1].content:",tmp2[1].content); 
-      console.log("tmp2[1].content as String:",JSON.stringify(tmp2[1].content)); 
+      console.log("tmp2:",tmp2);
+      console.log("tmp2[1].content:",tmp2[1].content);
+      console.log("tmp2[1].content as String:",JSON.stringify(tmp2[1].content));
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
