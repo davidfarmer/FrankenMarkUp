@@ -6,9 +6,9 @@ A _group_ is a set $G$ along with a binary operation $dot$ such that:
 
   - The operation is associative: if $a,b,c in G$ then <m>a dot (b dot c) = (a dot b) dot c</m>.
 
-  - There exists an _identity element_ $e in G$ such that $e dot a = a dot e = a$ for all $a in G$.
+  - There exists an _identity element_ $e in G$ such that $e dot a = a$ and $a dot e = a$ for all $a in G$.
 
-  - For each $a in G$ there exists an _inverse_ element $b in G$ such that $a dot b = b dot a = e$.
+  - For each $a in G$ there exists an _inverse_ element $b in G$ such that $a dot b = e$ and $b dot a = e$.
 \end{definition}
 
 To speak of a group one must refer to both the set and the operation.
@@ -28,12 +28,14 @@ who used groups to answer the question:  when is there a nice formula for the
 roots of a polynomial?  Most people know the quadratic formula.  There are
 formulas for the roots of any cubic (degree~3) or degree~4 polynomial.
 It turns out that some higher degree polynomials have nice formulas for their
-roots, and some don't.  For example, there is an expression (using familiar operations)
+roots, and some don't.  For example, there is an expression
+(complicated, but only using familiar operations)
 for the roots of <m>x^5 - 5 x^2 - 3</m>, but there is no such formula for the
-roots of $x^5 - 5 x^2 + 3$.  It is not obvious why those two polynomials
-should behave so differently.
+roots of $x^5 - 5 x^2 + 3$.  Why should those two polynomials
+behave so differently?
 
-Galois discovered that to each polynomial there can be associated a group,
+Galois figured out the answer.
+He discovered that to each polynomial there can be associated a group,
 known today as the "Galois group" of the polynomial.  Properties of that group,
 which we will explore later, 
 tell you whether there exists a nice formula for the roots.
@@ -65,15 +67,17 @@ which in the axioms for a group we have denoted~$e$:
 $$
    e x = a^{-1} b .
 $$
-By definition of identity, <m>e x = x</m>, so we obtain the solution $x = a^-1 b$.
+By definition of the identity, <m>e x = x</m>, so we obtain the solution $x = a^-1 b$.
 
 We see that identity, inverse, and associativity are the
 necessary ingredients to solve the simplest possible equations.
-All those properties are necessary, and
+All those properties are necessary,
+and
 no other properties are needed.
 
-The discussion above only used part of the identity and inverse axioms.
-We need the other parts to solve the equation $x a = b$.
+The discussion above only used half of the identity axiom and
+half of the inverse axiom.
+The other halves are needed to solve the equation $x a = b$.
 \end{exploration}
 
 One of the group axioms said "there exists" an identity.  Does that
@@ -137,4 +141,25 @@ How many elements are in that group, and what are their orders?
 
 \end{exercise}
 
+<lemma>
+The identity element of a group is unique.
+</lemma>
 
+<proof>
+Suppose $e_1$ and $e_2$ are identity elements of a group $G$.  We have
+$$
+e_1 e_2 = e_1
+
+=e_2
+$$
+Where the first equality uses the fact that $e_1$ is the identity and
+the second equality uses the fact that $e_2$ is the identity.
+Thus, $e_1 = e_2$.
+</proof>
+
+Note:
+The above is not a good model to show students who are new to proofs,
+but I needed a display equation with multiple lines to check
+if parsing was working properly.
+
+End of antePreTeXt demo.
