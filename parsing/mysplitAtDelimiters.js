@@ -143,7 +143,7 @@ console.log("found a string to ", delimiters);
        if (new_content.length == 1 && new_content[0].tag == 'text') {
            return new_content[0].content
        } else {
-           return new_content 
+           return new_content
        }
 
     } else {  // parse_me must be an object, but check
@@ -176,7 +176,7 @@ console.log("found a string to ", delimiters);
        } else if (processiftext.includes(parse_me.tag)) {  // note: not text or p, so probably wrong parsing,
                                                           // or could be blockquote, theorem, etc
 console.log("found a target node", parse_me.tag);
-       let new_node = {...parse_me};  // should copy object? 
+       let new_node = {...parse_me};  // should copy object?
        new_content = splitAtDelimiters(new_node.content, delimiters, toenter, donotenter, processiftext);
 //       if (false && new_content.length == 1 && new_content[0].tag == 'text') {
 //           new_node.content = new_content[0].content
@@ -262,11 +262,13 @@ console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
 //    delimiters.forEach( (element, index) => {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
-//        const regexp = 
+//        const regexp =
     the_text = the_text.replace(/(^|\s)\$([^\$\n]+)\$(\s|$|[.,!?;:])/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
+    the_text = the_text.replace(/(^|\s)"([^"\n]+)"(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3");
+    the_text = the_text.replace(/(^|\s)'([^'\n]+)'(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3");
     the_text = the_text.replace(/(^|\s)`([^`\n]+)`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
 
     return the_text
@@ -278,7 +280,7 @@ const accentedASCII = function(fullstring, accent, letter) {
 }
 
 const extract_lists = function(this_content, action="do_nothing", tags_to_process=[""], this_tag = "") {
-    
+
     let newnodelist = [];
 
     let current_new_text = "";

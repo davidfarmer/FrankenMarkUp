@@ -44,6 +44,7 @@ const paragraph_peer_delimiters = [
 const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline  markup
                                              // oops: what about lists and display math?
     "theorem", "proposition", "lemma", "corollary", "conjecture",
+    "definition", "exploration", "exercise",
     "principle", "claim", "remark", "note", "example", "proof"
 ];
 const paragraph_peer_ptx_and_latex_other = [
@@ -79,6 +80,9 @@ let asymmetric_inline_delimiters = [
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 
+// next is unused?
+const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise"];
+
 const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
     "p", "text", "blockquote", "title"
@@ -88,6 +92,7 @@ const inline_ptx_tags = [  //meaning: don't add space around them
     "m", "c", "q", "em", "term", "alert"
 ];
 // need to handle self-closing tags
+// also -- for emdash, and abbreviations, i.e., e.g.
 
 inline_ptx_tags.forEach( (el) => {
     asymmetric_inline_delimiters.push(
@@ -158,8 +163,10 @@ if (sourceTextArea.addEventListener) {
       console.log("tmpfirstsplit",tmpfirstsplit);
 
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplit, "all", paragraph_peers);
+ //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
+//      var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text"], "", ["text", "theorem", "blockquote"]);
 
-      console.log("tmp1firstsplitP[2]",tmp1firstsplitP[2]);
+      console.log("tmp1firstsplitP",tmp1firstsplitP);
       console.log("tmp1[2].content",tmp1firstsplitP[2].content);
 
       console.log("");
@@ -181,7 +188,8 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit[2]",tmp1secondsplit[2]);
 
-      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", paragraph_peers);
+//      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
+      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
  //     var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
 
       console.log("");
@@ -195,7 +203,7 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
 
 
-      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", ['text', 'p', 'q', 'blockquote', 'text']);
+      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", text_like_tags);
 
       console.log("tmp2:",tmp2);
       console.log("tmp2[1].content:",tmp2[1].content);
@@ -203,14 +211,14 @@ if (sourceTextArea.addEventListener) {
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", ['text', 'p','q','blockquote']);
+      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", text_like_tags);
       console.log("tmp3:",tmp3);
       console.log("tmp3[1].content:",tmp3[1].content);
       console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
 
 
 console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
-      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", ['text', 'p', 'q', 'blockquote']);
+      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", text_like_tags);
 
  //     const tmp4p = reassemblePreTeXt(tmp4);
 
