@@ -37,6 +37,8 @@ var parsecount = 0;
 
 const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
+    if (typeof nodelist == "string") {return splitTextIntoParagraphs(nodelist) }
+
     let newnodelist = [];
 
     let current_new_text = "";
@@ -55,10 +57,13 @@ console.log("readt to parse", element);
             newnodelist.push({tag: "p", content: current_new_text});
             current_new_text = "";
           }
+          // if element needs to be parsed
+          if (tags_containing_paragraphs.includes(element.tag) && typeof element.content == "string") {
+              element.content = splitTextAtDelimiters(element.content, paragraph_peer_delimiters);
+              element.content = splitIntoParagraphs(element.content, nodestoparse, peernodes)
+          }
           newnodelist.push(element);
-      } else if (element.tag != "text") {
-          alert("Error: non-block element while parsing paragraphs", element)
-      } else {
+      } else if (element.tag == "text") {
 
           const this_text = element.content.split(/\n{2,}/);
 console.log("found ", this_text.length, " pieces, which are:", this_text);
@@ -72,7 +77,7 @@ console.log("made this_new_text", this_new_text);
               current_new_text = ""
           })
 
-      }
+      } else { newnodelist.push(element) }
     });
     return newnodelist
 }
@@ -160,7 +165,12 @@ console.log("found a string to ", delimiters);
            if (typeof parse_me.content != "string") { alert("expected a string: ", parse_me.content) }
 
            if (processiftext.includes(parse_me.tag)) {
-               parse_me.content = splitAtDelimiters(parse_me.content, delimiters)
+               const new_content = splitAtDelimiters(parse_me.content, delimiters);
+//               if (delimiters == 'makeparagraphs' && parse_me.tag == "text") {
+//                   parse_me = new_content
+//               } else {
+                   parse_me.content = new_content
+//               }
            }
        }
        return parse_me

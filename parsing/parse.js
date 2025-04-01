@@ -81,7 +81,7 @@ let asymmetric_inline_delimiters = [
 ];
 
 // next is unused?
-const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise"];
+const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma"];
 
 const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
@@ -162,12 +162,16 @@ if (sourceTextArea.addEventListener) {
 
       console.log("tmpfirstsplit",tmpfirstsplit);
 
+alert("first split");
+
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplit, "all", paragraph_peers);
  //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
 //      var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text"], "", ["text", "theorem", "blockquote"]);
 
       console.log("tmp1firstsplitP",tmp1firstsplitP);
       console.log("tmp1[2].content",tmp1firstsplitP[2].content);
+
+alert("first split P");
 
       console.log("");
       console.log("");
@@ -188,9 +192,10 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit[2]",tmp1secondsplit[2]);
 
+alert("second split");
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
-      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
- //     var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
+//      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
+      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
 
       console.log("");
       console.log("");
