@@ -1,0 +1,140 @@
+
+Welcome to a sample of antePreTeXt.
+
+\begin{definition}
+A _group_ is a set $G$ along with a binary operation $dot$ such that:
+
+  - The operation is associative: if $a,b,c in G$ then <m>a dot (b dot c) = (a dot b) dot c</m>.
+
+  - There exists an _identity element_ $e in G$ such that $e dot a = a dot e = a$ for all $a in G$.
+
+  - For each $a in G$ there exists an _inverse_ element $b in G$ such that $a dot b = b dot a = e$.
+\end{definition}
+
+To speak of a group one must refer to both the set and the operation.
+The sentence "The integers are a group." is either incorrect or incomplete,
+depending on your perspective.
+A correct statement that is similar to that sentence is
+'The integers are a group under addition.'
+Any nonempty set can be made into a group by specifying an appropriate
+operation -- don't fall into the trap of assuming the 'obvious'
+operation is intended.  Say what you mean, and only use what is (explicitly) said.
+
+Exercise:
+Explain why the condition *nonempty* was included in the previous paragraph.
+
+The idea of a group was introduced by the French mathematician \'Evariste Galois,
+who used groups to answer the question:  when is there a nice formula for the
+roots of a polynomial?  Most people know the quadratic formula.  There are
+formulas for the roots of any cubic (degree~3) or degree~4 polynomial.
+It turns out that some higher degree polynomials have nice formulas for their
+roots, and some don't.  For example, there is an expression (using familiar operations)
+for the roots of <m>x^5 - 5 x^2 - 3</m>, but there is no such formula for the
+roots of $x^5 - 5 x^2 + 3$.  It is not obvious why those two polynomials
+should behave so differently.
+
+Galois discovered that to each polynomial there can be associated a group,
+known today as the "Galois group" of the polynomial.  Properties of that group,
+which we will explore later, 
+tell you whether there exists a nice formula for the roots.
+
+Beyond questions about roots of polynomials,
+why are groups important?  In particular, why are those three 
+axioms natural?
+We will answer that question by thinking about how to solve the
+simplest possible equations.
+
+\begin{exploration}
+Suppose we want to solve the equation $a x = b$.  Thinking back to
+when you first learned about solving equations, the main idea was:
+do the same operation on both sides of the equals sign. 
+First step, multiply on the left by $a^-1$:
+$$
+  a^-1 (a x) = a^-1 b .
+$$
+We have just encountered one of the axioms of a group: the existence of
+an inverse.  
+In the above equation ee included the parentheses to emphasize the fact that $a^-1$ is
+multiplying the left side of the equation, which is the *quantity* $a x$.
+Now we regroup (i.e., use associativity) to get
+$$
+    (a^-1 a) x = a^{-1} b .
+$$
+What does $a^-1 a$ equal?  By definition, it equals the identity,
+which in the axioms for a group we have denoted~$e$:
+$$
+   e x = a^{-1} b .
+$$
+By definition of identity, <m>e x = x</m>, so we obtain the solution $x = a^-1 b$.
+
+We see that identity, inverse, and associativity are the
+necessary ingredients to solve the simplest possible equations.
+All those properties are necessary, and
+no other properties are needed.
+
+The discussion above only used part of the identity and inverse axioms.
+We need the other parts to solve the equation $x a = b$.
+\end{exploration}
+
+One of the group axioms said "there exists" an identity.  Does that
+mean there can be more than one?  Same question for "there exists" an inverse.
+In the exploration above we talked about $a x$ and also about $x a$.
+Aren't those the same?  We will answer one of those questions and leave
+the others as exercises.
+
+Another issue is the binary operation in the definition of a
+group.  In the exploration above there is no explicitly named
+operation:  we merely juxtaposed symbols, as in $a x$, to indicate
+that $a$ and $x$ are combined in some way.  What is the operation?
+Is it addition? subtraction? multiplication? exponentiation?
+The answer is that sometimes there is no answer.  The operation in a group
+is just that: an operation -- a way of combining two objects.
+It is not necessary to give an
+explicit meaning to the operation:  just manipulate the
+symbols using the axioms.  You will become more
+comfortable with this perspective as you gain experience.
+
+Aside:
+The next exercise would occur much later in the exposition,
+but this is a demonstration of antePreTeXt, not a real
+textbook on group theory.
+
+\begin{exercise}
+The Hilbert Hotel has mattresses which are both symmetric and comfortable:
+both sides can be used, and you can sleep with your feet pointing either
+North or South.  (All the rooms have a window facing either East or West,
+and the beds are oriented so that you can easily look at the sunrise or
+sunset, if that is your preference.)
+
+The manager is concerned that the mattresses are wearing out because
+the housekeepers are not rotating them uniformly.  You have received
+the following memo:
+
+<blockquote>
+To help the mattresses last longer, every month we rotate the mattresses.
+I suspect that the staff is not keeping track of how they flip the mattresses,
+and so parts of the mattress are being used excessively, causing it to
+wear out too quickly.
+
+Please devise a way to flip the mattress so that the same
+operation can be done every time, and over the course of the year all
+parts of the mattress will be used equally.  That way it is not
+necessary for the staff to keep track of which way it was flipped previously.
+</blockquote>
+
+Write two responses to the manager's memo:  a one-sentence
+reply which assumes the reader is familiar with the basic concepts of
+group theory, and a longer reply which you think the manager might understand.
+
+Hint:
+The fact that a mattress is 3-dimensional is irrelevant:
+model it as a rectangle.
+
+Hint:
+The manager has assumed that the group of symmetries of a rectangle
+can be generated by a single element.  Is that assumption correct?
+How many elements are in that group, and what are their orders?
+
+\end{exercise}
+
+
