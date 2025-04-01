@@ -331,6 +331,14 @@ console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
         new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
 console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
+      } else if (action == "texlike" && tags_to_process.includes(this_tag)) {  // note: this_content already known
+                                                                          // to be a string
+        let new_text = "";
+        new_text = this_content.replace(/--/mg, "<mdash/>");
+        new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
+console.log("found genuine text:", this_content, "which is now",new_text);
+        return new_text
+      
       } else { return this_content }
     }
 

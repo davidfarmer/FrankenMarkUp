@@ -230,6 +230,7 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 //      console.log("tmp4p:",tmp4p);
 
       const tmp5 = extract_lists(tmp4, "fonts", text_like_tags);
+      const tmp5 = extract_lists(tmp5, "texlike", text_like_tags);
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
