@@ -165,10 +165,12 @@ if (sourceTextArea.addEventListener) {
 
       let tmpfirstsplitATT = extract_lists(tmpfirstsplit, "attributes", "all");
       let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
+      let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
 
-//alert("first split");
+console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
+//alert("labels");
 
-      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitTITLE, "all", paragraph_peers);
+      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
  //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
 //      var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text"], "", ["text", "theorem", "blockquote"]);
 
@@ -196,7 +198,11 @@ alert("first split P");
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
-      let tmp1secondsplitLI = extract_lists(tmp1secondsplit, "extract li", ["p"]);
+      let tmp1secondsplitATT = extract_lists(tmp1secondsplit, "attributes", "all");
+      let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
+      let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
+
+      let tmp1secondsplitLI = extract_lists(tmp1secondsplitLABEL, "extract li", ["p"]);
 
       const tmp1secondsplitENV = extract_lists(tmp1secondsplitLI, "oneline environments", ["p"]);
 

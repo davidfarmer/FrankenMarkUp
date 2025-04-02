@@ -66,11 +66,11 @@ console.log("readt to parse", element);
       } else if (element.tag == "text") {
 
           const this_text = element.content.split(/\n{2,}/);
-console.log("found ", this_text.length, " pieces, which are:", this_text);
+// console.log("found ", this_text.length, " pieces, which are:", this_text);
           this_text.forEach( (element) => {
               const this_new_text = current_new_text + element;
               if (this_new_text) {  // skip empty paragraphs
-console.log("made this_new_text", this_new_text);
+// console.log("made this_new_text", this_new_text);
                 const this_new_paragraph = {tag:"p", content: this_new_text};
                 newnodelist.push(this_new_paragraph)
               }
@@ -358,19 +358,31 @@ console.log("found an array, length", this_content.length);
         
             if (this_content.content.match(/^\s*\[/) ||
                  this_content.content.match(/^\s*<title>/)) {
- console.log("maybe found a title", this_content.content);
+//  console.log("maybe found a title", this_content.content);
                 if (this_content.content.match(/^\s*\[/)) { //LaTeX style
                   let this_title = this_content.content.split("]", 1)[0];
                   this_title = this_title.replace(/\s*\[/,"");
                   this_content.title = this_title
                   this_content.content = this_content.content.replace(/^\s*\[[^\[\]]*\]/,"");
-console.log("added a title to ", this_content);
+// console.log("added a title to ", this_content);
                 } else {
                   let this_title = this_content.content.split("</title>", 1)[0];
                   this_title = this_title.replace(/\s*<title>/,"");
                   this_content.title = this_title;
                   this_content.content = this_content.content.replace(/^\s*<title>.*?<\/title>/,"");
                 }
+            }
+
+          } else if (action == "label" // &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+            if (this_content.content.match(/^\s*\\label{/)) {
+  console.log("maybe found a label", this_content.content);
+                  let this_label = this_content.content.replace(/^\s*\\label{([^{}]*)}.*/s, "$1");
+console.log("found a label:", this_label);
+                  this_label = sanitizeForXML(this_label);
+                  this_content.label = this_label;
+                  this_content.content = this_content.content.replace(/^\s*\\label{([^{}]*)}/, "")
             }
 
           } 

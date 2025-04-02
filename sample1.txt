@@ -141,6 +141,7 @@ but this is a demonstration of FrankenMarkup, not a real
 textbook on group theory.
 
 \begin{exercise}
+\label{ex:hotel mattress}
 The Hilbert Hotel has mattresses which are both symmetric and comfortable:
 both sides can be used, and you can sleep with your feet pointing either
 North or South.  (All the rooms have a window facing either East or West,
@@ -184,7 +185,7 @@ The identity element of a group is unique.
 
 <proof>
 Suppose $e_1$ and $e_2$ are identity elements of a group $G$.  We have
-$$
+$$\label{eqn:e_1 e_2}
 e_1 e_2 = e_1
 
 =e_2
@@ -195,10 +196,11 @@ Thus, $e_1 = e_2$.
 </proof>
 
 Note:
-The above is not a good model to show students who are new to proofs,
+The above is not a good model for students who are new to proofs,
 but I needed a display equation with multiple lines to check
 if parsing was working properly.
 
-Some `inline code`. 
+Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress},
+and a reference to the equation in the lemma: \eqref{eqn:e_1 e_2}.
 
 End of FrankenMarkup demo.

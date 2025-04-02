@@ -17,6 +17,7 @@ const reassemblePreTeXt = function(content) {
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
       if (element.attributes) { this_element_text += " " + element.attributes.trim() }
+      if (element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
       this_element_text += these_tags.after_begin;
 
       if (element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
@@ -41,3 +42,15 @@ const reassemblePreTeXt = function(content) {
     return assembled_text
 }
 
+const sanitizeForXML = function(text) {
+
+    let new_text = text;
+
+    new_text = new_text.replace(/:/, "_");
+    new_text = new_text.replace(/ /, "-");
+    new_text = new_text.replace(/&/, "&amp;");
+    new_text = new_text.replace(/</, "&lt;");
+    new_text = new_text.replace(/>/, "&gt;");
+
+    return new_text
+}
