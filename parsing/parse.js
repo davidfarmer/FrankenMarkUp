@@ -82,7 +82,7 @@ let asymmetric_inline_delimiters = [
 ];
 
 // next is unused?
-const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma"];
+const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note"];
 
 const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
@@ -195,10 +195,16 @@ alert("first split P");
 
       let tmp1secondsplitLI = extract_lists(tmp1secondsplit, "extract li", ["p"]);
 
+      const tmp1secondsplitENV = extract_lists(tmp1secondsplitLI, "oneline environments", ["p"]);
+
+ console.log("tmp1secondsplitENV", tmp1secondsplitENV);
+
+//  maybe need another process text step here?
+
 alert("second split");
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
-      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitLI, "all", paragraph_peers);
+      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
       console.log("");
       console.log("");
@@ -209,7 +215,6 @@ alert("second split");
 
       console.log("tmp1secondsplitP",tmp1secondsplitP);
       console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
-
 
       const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", text_like_tags);
 
@@ -234,8 +239,9 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
       const tmp5x = extract_lists(tmp4, "fonts", text_like_tags);
       const tmp5y = extract_lists(tmp5x, "texlike", text_like_tags);
+      const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", text_like_tags);
 
-      const tmp5z = extract_lists(tmp5y, "oneline environments", ["p"]);
+//      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
       const tmp5 = extract_lists(tmp5z, "extract li", ["p"]);
 
       console.log("tmp2 again",tmp2 );

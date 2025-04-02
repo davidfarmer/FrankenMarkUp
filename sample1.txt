@@ -1,5 +1,36 @@
 
-Welcome to a sample of antePreTeXt.
+Welcome to a sample of antePreTeXt: an easy way to write a subset of PreTeXt.
+
+No need for `p` tags, just leave a blank line.  Within a paragraph you
+can define _terminology_, use *emphasis* or make an **alert**.
+You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
+official PreTeXt <m>sin x < x</m>.  Inside the math tags you can type
+LaTeX or Space Math.  (Currently the output is whatever you write.
+It will be converted to LaTeX soon, once I merge this new code with my old code.)
+
+Note:
+If you start a paragraph with one word followed by a colon,
+the word becomes the name of the environment and 
+paragraph becomes the content.
+
+\begin{note}
+You can use LaTeX-style `begin` and `end` tags, of PreTeXt angle
+brackets.
+
+You need to use the begin and end style if the environment
+is more than just one paragraph of text.  Also supported is
+(the most common)
+LaTeX-style font markup:
+
+Have you heard the one that starts "M\"obius and l'H\^opital walk into a bar..."?
+\end{note}
+
+These and more features are illustrated below.  To make it realistic,
+I started writing an introduction to group theory.
+
+Note: There is no support for sections or other divisions: it is the
+contents of just one (sub)section.
+
 
 \begin{definition}
 A _group_ is a set $G$ along with a binary operation $dot$ such that:
@@ -14,7 +45,7 @@ A _group_ is a set $G$ along with a binary operation $dot$ such that:
 To speak of a group one must refer to both the set and the operation.
 The sentence "The integers are a group." is either incorrect or incomplete,
 depending on your perspective.
-A correct statement that is similar to that sentence is
+A correct statement which is similar to that sentence is
 'The integers are a group under addition.'
 Any nonempty set can be made into a group by specifying an appropriate
 operation -- don't fall into the trap of assuming the 'obvious'
@@ -43,13 +74,15 @@ tell you whether there exists a nice formula for the roots.
 Beyond questions about roots of polynomials,
 why are groups important?  In particular, why are those three 
 axioms natural?
-We will answer that question by thinking about how to solve the
+We will answer that question by looking at the details of how to solve the
 simplest possible equations.
 
-\begin{exploration}
+\begin{exploration}[Why the group axioms are natural]
 Suppose we want to solve the equation $a x = b$.  Thinking back to
 when you first learned about solving equations, the main idea was:
-do the same operation on both sides of the equals sign. 
+do the same operation on both sides of the equals sign, 
+and use algebraic identities,
+
 First step, multiply on the left by $a^-1$:
 $$
   a^-1 (a x) = a^-1 b .
@@ -142,7 +175,7 @@ How many elements are in that group, and what are their orders?
 
 \end{exercise}
 
-<lemma>
+<lemma><title>The identity element is unique</title>
 The identity element of a group is unique.
 </lemma>
 

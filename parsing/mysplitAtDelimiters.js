@@ -319,10 +319,11 @@ console.log("found an array, length", this_content.length);
 
             if (this_content.content.match(/^\s*([A-Za-z]+):\s/)) {
 // console.log("matched some oneline environment", this_content.content);
-                let split_content = this_content.content.split(":", 2);
+                let split_content = this_content.content.split(":", 1);
 // console.log("split_content", split_content);
                 const new_tag = split_content[0].toLowerCase();
-                const new_content = split_content[1];
+ //               const new_content = split_content[1];
+                const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
@@ -333,12 +334,13 @@ console.log("found an array, length", this_content.length);
 
  console.log("found some oneline environment", this_content.content);
 
-            if (this_content.content.match(/^\s*\-\s/)) {
+            if (this_content.content.match(/^\s*\-+\s/)) {
  console.log("matched an li", this_content.content);
-                let split_content = this_content.content.split("-", 2);
- console.log("split_content", split_content);
+  //              let split_content = this_content.content.split("-", 2);
+// console.log("split_content", split_content);
                 const new_tag = "li";
-                const new_content = split_content[1];
+     //           const new_content = split_content[1];
+                const new_content = this_content.content.replace(/^\s*-+\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
