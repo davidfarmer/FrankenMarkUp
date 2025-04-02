@@ -312,6 +312,41 @@ console.log("found an array, length", this_content.length);
 
     } else if (typeof this_content == "object") {
 
+          if (action == "oneline environments" &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+// console.log("found some oneline environment", this_content.content);
+
+            if (this_content.content.match(/^\s*([A-Za-z]+):\s/)) {
+// console.log("matched some oneline environment", this_content.content);
+                let split_content = this_content.content.split(":", 2);
+// console.log("split_content", split_content);
+                const new_tag = split_content[0].toLowerCase();
+                const new_content = split_content[1];
+
+                this_content.tag = new_tag;
+                this_content.content = new_content;
+            }
+
+          } else if (action == "extract li" &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+ console.log("found some oneline environment", this_content.content);
+
+            if (this_content.content.match(/^\s*\-\s/)) {
+ console.log("matched an li", this_content.content);
+                let split_content = this_content.content.split("-", 2);
+ console.log("split_content", split_content);
+                const new_tag = "li";
+                const new_content = split_content[1];
+
+                this_content.tag = new_tag;
+                this_content.content = new_content;
+            }
+
+          }
+
+
           let this_node = {...this_content};
           if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action, tags_to_process, this_node.tag) }
           else { this_node.content = extract_lists(this_node.content, action, tags_to_process, this_node.tag) }

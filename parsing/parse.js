@@ -44,11 +44,12 @@ const paragraph_peer_delimiters = [
 const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline  markup
                                              // oops: what about lists and display math?
     "theorem", "proposition", "lemma", "corollary", "conjecture",
-    "definition", "exploration", "exercise",
+    "definition", "exploration", "exercise", 
+    "hint", "answer", "solution", "aside",
     "principle", "claim", "remark", "note", "example", "proof"
 ];
 const paragraph_peer_ptx_and_latex_other = [
-    "figure"
+    "figure", "li"
 ];
 
 // Note: no ">" in opening, because could have attributes,
@@ -162,7 +163,7 @@ if (sourceTextArea.addEventListener) {
 
       console.log("tmpfirstsplit",tmpfirstsplit);
 
-alert("first split");
+//alert("first split");
 
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplit, "all", paragraph_peers);
  //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
@@ -190,12 +191,14 @@ alert("first split P");
       console.log("");
       console.log("");
       console.log("tmp1secondsplit",tmp1secondsplit);
-      console.log("tmp1secondsplit[2]",tmp1secondsplit[2]);
+      console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
+
+      let tmp1secondsplitLI = extract_lists(tmp1secondsplit, "extract li", ["p"]);
 
 alert("second split");
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
-      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplit, "all", paragraph_peers);
+      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitLI, "all", paragraph_peers);
 
       console.log("");
       console.log("");
@@ -229,15 +232,18 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
 //      console.log("tmp4p:",tmp4p);
 
-      const tmp5 = extract_lists(tmp4, "fonts", text_like_tags);
-      const tmp5 = extract_lists(tmp5, "texlike", text_like_tags);
+      const tmp5x = extract_lists(tmp4, "fonts", text_like_tags);
+      const tmp5y = extract_lists(tmp5x, "texlike", text_like_tags);
+
+      const tmp5z = extract_lists(tmp5y, "oneline environments", ["p"]);
+      const tmp5 = extract_lists(tmp5z, "extract li", ["p"]);
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
-      console.log("tmp5p",tmp5p);
-      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));
+//      console.log("tmp5p",tmp5p);
+//      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));
 
       if(echosourceTextArea) {
           echosourceTextArea.innerText = tmp5p

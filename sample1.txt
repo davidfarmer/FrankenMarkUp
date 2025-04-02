@@ -56,14 +56,15 @@ $$
 $$
 We have just encountered one of the axioms of a group: the existence of
 an inverse.  
-In the above equation ee included the parentheses to emphasize the fact that $a^-1$ is
+In the above equation we included the parentheses to emphasize the fact that $a^-1$ is
 multiplying the left side of the equation, which is the *quantity* $a x$.
 Now we regroup (i.e., use associativity) to get
 $$
     (a^-1 a) x = a^{-1} b .
 $$
 What does $a^-1 a$ equal?  By definition, it equals the identity,
-which in the axioms for a group we have denoted~$e$:
+which in the axioms for a group we have denoted~$e$,
+so the above equation becomes:
 $$
    e x = a^{-1} b .
 $$
@@ -88,8 +89,8 @@ the others as exercises.
 
 Another issue is the binary operation in the definition of a
 group.  In the exploration above there is no explicitly named
-operation:  we merely juxtaposed symbols, as in $a x$, to indicate
-that $a$ and $x$ are combined in some way.  What is the operation?
+operation:  we merely juxtaposed symbol, as in $a x$, to indicate
+that $a$ and \(x\) are combined in some way.  What is the operation?
 Is it addition? subtraction? multiplication? exponentiation?
 The answer is that sometimes there is no answer.  The operation in a group
 is just that: an operation -- a way of combining two objects.
@@ -161,5 +162,7 @@ Note:
 The above is not a good model to show students who are new to proofs,
 but I needed a display equation with multiple lines to check
 if parsing was working properly.
+
+Some `inline code`. 
 
 End of antePreTeXt demo.
