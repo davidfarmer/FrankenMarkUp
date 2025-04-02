@@ -135,20 +135,20 @@ const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquo
 
 // need to handle attributes on output tags
 alone_on_line_tags.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: "\n",
+    outputtags[el] = { begin_tag: "<" + el + "", end_tag: "</" + el + ">",
+    before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
 paragraph_peer_ptx_and_latex_text.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + ">" + "\n" + "<statement>",
-                       end_tag: "</statement>" + "\n" + "</" + el + ">",
-    before_begin: "\n", after_begin: "\n",
+    outputtags[el] = { begin_tag: "<" + el + "",
+                       end_tag: "</" + el + ">",
+    before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
 paragraph_peer_ptx_and_latex_other.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + ">",
+    outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: "\n",
+    before_begin: ">\n", after_begin: "\n",
     before_end: "\n", after_end: "\n"}
     });
 
@@ -163,9 +163,12 @@ if (sourceTextArea.addEventListener) {
 
       console.log("tmpfirstsplit",tmpfirstsplit);
 
+      let tmpfirstsplitATT = extract_lists(tmpfirstsplit, "attributes", "all");
+      let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
+
 //alert("first split");
 
-      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplit, "all", paragraph_peers);
+      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitTITLE, "all", paragraph_peers);
  //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
 //      var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text"], "", ["text", "theorem", "blockquote"]);
 

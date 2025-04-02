@@ -15,7 +15,12 @@ const reassemblePreTeXt = function(content) {
       const these_tags = outputtags[this_tag];
 
       this_element_text = this_element_text +
-                these_tags.before_begin + these_tags.begin_tag + these_tags.after_begin;
+                these_tags.before_begin + these_tags.begin_tag 
+      if (element.attributes) { this_element_text += " " + element.attributes.trim() }
+      this_element_text += these_tags.after_begin;
+
+      if (element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
+
 //      this_element_text = this_element_text.concat(element.content);
       let this_new_text = reassemblePreTeXt(element.content);
 //      if (true || alone_on_line_tags.includes(this_tag) || inline_ptx_tags.includes(this_tag)) {  // any use case for only one end?

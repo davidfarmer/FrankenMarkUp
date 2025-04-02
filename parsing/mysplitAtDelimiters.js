@@ -243,6 +243,8 @@ console.log("regexLeft",regexLeft);
     //        type: "math",
             tag: delimiters[i].tag,
             content: mathcontent,
+            attributes: "",
+            id: "",
      //       rawData,
         });
         text = text.slice(index + delimiters[i].right.length);
@@ -252,6 +254,8 @@ console.log("regexLeft",regexLeft);
         data.push({
             tag: "text",
             content: text,
+            attributes: "",
+            id: "",
         });
     }
 
@@ -315,14 +319,9 @@ console.log("found an array, length", this_content.length);
           if (action == "oneline environments" &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-// console.log("found some oneline environment", this_content.content);
-
             if (this_content.content.match(/^\s*([A-Za-z]+):\s/)) {
-// console.log("matched some oneline environment", this_content.content);
                 let split_content = this_content.content.split(":", 1);
-// console.log("split_content", split_content);
                 const new_tag = split_content[0].toLowerCase();
- //               const new_content = split_content[1];
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
 
                 this_content.tag = new_tag;
@@ -332,21 +331,49 @@ console.log("found an array, length", this_content.length);
           } else if (action == "extract li" &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
- console.log("found some oneline environment", this_content.content);
-
             if (this_content.content.match(/^\s*\-+\s/)) {
- console.log("matched an li", this_content.content);
-  //              let split_content = this_content.content.split("-", 2);
-// console.log("split_content", split_content);
                 const new_tag = "li";
-     //           const new_content = split_content[1];
                 const new_content = this_content.content.replace(/^\s*-+\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
             }
 
-          }
+          } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+            if (this_content.content.match(/^\s*[^\n<>]*>/)) {
+ // console.log("maybe found an attribute", this_content.content);
+                if (this_content.content.match(/^\s*>/)) { //no actual attribute
+                  this_content.content = this_content.content.replace(/^\s*>/, "")
+                } else {
+                  let this_attribute = this_content.content.split(">", 1)[0];
+                  this_content.content = this_content.content.replace(/^\s*[^\n<>]*>/, "")
+                  this_content.attributes += this_attribute;  // could there already be attributes?
+                }
+            }
+
+          } else if (action == "title" // &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+        
+            if (this_content.content.match(/^\s*\[/) ||
+                 this_content.content.match(/^\s*<title>/)) {
+ console.log("maybe found a title", this_content.content);
+                if (this_content.content.match(/^\s*\[/)) { //LaTeX style
+                  let this_title = this_content.content.split("]", 1)[0];
+                  this_title = this_title.replace(/\s*\[/,"");
+                  this_content.title = this_title
+                  this_content.content = this_content.content.replace(/^\s*\[[^\[\]]*\]/,"");
+console.log("added a title to ", this_content);
+                } else {
+                  let this_title = this_content.content.split("</title>", 1)[0];
+                  this_title = this_title.replace(/\s*<title>/,"");
+                  this_content.title = this_title;
+                  this_content.content = this_content.content.replace(/^\s*<title>.*?<\/title>/,"");
+                }
+            }
+
+          } 
 
 
           let this_node = {...this_content};
@@ -359,7 +386,7 @@ console.log("found an array, length", this_content.length);
 
       if (typeof this_content != "string") { alert("non-object non-string: ", this_content) }
 
-console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
+//console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
       else if (action == "fonts" && tags_to_process.includes(this_tag)) {  // note: this_content already known
                                                                           // to be a string

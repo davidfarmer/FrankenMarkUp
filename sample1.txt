@@ -1,20 +1,23 @@
 
-Welcome to a sample of antePreTeXt: an easy way to write a subset of PreTeXt.
+Welcome to a sample of FrankenMarkup: an easy way to write a subset of PreTeXt.
+Just mix together LaTeX, Markdown, and PreTeXt, and out comes properly
+tagged PreTeXt.  Within reason, of course!
 
 No need for `p` tags, just leave a blank line.  Within a paragraph you
 can define _terminology_, use *emphasis* or make an **alert**.
 You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
 official PreTeXt <m>sin x < x</m>.  Inside the math tags you can type
 LaTeX or Space Math.  (Currently the output is whatever you write.
-It will be converted to LaTeX soon, once I merge this new code with my old code.)
+It will be converted to LaTeX soon, once I merge this new code with my
+Space Math code.)
 
 Note:
 If you start a paragraph with one word followed by a colon,
-the word becomes the name of the environment and 
-paragraph becomes the content.
+the word becomes the name of the environment and the
+paragraph becomes the contents.
 
 \begin{note}
-You can use LaTeX-style `begin` and `end` tags, of PreTeXt angle
+You can use LaTeX-style `begin` and `end` tags, or PreTeXt angle
 brackets.
 
 You need to use the begin and end style if the environment
@@ -122,19 +125,19 @@ the others as exercises.
 
 Another issue is the binary operation in the definition of a
 group.  In the exploration above there is no explicitly named
-operation:  we merely juxtaposed symbol, as in $a x$, to indicate
+operation:  we merely juxtaposed symbols, as in $a x$, to indicate
 that $a$ and \(x\) are combined in some way.  What is the operation?
 Is it addition? subtraction? multiplication? exponentiation?
 The answer is that sometimes there is no answer.  The operation in a group
 is just that: an operation -- a way of combining two objects.
-It is not necessary to give an
+It is not always necessary to give an
 explicit meaning to the operation:  just manipulate the
 symbols using the axioms.  You will become more
 comfortable with this perspective as you gain experience.
 
 Aside:
 The next exercise would occur much later in the exposition,
-but this is a demonstration of antePreTeXt, not a real
+but this is a demonstration of FrankenMarkup, not a real
 textbook on group theory.
 
 \begin{exercise}
@@ -175,7 +178,7 @@ How many elements are in that group, and what are their orders?
 
 \end{exercise}
 
-<lemma><title>The identity element is unique</title>
+<lemma xml:id="oneId" ><title>The identity element is unique</title>
 The identity element of a group is unique.
 </lemma>
 
@@ -198,4 +201,4 @@ if parsing was working properly.
 
 Some `inline code`. 
 
-End of antePreTeXt demo.
+End of FrankenMarkup demo.
