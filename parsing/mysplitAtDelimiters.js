@@ -61,6 +61,9 @@ console.log("readt to parse", element);
           if (tags_containing_paragraphs.includes(element.tag) && typeof element.content == "string") {
               element.content = splitTextAtDelimiters(element.content, paragraph_peer_delimiters);
               element.content = splitIntoParagraphs(element.content, nodestoparse, peernodes)
+          } else if (tags_containing_paragraphs.includes(element.tag)) {
+// ????
+              element.content = splitIntoParagraphs(element.content, nodestoparse, peernodes)
           }
           newnodelist.push(element);
       } else if (element.tag == "text") {
