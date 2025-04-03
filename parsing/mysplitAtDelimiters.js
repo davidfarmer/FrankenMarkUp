@@ -45,9 +45,7 @@ const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
     nodelist.forEach( (element, index) => {
 
-console.log("parsing", index);
-
-console.log("readt to parse", element);
+// console.log("readt to parse", element);
 
       // if we have a content node which is a paragraph peer,
       // end and save the current paragraph (if nonempty),
@@ -118,17 +116,17 @@ const splitAtDelimiters = function(parse_me, delimiters, toenter="all", donotent
     let newnodelist = [];
 
     if (Array.isArray(parse_me)) {
-console.log("found an array, of length", parse_me.length);
+//console.log("found an array, of length", parse_me.length);
 
         parse_me.forEach( (element, index) => {
 
-console.log("parsing", index);
+//console.log("parsing", index);
 
-console.log("readt to parse", element);
+//console.log("readt to parse", element);
 
-console.log("from:", element);
+//console.log("from:", element);
           const this_element_parsed = splitAtDelimiters(element, delimiters, toenter, donotenter, processiftext);
-console.log("to:", this_element_parsed);
+//console.log("to:", this_element_parsed);
 
 //          if (false && Array.isArray(this_element_parsed)) {
  //           newnodelist.push(...this_element_parsed)
@@ -143,7 +141,7 @@ console.log("to:", this_element_parsed);
 
     } else if (typeof parse_me == 'string') {
        let new_content = parse_me;
-console.log("found a string to ", delimiters);
+//console.log("found a string to ", delimiters);
        if (delimiters === 'spacelike') { new_content = recastSpacedDelimiters(new_content) }
        else if (delimiters === 'makeparagraphs') { new_content = splitTextIntoParagraphs(new_content) }
        else { new_content = splitTextAtDelimiters(new_content, delimiters) }
@@ -212,12 +210,9 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
     let index;
     const data = [];
 
-console.log(delimiters);
     const regexLeft = new RegExp(
         "(" + delimiters.map((x) => escapeRegex(x.left)).join("|") + ")"
     );
-
-console.log("regexLeft",regexLeft);
 
     while (true) {
 //console.log("text", text);
@@ -262,7 +257,7 @@ console.log("regexLeft",regexLeft);
         });
     }
 
-    console.log("leaving splitAtDelimiters", data, "   ", data.length);
+//    console.log("leaving splitAtDelimiters", data, "   ", data.length);
 
 //    if (data.length == 1 && data[0].tag == 'text') { return text }
 //    else { return data }
@@ -274,7 +269,7 @@ const recastSpacedDelimiters = function(this_content) {
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
 
-console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
+//console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
 
 //    delimiters.forEach( (element, index) => {
 // need to do this properly, from spacelike_inline_delimiters
@@ -303,7 +298,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
     let current_new_text = "";
 
     if (Array.isArray(this_content)) {
-console.log("found an array, length", this_content.length);
+// console.log("found an array, length", this_content);
 
         this_content.forEach( (element, index) => {
 
@@ -340,6 +335,14 @@ console.log("found an array, length", this_content.length);
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
+                this_content.parenttag = "ul"
+            } else if (this_content.content.match(/^\s*[0-9]+\.*\s/)) {
+                const new_tag = "li";
+                const new_content = this_content.content.replace(/^\s*[0-9]+\.*\s*/,"");
+
+                this_content.tag = new_tag;
+                this_content.content = new_content;
+                this_content.parenttag = "ol"
             }
 
           } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
@@ -380,9 +383,9 @@ console.log("found an array, length", this_content.length);
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*\\label{/)) {
-  console.log("maybe found a label", this_content.content);
+//  console.log("maybe found a label", this_content.content);
                   let this_label = this_content.content.replace(/^\s*\\label{([^{}]*)}.*/s, "$1");
-console.log("found a label:", this_label);
+//console.log("found a label:", this_label);
                   this_label = sanitizeForXML(this_label);
                   this_content.label = this_label;
                   this_content.content = this_content.content.replace(/^\s*\\label{([^{}]*)}/, "")
@@ -408,6 +411,43 @@ console.log("found a label:", this_label);
             let remaining_pieces = this_content.content.slice(index);
             remaining_pieces.unshift(this_statement);
             this_content.content = remaining_pieces
+
+          } else if (action == "gather li"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "object" ) {  // actually, must be an array
+
+            let this_statement_content = [];
+
+            let element = "";
+            let index = 0;
+            let found_list = false;
+            let new_list_content = [];
+            let new_list_object = {};
+            for (index = 0; index < this_content.content.length; ++index) {
+                element = this_content.content[index]
+
+                if (!found_list && element.tag != "li") {
+                  this_statement_content.push(element)
+                } else if (!found_list && element.tag == "li") {
+                  found_list = true;
+                  new_list_content = [element];
+                  new_list_object.tag = element.parenttag;
+                } else if (found_list && element.tag == "li") {
+                  new_list_content.push(element)
+                } else if (found_list && element.tag != "li") {
+                  found_list = false;
+                  new_list_object.content = new_list_content;
+                  this_statement_content.push({...new_list_object});
+                  new_list_object = {};
+                  this_statement_content.push(element);
+                } 
+            }
+
+            if (found_list) { //this means the environment ended with at list, which has not been saved
+              new_list_object.content = new_list_content;
+              this_statement_content.push({...new_list_object})
+            }
+
+            this_content.content = this_statement_content
           } 
 
 
@@ -419,7 +459,7 @@ console.log("found a label:", this_label);
 
     } else {
 
-      if (typeof this_content != "string") { alert("non-object non-string: ", this_content) }
+      if (typeof this_content != "string") { console.log("what is it", this_content);  alert("non-object non-string: ", this_content) }
 
 //console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
@@ -428,14 +468,14 @@ console.log("found a label:", this_label);
         let new_text = "";
         new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
         new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
-console.log("found genuine text:", this_content, "which is now",new_text);
+// console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
       } else if (action == "texlike" && tags_to_process.includes(this_tag)) {  // note: this_content already known
                                                                           // to be a string
         let new_text = "";
         new_text = this_content.replace(/--/mg, "<mdash/>");
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
-console.log("found genuine text:", this_content, "which is now",new_text);
+// console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
       
       } else { return this_content }

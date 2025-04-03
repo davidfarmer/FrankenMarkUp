@@ -49,7 +49,7 @@ const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline
     "principle", "claim", "remark", "note", "example", "proof"
 ];
 const paragraph_peer_ptx_and_latex_other = [
-    "figure", "li"
+    "figure", "li",
 ];
 
 // Note: no ">" in opening, because could have attributes,
@@ -155,7 +155,13 @@ paragraph_peer_ptx_and_latex_other.forEach( (el) => {
     before_end: "\n", after_end: "\n"}
     });
 
-
+// some special cases
+outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
 
 
 
@@ -198,7 +204,7 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 
  console.log("tmp1secondsplitENV", tmp1secondsplitENV);
 
-alert("look at oneline");
+//alert("look at oneline");
 //  maybe need another process text step here?
 
 // alert("second split");
@@ -236,7 +242,8 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
 //      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
       const tmp5w = extract_lists(tmp5z, "extract li", ["p"]);
-      const tmp5 = extract_lists(tmp5w, "statements", tags_needing_statements);
+      const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);
+      const tmp5 = extract_lists(tmp5v, "statements", tags_needing_statements);
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
