@@ -388,6 +388,26 @@ console.log("found a label:", this_label);
                   this_content.content = this_content.content.replace(/^\s*\\label{([^{}]*)}/, "")
             }
 
+          } else if (action == "statements"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "object" ) {  // actually, must be an array
+
+            let this_statement_content = [];
+
+            let element = "";
+            let index = 0;
+            for (index = 0; index < this_content.content.length; ++index) {
+                element = this_content.content[index]
+                if (statement_peers.includes(element.tag)) {
+                  break
+                } else {
+                  this_statement_content.push(element)
+                }
+            }
+
+            const this_statement = {tag: "statement", content: this_statement_content, id:"", attributes:"", title:""}
+            let remaining_pieces = this_content.content.slice(index);
+            remaining_pieces.unshift(this_statement);
+            this_content.content = remaining_pieces
           } 
 
 

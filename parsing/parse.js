@@ -84,6 +84,9 @@ let asymmetric_inline_delimiters = [
 // next is unused?
 const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint"];
 
+const tags_needing_statements = ["theorem", "definition", "exploration", "exercise", "lemma"];
+const statement_peers = ["hint", "answer", "solution", "proof"];
+
 const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
     "p", "text", "blockquote", "title"
@@ -203,13 +206,6 @@ alert("look at oneline");
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-
       console.log("tmp1secondsplitP",tmp1secondsplitP);
       console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
 
@@ -239,7 +235,8 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", text_like_tags);
 
 //      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
-      const tmp5 = extract_lists(tmp5z, "extract li", ["p"]);
+      const tmp5w = extract_lists(tmp5z, "extract li", ["p"]);
+      const tmp5 = extract_lists(tmp5w, "statements", tags_needing_statements);
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
