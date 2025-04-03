@@ -141,7 +141,7 @@ The next exercise would occur much later in the exposition,
 but this is a demonstration of FrankenMarkup, not a real
 textbook on group theory.
 
-\begin{exercise}
+\begin{exercise}[Flipping a mattress]
 \label{ex:hotel mattress}
 The Hilbert Hotel has mattresses which are both symmetric and comfortable:
 both sides can be used, and you can sleep with your feet pointing either

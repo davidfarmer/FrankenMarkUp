@@ -32,9 +32,9 @@ var theSpaceMathInML;
 
 const paragraph_peer_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
-          {left:"\\begin{equation}", right:"\\end{equation}", tag:"md"},
-          {left:"$$", right:"$$", tag:"md"},
-          {left:"\\[", right:"\\]", tag:"md"},
+          {left:"\\begin{equation}", right:"\\end{equation}", tag:"men"},
+          {left:"$$", right:"$$", tag:"men"},
+          {left:"\\[", right:"\\]", tag:"men"},
           {left:"<ol>", right:"</ol>", tag:"ol"},
           {left:"<ul>", right:"</ul>", tag:"ul"},
           {left:"\\begin{quote}", right:"\\end{quote}", tag:"blockquote"},
@@ -165,8 +165,8 @@ outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
          before_begin: "\n", after_begin: "\n",
          before_end: "\n", after_end: "\n"};
 
-outputtags["md"] = {begin_tag: "<md>", end_tag: "</md>",
-         before_begin: "", after_begin: "\n", // because probably source has the \n
+outputtags["men"] = {begin_tag: "<men", end_tag: "</men>",
+         before_begin: "", after_begin: ">\n", // because probably source has the \n
          before_end: "\n", after_end: "\n"};
 
 

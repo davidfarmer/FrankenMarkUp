@@ -32,7 +32,8 @@ const reassemblePreTeXt = function(content) {
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
       let mathpunctuation = "";
-      if (["md","me","mdn","men"].includes(this_tag)) {
+      if (["m","md","me","mdn","men"].includes(this_tag)) {
+         this_new_text = sanitizeXMLstring(this_new_text);
          if (this_new_text.match(/^.*(\.|,|;)\s*$/s)) {
 console.log("math punctuation",this_new_text);
 console.log(" the match", this_new_text.replace("^.*(\.|,|;)$", "$1"));
@@ -58,9 +59,18 @@ const sanitizeXMLattributes = function(text) {
 
     let new_text = text;
 
-    new_text = new_text.replace(/:/, "+");
-    new_text = new_text.replace(/ /, "-");
-    new_text = new_text.replace(/[^a-zA-Z0-9]\-+/, "_");
+    new_text = new_text.replace(/ /g, "-");
+    new_text = new_text.replace(/[^a-zA-Z0-9\-]/g, "_");
+
+    return new_text
+}
+const sanitizeXMLstring = function(text) {
+
+    let new_text = text;
+
+    new_text = new_text.replace(/&/g, "&amp;");
+    new_text = new_text.replace(/</g, "&lt;");
+    new_text = new_text.replace(/>/g, "&gt;");
 
     return new_text
 }
