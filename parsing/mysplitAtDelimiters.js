@@ -386,7 +386,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 //  console.log("maybe found a label", this_content.content);
                   let this_label = this_content.content.replace(/^\s*\\label{([^{}]*)}.*/s, "$1");
 //console.log("found a label:", this_label);
-                  this_label = sanitizeForXML(this_label);
+                  this_label = sanitizeXMLattributes(this_label);
                   this_content.label = this_label;
                   this_content.content = this_content.content.replace(/^\s*\\label{([^{}]*)}/, "")
             }
@@ -448,6 +448,58 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
             }
 
             this_content.content = this_statement_content
+
+          } else if (action == "absorb math"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "object" ) {  // actually, must be an array
+
+            let this_statement_content = [];
+
+            let element = "";
+            let index = 0;
+            let found_math = false;
+            let new_math_content = [];
+            let new_math_object = {tag: "p"};
+            let previouselement = "";
+            for (index = 0; index < this_content.content.length; ++index) {
+                element = this_content.content[index]
+
+                if (!found_math && !display_math_tags.includes(element.tag)) {
+                  if (previouselement) {
+                    this_statement_content.push(previouselement);
+                  }
+                  previouselement = element;
+                } else if (!found_math && display_math_tags.includes(element.tag)) {
+                  found_math = true;
+console.log("this_content", this_content);
+console.log("element", element);
+                  previouselement.content.push(element);
+                  this_statement_content.push(previouselement);
+                  previouselement = "";
+                  found_math = false
+// the next things cannot happen, which is good because we lack
+// the ability to tell of a p after me is part of the xame logical p
+                } else if (found_math && display_math_tags.includes(element.tag)) {
+                  new_math_content.push(element)
+                } else if (found_math && !display_math_tags.includes(element.tag)) {
+                  found_math = false;
+                  new_math_object.content = new_math_content;
+                  this_statement_content.push({...new_math_object});
+                  new_math_object = {tag: "p"};
+                  this_statement_content.push(element);
+                } 
+            }
+
+            if (index = 1) { // so, only one element in this list
+              this_statement_content.push(element);
+            }
+// cannot happen, right?
+            if (found_math) { //this means the environment ended with at math, which has not been saved
+      //        new_math_object.content = new_math_content;
+      //        this_statement_content.push({...new_math_object})
+alert("should not be here");
+            }
+
+            this_content.content = this_statement_content
           } 
 
 
@@ -475,6 +527,9 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
         let new_text = "";
         new_text = this_content.replace(/--/mg, "<mdash/>");
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
+        new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
+                                  return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
+                              });
 // console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
       

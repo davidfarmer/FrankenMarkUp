@@ -13,6 +13,7 @@ const reassemblePreTeXt = function(content) {
       const this_tag = element.tag;
 //  console.log("assembling a ", this_tag, "from", element);
       const these_tags = outputtags[this_tag];
+//  console.log("these_tags ", these_tags);
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
@@ -53,15 +54,13 @@ console.log("mathpunctuation", mathpunctuation);
     return assembled_text
 }
 
-const sanitizeForXML = function(text) {
+const sanitizeXMLattributes = function(text) {
 
     let new_text = text;
 
-    new_text = new_text.replace(/:/, "_");
+    new_text = new_text.replace(/:/, "+");
     new_text = new_text.replace(/ /, "-");
-    new_text = new_text.replace(/&/, "&amp;");
-    new_text = new_text.replace(/</, "&lt;");
-    new_text = new_text.replace(/>/, "&gt;");
+    new_text = new_text.replace(/[^a-zA-Z0-9]\-+/, "_");
 
     return new_text
 }
