@@ -170,7 +170,7 @@ reply which assumes the reader is familiar with the basic concepts of
 group theory, and a longer reply which you think the manager might understand.
 
 Hint:
-The fact that a mattress is 3-dimensional is irrelevant:
+The fact that a mattress is $3$-dimensional is irrelevant:
 model it as a rectangle.
 
 Hint:

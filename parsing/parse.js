@@ -82,7 +82,7 @@ let asymmetric_inline_delimiters = [
 ];
 
 // next is unused?
-const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note"];
+const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint"];
 
 const text_like_tags = [  // contain just text  (includes inline markup)
     "q", "em", "term", "alert", "li", // what if the content of an li is a p?
@@ -177,24 +177,11 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
       console.log("tmp1firstsplitP",tmp1firstsplitP);
       console.log("tmp1[2].content",tmp1firstsplitP[2].content);
 
-alert("first split P");
-
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
+// alert("first split P");
 
       var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
 //      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peers);
 
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
-      console.log("");
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
@@ -208,9 +195,10 @@ alert("first split P");
 
  console.log("tmp1secondsplitENV", tmp1secondsplitENV);
 
+alert("look at oneline");
 //  maybe need another process text step here?
 
-alert("second split");
+// alert("second split");
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
 //      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
