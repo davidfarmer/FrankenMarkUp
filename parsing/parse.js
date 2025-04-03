@@ -148,7 +148,7 @@ paragraph_peer_ptx_and_latex_text.forEach( (el) => {
 paragraph_peer_ptx_and_latex_other.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
-    before_begin: ">\n", after_begin: "\n",
+    before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
 

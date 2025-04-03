@@ -277,7 +277,7 @@ console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
-    the_text = the_text.replace(/(^|\s)\$([^\$\n]+)\$(\s|$|[.,!?;:])/mg, "$1<m>$2</m>$3");
+    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:])/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");

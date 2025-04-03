@@ -30,10 +30,21 @@ const reassemblePreTeXt = function(content) {
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
+      let mathpunctuation = "";
+      if (["md","me","mdn","men"].includes(this_tag)) {
+         if (this_new_text.match(/^.*(\.|,|;)\s*$/s)) {
+console.log("math punctuation",this_new_text);
+console.log(" the match", this_new_text.replace("^.*(\.|,|;)$", "$1"));
+            this_new_text = this_new_text.replace(/\s*$/,"");
+            mathpunctuation = this_new_text.slice(-1);
+console.log("mathpunctuation", mathpunctuation);
+            this_new_text = this_new_text.slice(0,-1)
+         }
+      }
 //      this_element_text = this_element_text.concat(reassemblePreTeXt(element.content));
       this_element_text = this_element_text + this_new_text;
       this_element_text = this_element_text +
-                these_tags.before_end + these_tags.end_tag + these_tags.after_end;
+                these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
 
       assembled_text = assembled_text + this_element_text;
 

@@ -6,7 +6,7 @@ tagged PreTeXt.  Within reason, of course!
 No need for `p` tags, just leave a blank line.  Within a paragraph you
 can define _terminology_, use *emphasis* or make an **alert**.
 You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
-official PreTeXt <m>sin x < x</m>.  Inside the math tags you can type
+official PreTeXt <m>sin x < abs x</m>.  Inside the math tags you can type
 LaTeX or Space Math.  (Currently the output is whatever you write.
 It will be converted to LaTeX soon, once I merge this new code with my
 Space Math code.)
@@ -31,7 +31,7 @@ Have you heard the one that starts "M\"obius and l'H\^opital walk into a bar..."
 These and more features are illustrated below.  To make it realistic,
 I started writing an introduction to group theory.
 
-Note: There is no support for sections or other divisions: it is the
+Note: There is no support for sections or other divisions, only the
 contents of just one (sub)section.
 
 
@@ -104,6 +104,7 @@ so the above equation becomes:
 $$
    e x = a^{-1} b .
 $$
+
 By definition of the identity, <m>e x = x</m>, so we obtain the solution $x = a^-1 b$.
 
 We see that identity, inverse, and associativity are the
@@ -188,9 +189,9 @@ Suppose $e_1$ and $e_2$ are identity elements of a group $G$.  We have
 $$\label{eqn:e_1 e_2}
 e_1 e_2 = e_1
 
-=e_2
+=e_2,
 $$
-Where the first equality uses the fact that $e_1$ is the identity and
+where the first equality uses the fact that $e_1$ is the identity and
 the second equality uses the fact that $e_2$ is the identity.
 Thus, $e_1 = e_2$.
 </proof>
@@ -198,7 +199,10 @@ Thus, $e_1 = e_2$.
 Note:
 The above is not a good model for students who are new to proofs,
 but I needed a display equation with multiple lines to check
-if parsing was working properly.
+if parsing was working properly.  Also, currently the conversion
+mistakenly makes a paragraph break after the display math in the proof.
+Not sure if that is worth fixing, or whether the way the source
+is processed makes it possible to preserve that information?
 
 Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress},
 and a reference to the equation in the lemma: \eqref{eqn:e_1 e_2}.
