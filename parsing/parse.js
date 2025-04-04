@@ -183,7 +183,7 @@ if (sourceTextArea.addEventListener) {
 
       let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
 console.log("tmpfirstsplitMATH", tmpfirstsplitMATH);
-alert("tmpfirstsplitMATH");
+// alert("tmpfirstsplitMATH");
       let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
       let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
       let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");

@@ -472,7 +472,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
           } else if (action == "absorb math"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "object" ) {  // actually, must be an array
 
-            let this_statement_content = [];
+            let this_p_content = [];
 
             let element = "";
             let index = 0;
@@ -485,11 +485,11 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                 if (!found_math && !display_math_tags.includes(element.tag)) {
                   found_math = false;
                   if (new_math_object.content.length) {
-                    this_statement_content.push({...new_math_object});
+                    this_p_content.push({...new_math_object});
                     new_math_object = {tag: "p", content: []}
                   }  // should this be else if?  can both happen?
                   if (previouselement) {
-                    this_statement_content.push({...previouselement});
+                    this_p_content.push({...previouselement});
                   }
                   previouselement = element;
                 } else if (!found_math && display_math_tags.includes(element.tag)) {
@@ -512,23 +512,55 @@ alert("ul=nlikely", element);
                 } else if (found_math && !display_math_tags.includes(element.tag)) {
                   found_math = false;
               // need to determine if this is a continuation paragraph
-              // for now, suppose no
-                  this_statement_content.push({...new_math_object});
-                  previous_element = element;
-                  new_math_object = {tag: "p", content: []};
-                } 
+                  if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
+                    element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
+                    new_math_object.content.push({tag: "text", content: element.content});
+                    previouselement = "";
+                    found_math = false
+                  } else if (typeof element.content == "object" && 
+                       element.content[0].tag == "text" &&
+                       element.content[0].content.match(/^\s*\+\+\+saMePaR/)) {
+                    element.content[0].content = element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,"");
+          //          new_math_object.content.push({tag: "text", content: element.content});
+          //          new_math_object.content.push({...element});
+                    new_math_object.content = new_math_object.content.concat(element.content);
+                    previouselement = "";
+                    found_math = false
+                  } else {
+console.log("did we miss a case?", element.content[0].content.match(/^\s*\+\+\+saMePaR/), "  ", element);
+console.log(typeof element.content == "object" && 
+                       typeof element.content[0].tag == "text" &&
+                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
+console.log(typeof element.content == "object" ," a ", 
+                       typeof element.content[0].tag == "text" ," a ",
+                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
+console.log(typeof element.content ," a ", 
+                       typeof element.content[0].tag  ," a ",
+                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
+console.log(element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,""));
+                // for now, suppose no
+                    this_p_content.push({...new_math_object});
+                    previouselement = element;
+                    new_math_object = {tag: "p", content: []};
+                  } 
+               }
             }
 
-            if (index = 1) { // so, only one element in this list
-              this_statement_content.push({...element});
+//            if (index = 1) { // so, only one element in this list
+//              this_p_content.push({...element});
+//            }
+    //        if (found_math) { //this means the environment ended with at math, which has not been saved
+            if (new_math_object.content.length) { //this means the environment ended with at math, which has not been saved
+                        // or should we examine new_math_object.content.length ?
+              this_p_content.push({...new_math_object})
             }
-            if (found_math) { //this means the environment ended with at math, which has not been saved
-              this_statement_content.push({...new_math_object})
+            if (previouselement) { 
+              this_p_content.push({...previouselement})
             }
 
-            this_content.content = this_statement_content
+            this_content.content = this_p_content
           } 
-
+// end of many special transformations
 
           let this_node = {...this_content};
           if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action, tags_to_process, this_node.tag) }
