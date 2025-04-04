@@ -17,11 +17,11 @@ const reassemblePreTeXt = function(content) {
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
-      if (element.attributes) { this_element_text += " " + element.attributes.trim() }
-      if (element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
+      if ("attributes" in element && element.attributes) { this_element_text += " " + element.attributes.trim() }
+      if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
       this_element_text += these_tags.after_begin;
 
-      if (element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
+      if ("title" in element && element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
 
 //      this_element_text = this_element_text.concat(element.content);
       let this_new_text = reassemblePreTeXt(element.content);

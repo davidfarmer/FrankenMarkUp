@@ -241,8 +241,6 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
     //        type: "math",
             tag: delimiters[i].tag,
             content: mathcontent,
-            attributes: "",
-            id: "",
      //       rawData,
         });
         text = text.slice(index + delimiters[i].right.length);
@@ -252,8 +250,6 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
         data.push({
             tag: "text",
             content: text,
-            attributes: "",
-            id: "",
         });
     }
 
@@ -336,9 +332,10 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                 this_content.tag = new_tag;
                 this_content.content = new_content;
                 this_content.parenttag = "ul"
-            } else if (this_content.content.match(/^\s*[0-9]+\.*\s/)) {
+            } else if (this_content.content.match(/^\s*\(*[0-9]+\.*\)*\s/)) {
+                //looking for 1 or 1. or 1) or (1) or (1.)
                 const new_tag = "li";
-                const new_content = this_content.content.replace(/^\s*[0-9]+\.*\s*/,"");
+                const new_content = this_content.content.replace(/^\s*\(*[0-9]+\.*\)*\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
@@ -348,13 +345,13 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
           } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*[^\n<>]*>/)) {
+            if (this_content.content.match(/^\s*[^\n<>+]*>/)) {
  // console.log("maybe found an attribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
                 } else {
                   let this_attribute = this_content.content.split(">", 1)[0];
-                  this_content.content = this_content.content.replace(/^\s*[^\n<>]*>/, "")
+                  this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
                   this_content.attributes += this_attribute;  // could there already be attributes?
                 }
             }
@@ -407,10 +404,33 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                 }
             }
 
-            const this_statement = {tag: "statement", content: this_statement_content, id:"", attributes:"", title:""}
+            const this_statement = {tag: "statement", content: this_statement_content}
             let remaining_pieces = this_content.content.slice(index);
             remaining_pieces.unshift(this_statement);
             this_content.content = remaining_pieces
+
+          } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {  // also must handle case of array
+
+            if (this_content.content.match(/^\s*\+\+\+sTaRTbQ>/)) {
+              let new_content_text = this_content.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
+              new_content_text = new_content_text.replace(/\n\s*>/g, "\n");
+      // need to handle the case that there are multiple paragraphs
+              let new_content_separated = new_content_text.split(/\n{2,}/);
+              let new_content_list = [];
+              new_content_separated.forEach( (element, index) => {
+                  new_content_list.push({tag: "p", content: element});
+              });
+              this_content.content = new_content_list;
+              this_content.tag = "blockquote";
+            }
+
+          } else if (action == "extraneous math"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) { 
+
+       //  because $$ are both begin and end tags, markers were mistakenly also put
+       // at the start of $$ math.  So remove them
+              this_content.content = this_content.content.replace(/^\s*\+\+\+saMePaR/, "");
 
           } else if (action == "gather li"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "object" ) {  // actually, must be an array
@@ -457,46 +477,53 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
             let element = "";
             let index = 0;
             let found_math = false;
-            let new_math_content = [];
-            let new_math_object = {tag: "p"};
+            let new_math_object = {tag: "p", content: []};
             let previouselement = "";
             for (index = 0; index < this_content.content.length; ++index) {
                 element = this_content.content[index]
 
                 if (!found_math && !display_math_tags.includes(element.tag)) {
+                  found_math = false;
+                  if (new_math_object.content.length) {
+                    this_statement_content.push({...new_math_object});
+                    new_math_object = {tag: "p", content: []}
+                  }  // should this be else if?  can both happen?
                   if (previouselement) {
-                    this_statement_content.push(previouselement);
+                    this_statement_content.push({...previouselement});
                   }
                   previouselement = element;
                 } else if (!found_math && display_math_tags.includes(element.tag)) {
+                  // now we build a compound p
                   found_math = true;
 console.log("this_content", this_content);
 console.log("element", element);
-                  previouselement.content.push(element);
-                  this_statement_content.push(previouselement);
+console.log("previouselement", previouselement);
+          //        if (previouselement) {new_math_object.content.push(previouselement)}
+                  if (previouselement) {new_math_object.content = new_math_object.content.concat(previouselement.content)}
+                  new_math_object.content.push({...element});  // okay b/c just one string
                   previouselement = "";
-                  found_math = false
-// the next things cannot happen, which is good because we lack
-// the ability to tell of a p after me is part of the xame logical p
+console.log("new_math_object", new_math_object);
                 } else if (found_math && display_math_tags.includes(element.tag)) {
-                  new_math_content.push(element)
+                  // this can only happen with consecutuve display math.
+                  // so we handle that case, but it should not happen
+            //      new_math_object.content.push({...element})
+alert("ul=nlikely", element);
+                  new_math_object.content.push({...element})
                 } else if (found_math && !display_math_tags.includes(element.tag)) {
                   found_math = false;
-                  new_math_object.content = new_math_content;
+              // need to determine if this is a continuation paragraph
+              // for now, suppose no
                   this_statement_content.push({...new_math_object});
-                  new_math_object = {tag: "p"};
-                  this_statement_content.push(element);
+                  previous_element = element;
+                  new_math_object = {tag: "p", content: []};
                 } 
             }
 
             if (index = 1) { // so, only one element in this list
-              this_statement_content.push(element);
+              this_statement_content.push({...element});
             }
-// cannot happen, right?
             if (found_math) { //this means the environment ended with at math, which has not been saved
-      //        new_math_object.content = new_math_content;
-      //        this_statement_content.push({...new_math_object})
-alert("should not be here");
+              this_statement_content.push({...new_math_object})
             }
 
             this_content.content = this_statement_content

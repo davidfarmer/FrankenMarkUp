@@ -40,9 +40,11 @@ A _group_ is a set $G$ along with a binary operation $dot$ such that:
 
   - The operation is associative: if $a,b,c in G$ then <m>a dot (b dot c) = (a dot b) dot c</m>.
 
-  - There exists an _identity element_ $e in G$ such that $e dot a = a$ and $a dot e = a$ for all $a in G$.
+  - There exists an _identity element_ $e in G$ such that
+$e dot a = a$ and $a dot e = a$ for all $a in G$.
 
-  - For each $a in G$ there exists an _inverse_ element $b in G$ such that $a dot b = e$ and $b dot a = e$.
+  - For each $a in G$ there exists an _inverse_
+     element $b in G$ such that $a dot b = e$ and $b dot a = e$.
 \end{definition}
 
 To speak of a group one must refer to both the set and the operation.
@@ -155,7 +157,7 @@ the following memo:
 
 <blockquote>
 To help the mattresses last longer, every month we rotate the mattresses.
-I suspect that the staff is not keeping track of how they flip the mattresses,
+I suspect that the staff are not keeping track of how they flip the mattresses,
 and so parts of the mattress are being used excessively, causing it to
 wear out too quickly.
 
@@ -206,5 +208,10 @@ is processed makes it possible to preserve that information?
 
 Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress},
 and a reference to the equation in the lemma: \eqref{eqn:e_1 e_2}.
+
+> An egregious block quote in the markdown style.
+>
+  > Checking that multiple paragraph markdown blockquotes are working.
+     and that the required markup is not strict.
 
 End of FrankenMarkup demo.

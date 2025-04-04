@@ -173,11 +173,18 @@ outputtags["men"] = {begin_tag: "<men", end_tag: "</men>",
 if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
 
-      var tmpfirstsplit = splitTextAtDelimiters(sourceTextArea.value, paragraph_peer_delimiters);
+      const originaltext = sourceTextArea.value;
+      let originaltextA = originaltext.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+      let originaltextB = originaltextA.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
+
+      var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
       console.log("tmpfirstsplit",tmpfirstsplit);
 
-      let tmpfirstsplitATT = extract_lists(tmpfirstsplit, "attributes", "all");
+      let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
+console.log("tmpfirstsplitMATH", tmpfirstsplitMATH);
+alert("tmpfirstsplitMATH");
+      let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
       let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
       let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
 
@@ -199,7 +206,8 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
       console.log("tmp1secondsplit",tmp1secondsplit);
       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
-      let tmp1secondsplitATT = extract_lists(tmp1secondsplit, "attributes", "all");
+      let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
+      let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
       let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
       let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
 
@@ -246,7 +254,8 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", text_like_tags);
 
 //      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
-      const tmp5w = extract_lists(tmp5z, "extract li", ["p"]);
+      const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);
+      const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
       const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);
       const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
       const tmp5 = extract_lists(tmp5u, "statements", tags_needing_statements);
