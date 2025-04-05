@@ -1,30 +1,38 @@
 
 // this list is not used, it serves to help keep track of tags requiring special attention
-randomtags = ["fn", "footnote", "title", "statement", "reading-questions",
+const randomtags = ["fn", "footnote", "title", "statement", "reading-questions",
               "figure", "image", "introduction", "output", "blockquote",
-              "definition", "exercisegroup", "mrow", "sidebyside", "worksheet",
+              "definition", "exercisegroup", "exercises", "mrow", "sidebyside",
+              "worksheet", "case", "task",
               "table"];
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-list-like = ["ol", "ul", "dl];
+const list-like = ["ol", "ul", "dl];
 
-aside-like = ["aside", "historical", "biographical"];
+const aside-like = ["aside", "historical", "biographical"];
 
-theorem-like = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"];
+const theorem-like = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"];
 
 // can definition be axiom-like?
-axiom-like = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"]
+const axiom-like = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"]
 
-remark-like = ["convention", "insight", "note", "observation", "remark", "warning"];
+const remark-like = ["convention", "insight", "note", "observation", "remark", "warning"];
 
-example-like = ["example", "problem", "question"]
+const example-like = ["example", "problem", "question"]
 
-definition-like = ["definition", "axiom"]
+const definition-like = ["definition", "axiom"]
 
-hint-like = ["hint", "answer", "solution"];
+const hint-like = ["hint", "answer", "solution"];
 
-project-like = ["activity", "exploration", "investigation", "project"]
+const project-like = ["activity", "exploration", "investigation", "project"]
 
-exercise-like = ["exercise'];
+const exercise-like = ["exercise"];
 
+const inlinetags = ["em", "term", "alert", "m", "q", "c"];
+
+//  
+
+const tags_needing_statements = [...theorem-like, ...axiom-like, ...exercise-like];
+
+const tags_containing_text = ["text", "p", "fn", "em", "term", "q"];
