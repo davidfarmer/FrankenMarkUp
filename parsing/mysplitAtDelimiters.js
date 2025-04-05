@@ -346,13 +346,19 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*[^\n<>+]*>/)) {
- // console.log("maybe found an attribute", this_content.content);
+  console.log("maybe found an attribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
                 } else {
                   let this_attribute = this_content.content.split(">", 1)[0];
+
+  console.log("this attribute", this_attribute);
                   this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
-                  this_content.attributes += this_attribute;  // could there already be attributes?
+                  if ("attributes" in this_content) {
+                    this_content.attributes += this_attribute
+                  } else {
+                    this_content.attributes = this_attribute
+                  }
                 }
             }
 
@@ -495,19 +501,19 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                 } else if (!found_math && display_math_tags.includes(element.tag)) {
                   // now we build a compound p
                   found_math = true;
-console.log("this_content", this_content);
-console.log("element", element);
-console.log("previouselement", previouselement);
+// console.log("this_content", this_content);
+// console.log("element", element);
+// console.log("previouselement", previouselement);
           //        if (previouselement) {new_math_object.content.push(previouselement)}
                   if (previouselement) {new_math_object.content = new_math_object.content.concat(previouselement.content)}
                   new_math_object.content.push({...element});  // okay b/c just one string
                   previouselement = "";
-console.log("new_math_object", new_math_object);
+// console.log("new_math_object", new_math_object);
                 } else if (found_math && display_math_tags.includes(element.tag)) {
                   // this can only happen with consecutuve display math.
                   // so we handle that case, but it should not happen
             //      new_math_object.content.push({...element})
-alert("ul=nlikely", element);
+alert("consecutive math?", element);
                   new_math_object.content.push({...element})
                 } else if (found_math && !display_math_tags.includes(element.tag)) {
                   found_math = false;

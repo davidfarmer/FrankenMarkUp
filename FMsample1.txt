@@ -1,15 +1,14 @@
 
 Welcome to a sample of FrankenMarkup: an easy way to write a subset of PreTeXt.
-Just mix together LaTeX, Markdown, and PreTeXt, and out comes properly
-tagged PreTeXt.  Within reason, of course!
+Just mix together LaTeX, Markdown, and PreTeXt, and hope for the best!
 
 No need for `p` tags, just leave a blank line.  Within a paragraph you
-can define _terminology_, use *emphasis* or make an **alert**.
+can define _terminology_, use *emphasis*, or make an **alert**.
 You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
-official PreTeXt <m>sin x < abs x</m>.  Inside the math tags you can type
-LaTeX or Space Math.  (Currently the output is whatever you write.
-It will be converted to LaTeX soon, once I merge this new code with my
-Space Math code.)
+official PreTeXt <m>sin x <= abs x</m>.  Inside the math tags you can type
+LaTeX or, as in this demo, Space Math.  (Currently the output is LaTeX, which is unfortunate
+because information is lost.  It will be better when PreTeXt
+allows Space Math or MathML in the source.)
 
 Note:
 If you start a paragraph with one word followed by a colon,
@@ -21,11 +20,11 @@ You can use LaTeX-style `begin` and `end` tags, or PreTeXt angle
 brackets.
 
 You need to use the begin and end style if the environment
-is more than just one paragraph of text.  Also supported is
+has more than just one paragraph of text.  Also supported is
 (the most common)
 LaTeX-style font markup:
 
-Have you heard the one that starts "M\"obius and l'H\^opital walk into a bar..."?
+> Have you heard the one that starts "M\"obius and l'H\^opital walk into a bar..."?
 \end{note}
 
 These and more features are illustrated below.  To make it realistic,
@@ -36,15 +35,15 @@ contents of just one (sub)section.
 
 
 \begin{definition}
-A _group_ is a set $G$ along with a binary operation $dot$ such that:
+A _group_ is a set $G$ along with a binary operation $of$ such that:
 
-  - The operation is associative: if $a,b,c in G$ then <m>a dot (b dot c) = (a dot b) dot c</m>.
+  - The operation is associative: if $a,b,c in G$ then <m>a of (b of c) = (a of b) of c</m>.
 
   - There exists an _identity element_ $e in G$ such that
-$e dot a = a$ and $a dot e = a$ for all $a in G$.
+$e of a = a$ and $a of e = a$ for all $a in G$.
 
   - For each $a in G$ there exists an _inverse_
-     element $b in G$ such that $a dot b = e$ and $b dot a = e$.
+     element $b in G$ such that $a of b = e$ and $b of a = e$.
 \end{definition}
 
 To speak of a group one must refer to both the set and the operation.
@@ -59,6 +58,25 @@ operation is intended.  Say what you mean, and only use what is (explicitly) sai
 Exercise:
 Explain why the condition *nonempty* was included in the previous paragraph.
 
+We will now contradict what we wrote about needing to specify the operation!
+It is perfectly fine to say "Let $G$ be a group."  Because $G$ is a group,
+by definition it has an operation, we just haven't
+specified a symbol for the operation.  If we wish to combine two elements
+in the group, we just write them next to each other.
+For example: if $x$ and $y$ are elements of $G$, then so are $x y$ and~$y x$.
+<xref ref="oneId"/> uses that notation.
+
+As you start your study of group theory,
+you may find it helpful to write a symbol for the group operation.
+When none has been given, we recommend the symbol <m>of</m> used in the definition.  You may have
+encountered that symbol when learning about composition of
+functions: \(f of g(x) = f(g(x))\).  Both sides of that equation are
+pronounced "f of g of x".  That notation for the group operation is meant to be suggestive, for soon
+we will see that *every* group can be thought of as a set of functions,
+where the operation is function composition.
+
+\begin{historical}
+<title>Galois invents group theory</title>
 The idea of a group was introduced by the French mathematician \'Evariste Galois,
 who used groups to answer the question:  when is there a nice formula for the
 roots of a polynomial?  Most people know the quadratic formula.  There are
@@ -73,11 +91,13 @@ behave so differently?
 Galois figured out the answer.
 He discovered that to each polynomial there can be associated a group,
 known today as the "Galois group" of the polynomial.  Properties of that group,
-which we will explore later, 
+which we will explore later,
 tell you whether there exists a nice formula for the roots.
+\end{historical}
+
 
 Beyond questions about roots of polynomials,
-why are groups important?  In particular, why are those three 
+why are groups important?  In particular, why are those three
 axioms natural?
 We will answer that question by looking at the details of how to solve the
 simplest possible equations.
@@ -85,7 +105,7 @@ simplest possible equations.
 \begin{exploration}[Why the group axioms are natural]
 Suppose we want to solve the equation $a x = b$.  Thinking back to
 when you first learned about solving equations, the main idea was:
-do the same operation on both sides of the equals sign, 
+do the same operation on both sides of the equals sign,
 and use algebraic identities,
 
 First step, multiply on the left by $a^-1$:
@@ -93,7 +113,7 @@ $$
   a^-1 (a x) = a^-1 b .
 $$
 We have just encountered one of the axioms of a group: the existence of
-an inverse.  
+an inverse.
 In the above equation we included the parentheses to emphasize the fact that $a^-1$ is
 multiplying the left side of the equation, which is the *quantity* $a x$.
 Now we regroup (i.e., use associativity) to get
@@ -187,27 +207,28 @@ The identity element of a group is unique.
 </lemma>
 
 <proof>
-Suppose $e_1$ and $e_2$ are identity elements of a group $G$.  We have
-$$\label{eqn:e_1 e_2}
-e_1 e_2 = e_1
-
-=e_2,
+Suppose $e_1$ and $e_2$ are identity elements of a group $G$,
+and consider the expression $e_1 e_2$.  
+By the first part of the identity axiom we have
+$$\label{eqn:e_1 e_2 first part}
+e_1 e_2 = e_2,
 $$
-where the first equality uses the fact that $e_1$ is the identity and
-the second equality uses the fact that $e_2$ is the identity.
-Thus, $e_1 = e_2$.
+because \(e_1\) is an identity.
+Using the second part of the identity axiom we have
+\begin{equation}
+\label{eqn:e_1 e_2 second part}
+e_1 e_2 = e_1,
+\end{equation}
+because $e_2$ is an identity.
+Since the left sides of \eqref{eqn:e_1 e_2 first part} and \ref{eqn:e_1 e_2 second part}
+are the same, we see that $e_1 = e_2$.
 </proof>
 
 Note:
-The above is not a good model for students who are new to proofs,
-but I needed a display equation with multiple lines to check
-if parsing was working properly.  Also, currently the conversion
-mistakenly makes a paragraph break after the display math in the proof.
-Not sure if that is worth fixing, or whether the way the source
-is processed makes it possible to preserve that information?
+Labeling and referencing those equations was a bit excessive,
+but this is a demo, not a real textbook.
 
-Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress},
-and a reference to the equation in the lemma: \eqref{eqn:e_1 e_2}.
+Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress}.
 
 > An egregious block quote in the markdown style.
 >

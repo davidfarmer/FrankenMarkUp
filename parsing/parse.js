@@ -45,7 +45,8 @@ const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline
                                              // oops: what about lists and display math?
     "theorem", "proposition", "lemma", "corollary", "conjecture",
     "definition", "exploration", "exercise", 
-    "hint", "answer", "solution", "aside",
+    "hint", "answer", "solution",
+    "aside", "historical",
     "principle", "claim", "remark", "note", "example", "proof"
 ];
 const paragraph_peer_ptx_and_latex_other = [
@@ -84,7 +85,7 @@ let asymmetric_inline_delimiters = [
 ];
 
 // next is unused?
-const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint"];
+const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint", "aside", "historical"];
 
 const tags_needing_statements = ["theorem", "definition", "exploration", "exercise", "lemma"];
 const statement_peers = ["hint", "answer", "solution", "proof"];
