@@ -53,8 +53,6 @@ const paragraph_peer_ptx_and_latex_other = [
     "figure", "li",
 ];
 
-const display_math_tags = ["me", "md", "men", "mdn"];
-
 // Note: no ">" in opening, because could have attributes,
 // which are parsed later
 paragraph_peer_ptx_and_latex_text.forEach( (el) => {
@@ -87,13 +85,8 @@ let asymmetric_inline_delimiters = [
 // next is unused?
 const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint", "aside", "historical"];
 
-const tags_needing_statements = ["theorem", "definition", "exploration", "exercise", "lemma"];
+//const tags_needing_statements = ["theorem", "definition", "exploration", "exercise", "lemma"];
 const statement_peers = ["hint", "answer", "solution", "proof"];
-
-const text_like_tags = [  // contain just text  (includes inline markup)
-    "q", "em", "term", "alert", "li", // what if the content of an li is a p?
-    "p", "text", "blockquote", "title"
-];
 
 const inline_ptx_tags = [  //meaning: don't add space around them
     "m", "c", "q", "em", "term", "alert"
@@ -229,7 +222,7 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
       console.log("tmp1secondsplitP",tmp1secondsplitP);
       console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
 
-      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", text_like_tags);
+      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
       console.log("tmp2:",tmp2);
       console.log("tmp2[1].content:",tmp2[1].content);
@@ -237,22 +230,22 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", text_like_tags);
+      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", tags_containing_text);
       console.log("tmp3:",tmp3);
       console.log("tmp3[1].content:",tmp3[1].content);
       console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
 
 
 console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
-      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", text_like_tags);
+      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
  //     const tmp4p = reassemblePreTeXt(tmp4);
 
 //      console.log("tmp4p:",tmp4p);
 
-      const tmp5x = extract_lists(tmp4, "fonts", text_like_tags);
-      const tmp5y = extract_lists(tmp5x, "texlike", text_like_tags);
-      const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", text_like_tags);
+      const tmp5x = extract_lists(tmp4, "fonts", tags_containing_text);
+      const tmp5y = extract_lists(tmp5x, "texlike", tags_containing_text);
+      const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", tags_containing_text);
 
 //      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
       const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);

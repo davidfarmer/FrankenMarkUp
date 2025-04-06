@@ -6,7 +6,7 @@ No need for `p` tags, just leave a blank line.  Within a paragraph you
 can define _terminology_, use *emphasis*, or make an **alert**.
 You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
 official PreTeXt <m>sin x <= abs x</m>.  Inside the math tags you can type
-LaTeX or, as in this demo, Space Math.  (Currently the output is LaTeX, which is unfortunate
+either LaTeX or, as in this demo, Space Math.  (Currently the output is LaTeX, which is unfortunate
 because information is lost.  It will be better when PreTeXt
 allows Space Math or MathML in the source.)
 
@@ -15,12 +15,17 @@ If you start a paragraph with one word followed by a colon,
 the word becomes the name of the environment and the
 paragraph becomes the contents.
 
-\begin{note}
-You can use LaTeX-style `begin` and `end` tags, or PreTeXt angle
-brackets.
+Most block-level components can be typed as LaTeX-style
+`\begin{tag}...\end{tag}` or PreTeXt-style `<tag>...</tag>`.
+If it is only one block of text, just put `tag:` or `Tag:` at the
+start of that text.  And if it is within a paragraph and is really short and simple,
+usually meaning it fits on one line and contains no brackes,
+you can type it as `\tag{...}`.\footnote{Like this!}
 
-You need to use the begin and end style if the environment
+\begin{note}
+You need to mark the beginning and ending if the environment
 has more than just one paragraph of text.  Also supported is
+markdown lists and block quotes, and
 (the most common)
 LaTeX-style font markup:
 
@@ -61,16 +66,23 @@ Explain why the condition *nonempty* was included in the previous paragraph.
 We will now contradict what we wrote about needing to specify the operation!
 It is perfectly fine to say "Let $G$ be a group."  Because $G$ is a group,
 by definition it has an operation, we just haven't
-specified a symbol for the operation.  If we wish to combine two elements
-in the group, we just write them next to each other.
+specified a symbol for the operation. We could also write "Let \m{(H, !)} be a group."
+to indicate that <m>H</m> is the name of the group and <m>!</m> is the symbol for the operation.
+Note that in this situation the symbol "$!$" does not mean what it usually means in mathematics.
+ If we wish to combine two elements and we don't know the symbol for the operation,
+just write them next to each other.
 For example: if $x$ and $y$ are elements of $G$, then so are $x y$ and~$y x$.
 <xref ref="oneId"/> uses that notation.
 
 As you start your study of group theory,
 you may find it helpful to write a symbol for the group operation.
-When none has been given, we recommend the symbol <m>of</m> used in the definition.  You may have
+When none has been given, we recommend the symbol <m>of</m> used in our definition.
+If you decide to do that, leave a note for the reader, 
+sush as
+"We will use $of$ for the group opertation."
+You may have
 encountered that symbol when learning about composition of
-functions: \(f of g(x) = f(g(x))\).  Both sides of that equation are
+functions: \(f of g(x) = f(g(x))\).  In that situation, both sides of that equation are
 pronounced "f of g of x".  That notation for the group operation is meant to be suggestive, for soon
 we will see that *every* group can be thought of as a set of functions,
 where the operation is function composition.
@@ -93,6 +105,17 @@ He discovered that to each polynomial there can be associated a group,
 known today as the "Galois group" of the polynomial.  Properties of that group,
 which we will explore later,
 tell you whether there exists a nice formula for the roots.
+
+These days "Galois theory" is an entire branch of research mathematics.
+One of the (many) problems which have not been solved is:
+Is every finite group the Galois group of a polynomial with rational coefficients?
+This is known as _The Inverse Galois Problem_.
+As of this writing, the most recent advance on this problem
+was the discovery in November 2024 of a degree 17 polynomial with Galois group~$"17T7"$.
+The paper describing their results, which uses methods far beyond basic
+group theory, \href{https://arxiv.org/abs/2411.07857}{is available on arXiv},
+or you can <url href="https://www.lmfdb.org/NumberField/?galois_group=17T7">see
+examples in the LMFDB"</url>.
 \end{historical}
 
 
