@@ -31,6 +31,9 @@ const reassemblePreTeXt = function(content) {
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
+      if (["c","code"].includes(this_tag)) {
+          this_new_text = sanitizeXMLstring(this_new_text)
+      }
       let mathpunctuation = "";
       if (["m","md","me","mdn","men"].includes(this_tag)) {
     //     this_new_text = sanitizeXMLstring(this_new_text);

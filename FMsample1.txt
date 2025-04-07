@@ -19,7 +19,7 @@ Most block-level components can be typed as LaTeX-style
 `\begin{tag}...\end{tag}` or PreTeXt-style `<tag>...</tag>`.
 If it is only one block of text, just put `tag:` or `Tag:` at the
 start of that text.  And if it is within a paragraph and is really short and simple,
-usually meaning it fits on one line and contains no brackes,
+usually meaning it fits on one line and contains no brackets,
 you can type it as `\tag{...}`.\footnote{Like this!}
 
 \begin{note}
@@ -35,7 +35,7 @@ LaTeX-style font markup:
 These and more features are illustrated below.  To make it realistic,
 I started writing an introduction to group theory.
 
-Note: There is no support for sections or other divisions, only the
+Note: Currently there is no support for sections or other divisions, only the
 contents of just one (sub)section.
 
 
@@ -78,8 +78,8 @@ As you start your study of group theory,
 you may find it helpful to write a symbol for the group operation.
 When none has been given, we recommend the symbol <m>of</m> used in our definition.
 If you decide to do that, leave a note for the reader, 
-sush as
-"We will use $of$ for the group opertation."
+such as
+"We will use $of$ for the group operation."
 You may have
 encountered that symbol when learning about composition of
 functions: \(f of g(x) = f(g(x))\).  In that situation, both sides of that equation are
