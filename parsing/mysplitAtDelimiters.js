@@ -294,7 +294,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
     let current_new_text = "";
 
     if (Array.isArray(this_content)) {
-// console.log("found an array, length", this_content);
+//  console.log("found an array, length", this_content);
 
         this_content.forEach( (element, index) => {
 
@@ -403,7 +403,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
             let index = 0;
             for (index = 0; index < this_content.content.length; ++index) {
                 element = this_content.content[index]
-                if (statement_peers.includes(element.tag)) {
+                if (hint_like.includes(element.tag)) {
                   break
                 } else {
                   this_statement_content.push(element)

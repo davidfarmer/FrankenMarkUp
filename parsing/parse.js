@@ -28,7 +28,7 @@ fetch("dictionary.json").then(
       )
       */
 
-var theSpaceMathInML;
+console.log("math_tags`", math_tags);
 
 const paragraph_peer_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
@@ -81,12 +81,6 @@ let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"m"},
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
-
-// next is unused?
-const tags_containing_paragraphs = ["text", "blockquote", "theorem", "definition", "exploration", "exercise", "proof", "lemma", "note", "hint", "aside", "historical"];
-
-//const tags_needing_statements = ["theorem", "definition", "exploration", "exercise", "lemma"];
-const statement_peers = ["hint", "answer", "solution", "proof"];
 
 const inline_ptx_tags = [  //meaning: don't add space around them
     "m", "c", "q", "em", "term", "alert"
@@ -176,7 +170,6 @@ if (sourceTextArea.addEventListener) {
       console.log("tmpfirstsplit",tmpfirstsplit);
 
       let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
-console.log("tmpfirstsplitMATH", tmpfirstsplitMATH);
 // alert("tmpfirstsplitMATH");
       let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
       let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
@@ -201,6 +194,8 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
       let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
+console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
+
       let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
       let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
       let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
@@ -211,12 +206,6 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 
  console.log("tmp1secondsplitENV", tmp1secondsplitENV);
 
-//alert("look at oneline");
-//  maybe need another process text step here?
-
-// alert("second split");
-//      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", "all", "", tags_containing_paragraphs);
-//      var tmp1secondsplitP = splitAtDelimiters(tmp1secondsplit, "makeparagraphs", tags_containing_paragraphs, "", tags_containing_paragraphs);
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
       console.log("tmp1secondsplitP",tmp1secondsplitP);

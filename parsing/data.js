@@ -1,10 +1,10 @@
 
 // this list is not used, it serves to help keep track of tags requiring special attention
 const randomtags = ["fn", "title", "statement", "reading-questions",
-              "figure", "image", "introduction", "output", "blockquote",
-              "definition", "exercisegroup", "exercises", "mrow", "sidebyside",
-              "worksheet", "case", "task",
-              "table", "idx", "url"];
+              "introduction", "output",
+              "exercisegroup", "exercises", "mrow", "sidebyside",
+              "worksheet" // is that a "division"?
+];
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
@@ -21,19 +21,38 @@ const remark_like = ["convention", "insight", "note", "observation", "remark", "
 
 const example_like = ["example", "problem", "question"]
 
-const definition_like = ["definition", "axiom"]
-
-const hint_like = ["hint", "answer", "solution"];
-
-const project_like = ["activity", "exploration", "investigation", "project"]
+const definition_like = ["definition"]
 
 const exercise_like = ["exercise"];
 
-const inlinetags = ["em", "term", "alert", "m", "q", "c"];
+const proof_like = ["proof"];
+
+const project_like = ["activity", "exploration", "investigation", "project"];
 
 const display_math_tags = ["md", "mdn", "me", "men"];  // let's get rid of me and men
 
-const math_tags = ["m", [...display_math_tags]];
+const hint_like = ["hint", "answer", "solution"];
+
+const subpart_like = ["case", "task"];
+
+const inlinetags = ["em", "term", "alert", "m", "q", "c"];
+
+const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
+const possibly_self_closing_inline_tags = ["url"];
+
+const math_tags = ["m", ...display_math_tags];
+
+let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
+    ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)
+    ...remark_like, ...example_like, ...definition_like, ...exercise_like,
+    ...proof_like,
+    ...project_like,
+    "blockquote"
+];
+
+const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like, ...subpart_like];
+
+const other_level_1_p_peers = ["figure", "image", "blockquote", "table", "tabular"];
 
 //  
 
@@ -49,7 +68,7 @@ const title_like_tags = ["title", "idx"];
 
 
 // Tags can have many synonyms
-// (similar to, but less powerful, to the LaTeX `newcommand`
+// (similar to, but less powerful, to the LaTeX `newcommand`)
 
 let synonyms = [ // in the format ["newname", "officialname"]
     ["footnote", "fn"],

@@ -137,7 +137,7 @@ $$
 $$
 We have just encountered one of the axioms of a group: the existence of
 an inverse.
-In the above equation we included the parentheses to emphasize the fact that $a^-1$ is
+In the above equation we included the parentheses to emphasize that $a^-1$ is
 multiplying the left side of the equation, which is the *quantity* $a x$.
 Now we regroup (i.e., use associativity) to get
 $$
