@@ -85,7 +85,7 @@ encountered that symbol when learning about composition of
 functions: \(f of g(x) = f(g(x))\).  In that situation, both sides of that equation are
 pronounced "f of g of x".  That notation for the group operation is meant to be suggestive, for soon
 we will see that *every* group can be thought of as a set of functions,
-where the operation is function composition.
+where the operation is function composition.  
 
 \begin{historical}
 <title>Galois invents group theory</title>
@@ -115,7 +115,7 @@ was the discovery in November 2024 of a degree 17 polynomial with Galois group~$
 The paper describing their results, which uses methods far beyond basic
 group theory, \href{https://arxiv.org/abs/2411.07857}{is available on arXiv},
 or you can <url href="https://www.lmfdb.org/NumberField/?galois_group=17T7">see
-examples in the LMFDB"</url>.
+examples in the LMFDB</url>.
 \end{historical}
 
 
@@ -166,8 +166,8 @@ The other halves are needed to solve the equation $x a = b$.
 One of the group axioms said "there exists" an identity.  Does that
 mean there can be more than one?  Same question for "there exists" an inverse.
 In the exploration above we talked about $a x$ and also about $x a$.
-Aren't those the same?  We will answer one of those questions and leave
-the others as exercises.
+Aren't those the same?  Try to keep those questions in mind as we
+start looking at some examples of groups.
 
 Another issue is the binary operation in the definition of a
 group.  In the exploration above there is no explicitly named
@@ -182,8 +182,9 @@ symbols using the axioms.  You will become more
 comfortable with this perspective as you gain experience.
 
 Aside:
-The next exercise would occur much later in the exposition,
-but this is a demonstration of FrankenMarkup, not a real
+The next material would occur later in the exposition,
+probably after some examples.
+But this is a demonstration of FrankenMarkup, not a real
 textbook on group theory.
 
 \begin{exercise}[Flipping a mattress]
@@ -243,7 +244,7 @@ Using the second part of the identity axiom we have
 e_1 e_2 = e_1,
 \end{equation}
 because $e_2$ is an identity.
-Since the left sides of \eqref{eqn:e_1 e_2 first part} and \ref{eqn:e_1 e_2 second part}
+Since the left sides of \eqref{eqn:e_1 e_2 first part} and (\ref{eqn:e_1 e_2 second part})
 are the same, we see that $e_1 = e_2$.
 </proof>
 

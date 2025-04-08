@@ -210,6 +210,8 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
     let index;
     const data = [];
 
+// console.log("delimiters", delimiters);
+
     const regexLeft = new RegExp(
         "(" + delimiters.map((x) => escapeRegex(x.left)).join("|") + ")"
     );
@@ -253,7 +255,7 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
         });
     }
 
-//    console.log("leaving splitAtDelimiters", data, "   ", data.length);
+//     console.log("leaving splitTextAtDelimiters", data, "   ", data.length);
 
 //    if (data.length == 1 && data[0].tag == 'text') { return text }
 //    else { return data }
@@ -533,7 +535,7 @@ alert("consecutive math?", element);
                     previouselement = "";
                     found_math = false
                   } else {
-console.log("did we miss a case?", element.content[0].content.match(/^\s*\+\+\+saMePaR/), "  ", element);
+console.log("did we miss a case? ", element.content[0].content.match(/^\s*\+\+\+saMePaR/), "  ", element);
 console.log(typeof element.content == "object" && 
                        typeof element.content[0].tag == "text" &&
                        element.content[0].content.match(/^\s*\+\+\+saMePaR/));
@@ -591,9 +593,24 @@ console.log(element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,""));
                                                                           // to be a string
         let new_text = "";
         new_text = this_content.replace(/--/mg, "<mdash/>");
+        new_text = this_content.replace(/LaTeX/mg, "<latex/>");
+        new_text = this_content.replace(/TeX/mg, "<tex/>");
+        new_text = this_content.replace(/PreTeXt/mg, "<pretext/>");
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
+            // for those who write (\ref{...}) instead of \eqref{...}
+        new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
+                                  return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
+                              });
         new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
                                   return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
+                              });
+   //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
+        new_text = new_text.replace(/\\(q|term|em|emph|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
+        new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
+                                  return '<url href="' + z + '">' + w + '</url>'
+                              });
+        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {
+                                  return '<url href="' + z + '"/>'
                               });
 // console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
@@ -603,4 +620,24 @@ console.log(element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,""));
 
     return newnodelist
 
+}
+
+const preprocessSynonyms = function(this_content) {
+
+    if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
+    let the_text = this_content;
+
+    for (let [key, value] of Object.entries(synonyms)) {
+      let trueName = key;
+// console.log("a key=trueName", key);
+      value.forEach( (element, index) => {
+          let unofficialName = element;
+// console.log("a value=unofficialName", element);
+          the_text = the_text.replace("<" + unofficialName + "( |>)", "<" + trueName + "$1");
+          the_text = the_text.replace("(\\begin{|\\end{)" + unofficialName + "}", "$1" + trueName + "}");
+          the_text = the_text.replace("\\" + unofficialName + "{", "\\" + trueName + "{");
+      });
+    }
+
+    return the_text
 }

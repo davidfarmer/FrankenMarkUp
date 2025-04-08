@@ -25,7 +25,6 @@ const reassemblePreTeXt = function(content) {
 
 //      this_element_text = this_element_text.concat(element.content);
       let this_new_text = reassemblePreTeXt(element.content);
-//      if (true || alone_on_line_tags.includes(this_tag) || inline_ptx_tags.includes(this_tag)) {  // any use case for only one end?
       if (this_tag != "text") {
                 // what about a code block?
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");

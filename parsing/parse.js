@@ -35,9 +35,6 @@ const paragraph_peer_delimiters = [
           {left:"\\begin{equation}", right:"\\end{equation}", tag:"men"},
           {left:"$$", right:"$$", tag:"men"},
           {left:"\\[", right:"\\]", tag:"men"},
-          {left:"<ol>", right:"</ol>", tag:"ol"},
-          {left:"<ul>", right:"</ul>", tag:"ul"},
-          {left:"\\begin{quote}", right:"\\end{quote}", tag:"blockquote"},
           {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
 ];
 
@@ -162,8 +159,10 @@ if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
 
       const originaltext = sourceTextArea.value;
-      let originaltextA = originaltext.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      let originaltextB = originaltextA.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
+
+      let originaltextA = preprocessSynonyms(originaltext);
+      let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
 
       var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
@@ -226,7 +225,8 @@ console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
 
 console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
-      const tmp4 = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
  //     const tmp4p = reassemblePreTeXt(tmp4);
 
