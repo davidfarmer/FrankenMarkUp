@@ -279,7 +279,8 @@ const recastSpacedDelimiters = function(this_content) {
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
     the_text = the_text.replace(/(^|\s)"([^"\n]+)"(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3");
     the_text = the_text.replace(/(^|\s)'([^'\n]+)'(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3");
-    the_text = the_text.replace(/(^|\s)`([^`\n]+)`(\s|$|[.,!?;:])/mg, "$1<c>$2</c>$3");
+//    the_text = the_text.replace(/(^|\s)`([^`\n]+)`(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3");
+    the_text = the_text.replace(/(^|[^`a-zA-Z0-9])`([^`\n]+)`($|[^`a-zA-A0-9])/mg, "$1<c>$2</c>$3");
 
     return the_text
 }
@@ -520,6 +521,7 @@ console.log("this_content.content BB", this_content.content);
                   }
                 } else if (element.tag == "p") {
          // either connect to previous element, or not
+console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
@@ -531,6 +533,7 @@ console.log("is this the wrong case?", element);
 console.log("now this_new_content", this_new_content);
 // alert("pause");
                   } else if (element.content[0].tag == "text" 
+                                && typeof element.content[0].content == "string"
                                 && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
          // also connect to previous p, but we have multiple items to connect
                     element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
@@ -539,6 +542,8 @@ console.log("now this_new_content", this_new_content);
          // not connected
                     this_new_content.push({...element})
                   }
+                } else {  // some other element, so just save it
+                    this_new_content.push({...element})
                 }
             }
 
@@ -598,18 +603,19 @@ console.log("now this_new_content", this_new_content);
 
 }
 
-const preprocessSynonyms = function(this_content) {
+const preprocessAliases = function(this_content) {
 
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
 
-    for (let [key, value] of Object.entries(synonyms)) {
+    for (let [key, value] of Object.entries(aliases)) {
       let trueName = key;
 // console.log("a key=trueName", key);
       value.forEach( (element, index) => {
           let unofficialName = element;
-// console.log("a value=unofficialName", element);
-          the_text = the_text.replace("<" + unofficialName + "( |>)", "<" + trueName + "$1");
+          the_text = the_text.replace("<" + unofficialName + ">", "<" + trueName + ">");
+          the_text = the_text.replace("<" + unofficialName + " ", "<" + trueName + " ");
+          the_text = the_text.replace("</" + unofficialName + ">", "</" + trueName + ">");
           the_text = the_text.replace("(\\begin{|\\end{)" + unofficialName + "}", "$1" + trueName + "}");
           the_text = the_text.replace("\\" + unofficialName + "{", "\\" + trueName + "{");
       });

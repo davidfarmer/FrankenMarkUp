@@ -68,10 +68,10 @@ const tags_containing_text = ["text", "p",
 const title_like_tags = ["title", "idx"];
 
 
-// Tags can have many synonyms
+// Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)
 
-let synonyms = { // in the format "officialname": [list of synonyms].  Taken from SL3X
+let aliases = { // in the format "officialname": [list of synonyms].  Taken from SL3X
     "abstract" : ["abs","abstr"],
     "acknowledgement" : ["ack"],
     "assumption" : ["assu","ass"],

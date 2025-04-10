@@ -165,7 +165,7 @@ if (sourceTextArea.addEventListener) {
 
       const originaltext = sourceTextArea.value;
 
-      let originaltextX = preprocessSynonyms(originaltext);
+      let originaltextX = preprocessAliases(originaltext);
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
