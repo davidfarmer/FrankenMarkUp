@@ -38,16 +38,21 @@ const paragraph_peer_delimiters = [
           {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
 ];
 
+/*
 const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline  markup
                                              // oops: what about lists and display math?
+                                             // and hint/answer/solution?
     "theorem", "proposition", "lemma", "corollary", "conjecture",
     "definition", "exploration", "exercise", 
     "hint", "answer", "solution",
     "aside", "historical",
     "principle", "claim", "remark", "note", "example", "proof"
 ];
+*/
+const paragraph_peer_ptx_and_latex_text = level_1_p_peers_containing_p;
+
 const paragraph_peer_ptx_and_latex_other = [
-    "figure", "li",
+    "figure"
 ];
 
 // Note: no ">" in opening, because could have attributes,
@@ -160,10 +165,12 @@ if (sourceTextArea.addEventListener) {
 
       const originaltext = sourceTextArea.value;
 
-      let originaltextA = preprocessSynonyms(originaltext);
+      let originaltextX = preprocessSynonyms(originaltext);
+      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
 
+console.log("preprocessed text", originaltextB);
       var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
       console.log("tmpfirstsplit",tmpfirstsplit);
@@ -178,11 +185,8 @@ console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 //alert("labels");
 
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
- //     var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text", "theorem", "blockquote"], "", ["text", "theorem", "blockquote"]);
-//      var tmp1firstsplitP = splitAtDelimiters(tmpfirstsplit, "makeparagraphs", ["text"], "", ["text", "theorem", "blockquote"]);
 
       console.log("tmp1firstsplitP",tmp1firstsplitP);
-      console.log("tmp1[2].content",tmp1firstsplitP[2].content);
 
 // alert("first split P");
 
@@ -208,20 +212,15 @@ console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
       console.log("tmp1secondsplitP",tmp1secondsplitP);
-      console.log("tmp1secondsplitP[2].content",tmp1secondsplitP[2].content);
 
       const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
       console.log("tmp2:",tmp2);
-      console.log("tmp2[1].content:",tmp2[1].content);
-      console.log("tmp2[1].content as String:",JSON.stringify(tmp2[1].content));
 
 console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
       const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", tags_containing_text);
       console.log("tmp3:",tmp3);
-      console.log("tmp3[1].content:",tmp3[1].content);
-      console.log("tmp3[1].content as String:",JSON.stringify(tmp3[1].content));
 
 
 console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
@@ -237,10 +236,12 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", tags_containing_text);
 
 //      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
-      const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);
+      const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
       const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
       const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);
+console.log("tmp5v", tmp5v);
       const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
+console.log("tmp5u", tmp5u);
       const tmp5 = extract_lists(tmp5u, "statements", tags_needing_statements);
 
       console.log("tmp2 again",tmp2 );

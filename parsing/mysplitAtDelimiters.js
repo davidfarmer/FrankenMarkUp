@@ -329,11 +329,18 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 
             if (this_content.content.match(/^\s*\-+\s/)) {
                 const new_tag = "li";
-                const new_content = this_content.content.replace(/^\s*-+\s*/,"");
+                const new_content = this_content.content.replace(/^\s*\-+\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
                 this_content.parenttag = "ul"
+            } else if (this_content.content.match(/^\s*\++\s/)) {
+                const new_tag = "li";
+                const new_content = this_content.content.replace(/^\s*\++\s*/,"");
+
+                this_content.tag = new_tag;
+                this_content.content = new_content;
+                this_content.parenttag = "ol"
             } else if (this_content.content.match(/^\s*\(*[0-9]+\.*\)*\s/)) {
                 //looking for 1 or 1. or 1) or (1) or (1.)
                 const new_tag = "li";
@@ -387,13 +394,13 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
           } else if (action == "label" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*\\label{/)) {
+            if (this_content.content.match(/^\s*(\\*)label{/)) {
 //  console.log("maybe found a label", this_content.content);
-                  let this_label = this_content.content.replace(/^\s*\\label{([^{}]*)}.*/s, "$1");
+                  let this_label = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
 //console.log("found a label:", this_label);
                   this_label = sanitizeXMLattributes(this_label);
                   this_content.label = this_label;
-                  this_content.content = this_content.content.replace(/^\s*\\label{([^{}]*)}/, "")
+                  this_content.content = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "")
             }
 
           } else if (action == "statements"  &&  tags_to_process.includes(this_content.tag)
@@ -438,7 +445,9 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 
        //  because $$ are both begin and end tags, markers were mistakenly also put
        // at the start of $$ math.  So remove them
+console.log("this_content.content AA", this_content.content);
               this_content.content = this_content.content.replace(/^\s*\+\+\+saMePaR/, "");
+console.log("this_content.content BB", this_content.content);
 
           } else if (action == "gather li"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "object" ) {  // actually, must be an array
@@ -480,95 +489,62 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
           } else if (action == "absorb math"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "object" ) {  // actually, must be an array
 
-            let this_p_content = [];
+  // these cases can be consolidated, but it took me a while to figure out
+  // what to do and I have not gone back to refactor
+
+
+ console.log("this_content.content", [...this_content.content]);
+            let this_new_content = [];
 
             let element = "";
             let index = 0;
-            let found_math = false;
-            let new_math_object = {tag: "p", content: []};
-            let previouselement = "";
             for (index = 0; index < this_content.content.length; ++index) {
                 element = this_content.content[index]
-
-                if (!found_math && !display_math_tags.includes(element.tag)) {
-                  found_math = false;
-                  if (new_math_object.content.length) {
-                    this_p_content.push({...new_math_object});
-                    new_math_object = {tag: "p", content: []}
-                  }  // should this be else if?  can both happen?
-                  if (previouselement) {
-                    this_p_content.push({...previouselement});
+ console.log("element", element);
+                const items_so_far = this_new_content.length;
+                if (display_math_tags.includes(element.tag)) {
+         // display math should not start a paragraph, so connect to previous p, if it exists
+                  if (items_so_far == 0) {
+         // should not happen, but just in case
+                    this_new_content.push({...element}) 
+                  } else if(this_new_content[items_so_far - 1].tag != "p") {   // again, should not happen
+                    this_new_content.push({...element})
+                  } else {  //last was a p, so put the display math on the end
+                    if (typeof this_new_content[items_so_far - 1].content == "string") {
+         //tricky case, because we need to make ti a list so we can append to it
+                      this_new_content[items_so_far - 1].content = [{tag: "text", content: this_new_content[items_so_far - 1].content}];
+                      this_new_content[items_so_far - 1].content.push({...element})
+                    } else {
+                      this_new_content[items_so_far - 1].content.push({...element})
+                    }
                   }
-                  previouselement = element;
-                } else if (!found_math && display_math_tags.includes(element.tag)) {
-                  // now we build a compound p
-                  found_math = true;
-// console.log("this_content", this_content);
-// console.log("element", element);
-// console.log("previouselement", previouselement);
-          //        if (previouselement) {new_math_object.content.push(previouselement)}
-                  if (previouselement) {new_math_object.content = new_math_object.content.concat(previouselement.content)}
-                  new_math_object.content.push({...element});  // okay b/c just one string
-                  previouselement = "";
-// console.log("new_math_object", new_math_object);
-                } else if (found_math && display_math_tags.includes(element.tag)) {
-                  // this can only happen with consecutuve display math.
-                  // so we handle that case, but it should not happen
-            //      new_math_object.content.push({...element})
-alert("consecutive math?", element);
-                  new_math_object.content.push({...element})
-                } else if (found_math && !display_math_tags.includes(element.tag)) {
-                  found_math = false;
-              // need to determine if this is a continuation paragraph
+                } else if (element.tag == "p") {
+         // either connect to previous element, or not
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
+         // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
-                    new_math_object.content.push({tag: "text", content: element.content});
-                    previouselement = "";
-                    found_math = false
-                  } else if (typeof element.content == "object" && 
-                       element.content[0].tag == "text" &&
-                       element.content[0].content.match(/^\s*\+\+\+saMePaR/)) {
-                    element.content[0].content = element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,"");
-          //          new_math_object.content.push({tag: "text", content: element.content});
-          //          new_math_object.content.push({...element});
-                    new_math_object.content = new_math_object.content.concat(element.content);
-                    previouselement = "";
-                    found_math = false
+                    this_new_content[items_so_far - 1].content.push(element.content)
+                  } else if (typeof element.content == "string") {
+         // simple p, not connected
+console.log("is this the wrong case?", element);
+                    this_new_content.push({...element})
+console.log("now this_new_content", this_new_content);
+// alert("pause");
+                  } else if (element.content[0].tag == "text" 
+                                && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
+         // also connect to previous p, but we have multiple items to connect
+                    element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
+                    element.content.forEach( (el) => { this_new_content[items_so_far - 1].content.push(el) });
                   } else {
-console.log("did we miss a case? ", element.content[0].content.match(/^\s*\+\+\+saMePaR/), "  ", element);
-console.log(typeof element.content == "object" && 
-                       typeof element.content[0].tag == "text" &&
-                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
-console.log(typeof element.content == "object" ," a ", 
-                       typeof element.content[0].tag == "text" ," a ",
-                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
-console.log(typeof element.content ," a ", 
-                       typeof element.content[0].tag  ," a ",
-                       element.content[0].content.match(/^\s*\+\+\+saMePaR/));
-console.log(element.content[0].content.replace(/^\s*\+\+\+saMePaR\s*/,""));
-                // for now, suppose no
-                    this_p_content.push({...new_math_object});
-                    previouselement = element;
-                    new_math_object = {tag: "p", content: []};
-                  } 
-               }
+         // not connected
+                    this_new_content.push({...element})
+                  }
+                }
             }
 
-//            if (index = 1) { // so, only one element in this list
-//              this_p_content.push({...element});
-//            }
-    //        if (found_math) { //this means the environment ended with at math, which has not been saved
-            if (new_math_object.content.length) { //this means the environment ended with at math, which has not been saved
-                        // or should we examine new_math_object.content.length ?
-              this_p_content.push({...new_math_object})
-            }
-            if (previouselement) { 
-              this_p_content.push({...previouselement})
-            }
+            this_content.content = [...this_new_content]
 
-            this_content.content = this_p_content
-          } 
-// end of many special transformations
+          }    // last of many special transformations
 
           let this_node = {...this_content};
           if (action == "do_nothing") { this_node.content = extract_lists(this_node.content, action, tags_to_process, this_node.tag) }

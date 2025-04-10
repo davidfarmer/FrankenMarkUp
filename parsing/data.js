@@ -47,7 +47,8 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...remark_like, ...example_like, ...definition_like, ...exercise_like,
     ...proof_like,
     ...project_like,
-    "blockquote"
+    ...hint_like,
+    "blockquote", "sidebyside", "li"
 ];
 
 const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like, ...subpart_like];

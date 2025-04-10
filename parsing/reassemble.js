@@ -12,8 +12,11 @@ const reassemblePreTeXt = function(content) {
       let this_element_text = "";
       const this_tag = element.tag;
 //  console.log("assembling a ", this_tag, "from", element);
-      const these_tags = outputtags[this_tag];
+      let these_tags = outputtags[this_tag];
 //  console.log("these_tags ", these_tags);
+      // DANGER:  is this a bad idea, or is it okay because it
+      // is reasonably to nave a plain text node (and not anode with "text" as its tag"
+      if (!these_tags) { these_tags = do_nothing_markup }
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
@@ -44,7 +47,9 @@ const reassemblePreTeXt = function(content) {
 // console.log("mathpunctuation", mathpunctuation);
             this_new_text = this_new_text.slice(0,-1)
          }
-         this_new_text = convertMathSnippet(this_new_text, "LaTeX")
+         this_new_text = convertMathSnippet(this_new_text, "LaTeX");
+// console.log("this_new_text", this_new_text);
+         this_new_text = sanitizeXMLstring(this_new_text)
       }
 //      this_element_text = this_element_text.concat(reassemblePreTeXt(element.content));
       this_element_text = this_element_text + this_new_text;
