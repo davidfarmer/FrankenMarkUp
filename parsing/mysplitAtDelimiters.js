@@ -469,13 +469,16 @@ console.log("this_content.content BB", this_content.content);
                   found_list = true;
                   new_list_content = [element];
                   new_list_object.tag = element.parenttag;
+console.log("started a new list", new_list_content);
+//alert("new list");
                 } else if (found_list && element.tag == "li") {
                   new_list_content.push(element)
                 } else if (found_list && element.tag != "li") {
-                  found_list = false;
-                  new_list_object.content = new_list_content;
+                  new_list_object.content = [...new_list_content];
                   this_statement_content.push({...new_list_object});
+                  found_list = false;
                   new_list_object = {};
+                  new_list_content = [];
                   this_statement_content.push(element);
                 } 
             }
@@ -484,6 +487,10 @@ console.log("this_content.content BB", this_content.content);
               new_list_object.content = new_list_content;
               this_statement_content.push({...new_list_object})
             }
+
+            found_list = false;
+            new_list_content = [];
+            new_list_object = {};
 
             this_content.content = this_statement_content
 

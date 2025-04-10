@@ -36,6 +36,7 @@ const hint_like = ["hint", "answer", "solution"];
 const subpart_like = ["case", "task"];
 
 const inlinetags = ["em", "term", "alert", "m", "q", "c"];
+// also need to handle self-closing tags
 
 const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 const possibly_self_closing_inline_tags = ["url"];
@@ -48,7 +49,8 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...proof_like,
     ...project_like,
     ...hint_like,
-    "blockquote", "sidebyside", "li"
+    "blockquote", "sidebyside", "li",
+    "paragraphs"
 ];
 
 const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like, ...subpart_like];
@@ -67,6 +69,11 @@ const tags_containing_text = ["text", "p",
                    // sit alone on a line with their content
 const title_like_tags = ["title", "idx"];
 
+const remapped_tags = [  // [latex_name, ptx_tag]
+                         // could these be handled by a alias, like we did with quote -> blockquote?
+    ["equation", "men"],
+    ["align", "mdn"],
+];
 
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)

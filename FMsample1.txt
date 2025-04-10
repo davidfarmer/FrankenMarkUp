@@ -209,6 +209,7 @@ Please devise a way to flip the mattress so that the same
 operation can be done every time, and over the course of the year all
 parts of the mattress will be used equally.  That way it is not
 necessary for the staff to keep track of which way it was flipped previously.
+It is important that *the exact same operation* be done every time.
 </blockquote>
 
 Write two responses to the manager's memo:  a one-sentence
@@ -252,6 +253,8 @@ Note:
 Labeling and referencing those equations was a bit excessive,
 but this is a demo, not a real textbook.
 
+\begin{paragraphs}[More samples, for testing]
+
 <sidebyside>
 Some `inline code`. A reference to the hotel exercise: \ref{ex:hotel mattress}.
 
@@ -275,5 +278,29 @@ you are reading now.  Think about why it happens that way.
   This is to check that the contents of a `figure` are *not*
   processed as text.  $x^3.14159$  D\'ej\`a vu.
 </figure>
+
+Approximate order of next items to implement
+(suggestions for additions and rearrangement are welcome):
+
+- tags in `title`
+
+- `figure` and bare `image`
+
+- `foreign` and other missing inline tags (such as the new `pf`)
+
+- investigate what is missing for a worksheet
+
+- some Typst compatibility (some of Typst has an
+  irreconcilable conflict with other formats).
+
+- `ol` and `ul` as source (not just markdown style)
+
+- `dl`
+
+- investigate what is reasonable for `program`, `listing`, and `console`
+
+- multiline math
+
+\end{paragraphs}
 
 End of FrankenMarkup demo.

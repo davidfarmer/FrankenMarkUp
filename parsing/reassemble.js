@@ -16,7 +16,7 @@ const reassemblePreTeXt = function(content) {
 //  console.log("these_tags ", these_tags);
       // DANGER:  is this a bad idea, or is it okay because it
       // is reasonably to nave a plain text node (and not anode with "text" as its tag"
-      if (!these_tags) { these_tags = do_nothing_markup }
+//      if (!these_tags) { these_tags = do_nothing_markup }
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 

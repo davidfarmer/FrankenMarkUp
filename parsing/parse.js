@@ -32,24 +32,22 @@ console.log("math_tags`", math_tags);
 
 const paragraph_peer_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
-          {left:"\\begin{equation}", right:"\\end{equation}", tag:"men"},
           {left:"$$", right:"$$", tag:"men"},
           {left:"\\[", right:"\\]", tag:"men"},
-          {left:"<blockquote>", right:"</blockquote>", tag:"blockquote"},
 ];
+remapped_tags.forEach( (el) => {
+    paragraph_peer_delimiters.push(
+        {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
+    );
+});
 
-/*
-const paragraph_peer_ptx_and_latex_text = [  // can only contain text and inline  markup
-                                             // oops: what about lists and display math?
-                                             // and hint/answer/solution?
-    "theorem", "proposition", "lemma", "corollary", "conjecture",
-    "definition", "exploration", "exercise", 
-    "hint", "answer", "solution",
-    "aside", "historical",
-    "principle", "claim", "remark", "note", "example", "proof"
-];
-*/
-const paragraph_peer_ptx_and_latex_text = level_1_p_peers_containing_p;
+
+let paragraph_peer_ptx_and_latex_text = [...level_1_p_peers_containing_p];
+let paragraph_peer_ptx_and_latex_text_output = [...paragraph_peer_ptx_and_latex_text, ...list_like];
+// plus some tags we don't expect people to type (go back and rethink this)
+paragraph_peer_ptx_and_latex_text_output.push("p");
+paragraph_peer_ptx_and_latex_text_output.push("statement");
+
 
 const paragraph_peer_ptx_and_latex_other = [
     "figure"
@@ -84,13 +82,10 @@ let asymmetric_inline_delimiters = [
           {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 
-const inline_ptx_tags = [  //meaning: don't add space around them
-    "m", "c", "q", "em", "term", "alert"
-];
 // need to handle self-closing tags
 // also -- for emdash, and abbreviations, i.e., e.g.
 
-inline_ptx_tags.forEach( (el) => {
+inlinetags.forEach( (el) => {
     asymmetric_inline_delimiters.push(
         {left:"<" + el + ">", right:"</" + el + ">", tag:el}
     )
@@ -120,12 +115,13 @@ const outputtags = {  // start with the quirky ones
          before_end: "", after_end: "\n"},
     };
 
-inline_ptx_tags.forEach( (el) => {
+inlinetags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
     before_begin: "", after_begin: "",
     before_end: "", after_end: ""}
     });
 
+/*
 const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote", "statement"];
 
 // need to handle attributes on output tags
@@ -134,7 +130,8 @@ alone_on_line_tags.forEach( (el) => {
     before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
-paragraph_peer_ptx_and_latex_text.forEach( (el) => {
+*/
+paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: ">\n",
@@ -243,6 +240,7 @@ console.log("tmp5v", tmp5v);
       const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
 console.log("tmp5u", tmp5u);
       const tmp5 = extract_lists(tmp5u, "statements", tags_needing_statements);
+console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
       console.log("tmp2 again",tmp2 );
       console.log("tmp4",tmp4 );
