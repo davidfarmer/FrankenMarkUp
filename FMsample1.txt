@@ -1,5 +1,5 @@
 
-<title>FrankenMarkup demo</title>
+<title>FrankenMarkup demo and sample section</title>
 
 Welcome to a sample of FrankenMarkup: an easy way to write a subset of PreTeXt.
 Just mix together LaTeX, Markdown, and PreTeXt, and hope for the best!
@@ -9,7 +9,7 @@ can define _terminology_, use *emphasis*, or make an **alert**.
 You have a choice of math tags:  $x^10$ or \(sqrt 5x\) or even the
 official PreTeXt <m>sin x <= abs x</m>.  Inside the math tags you can type
 either LaTeX or, as in this demo, Space Math.  (Currently the output is LaTeX, which is unfortunate
-because information is lost.  It will be better when PreTeXt
+because information is lost and multiline is not working properly.  It will be better when PreTeXt
 allows Space Math or MathML in the source.)
 
 Note:

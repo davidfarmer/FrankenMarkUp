@@ -585,10 +585,10 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
       } else if (action == "texlike" && tags_to_process.includes(this_tag)) {  // note: this_content already known
                                                                           // to be a string
         let new_text = "";
-        new_text = this_content.replace(/--/mg, "<mdash/>");
-        new_text = this_content.replace(/LaTeX/mg, "<latex/>");
-        new_text = this_content.replace(/TeX/mg, "<tex/>");
-        new_text = this_content.replace(/PreTeXt/mg, "<pretext/>");
+        new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
+        new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
+        new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
+        new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
             // for those who write (\ref{...}) instead of \eqref{...}
         new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
