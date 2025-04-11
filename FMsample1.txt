@@ -1,4 +1,6 @@
 
+<title>FrankenMarkup demo</title>
+
 Welcome to a sample of FrankenMarkup: an easy way to write a subset of PreTeXt.
 Just mix together LaTeX, Markdown, and PreTeXt, and hope for the best!
 
@@ -295,6 +297,8 @@ Approximate order of next items to implement
 
 - `ol` and `ul` as source (not just markdown style)
 
+- more generally: test on pure PreTeXt source (`p` tags for example)
+
 - `dl`
 
 - investigate what is reasonable for `program`, `listing`, and `console`
@@ -302,5 +306,21 @@ Approximate order of next items to implement
 - multiline math
 
 \end{paragraphs}
+
+More things for testing, such as the quadratic formula:
+
+\begin{equation}
+
+(-b pm sqrt(b^2 - 4 a c))/[2 a]
+
+\end{equation}
+
+And a list:
+
++ apple
+
++ banana
+
++ cherry
 
 End of FrankenMarkup demo.

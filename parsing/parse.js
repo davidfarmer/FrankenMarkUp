@@ -28,7 +28,7 @@ fetch("dictionary.json").then(
       )
       */
 
-console.log("math_tags`", math_tags);
+// console.log("math_tags`", math_tags);
 
 const paragraph_peer_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
@@ -75,7 +75,7 @@ paragraph_peer_ptx_and_latex_other.forEach( (el) => {
 let paragraph_peers = Array.from(paragraph_peer_delimiters, ({ tag }) => tag);
 paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 
-console.log("paragraph_peers", paragraph_peers);
+// console.log("paragraph_peers", paragraph_peers);
 
 let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"m"},
@@ -163,14 +163,20 @@ if (sourceTextArea.addEventListener) {
       const originaltext = sourceTextArea.value;
 
       let originaltextX = preprocessAliases(originaltext);
+
+      let document_title = "";
+      if (originaltextX.match(/^\s*<title>/)) {
+          document_title = originaltextX.replace(/^\s*<title>(.*?)<\/title>.*/s,"$1");
+          originaltextX = originaltextX.replace(/^\s*<title>(.*?)<\/title>/,"");
+      }
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // preprocess blockquote
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from somewnere else
 
-console.log("preprocessed text", originaltextB);
+// console.log("preprocessed text", originaltextB);
       var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
-      console.log("tmpfirstsplit",tmpfirstsplit);
+//       console.log("tmpfirstsplit",tmpfirstsplit);
 
       let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
 // alert("tmpfirstsplitMATH");
@@ -178,23 +184,27 @@ console.log("preprocessed text", originaltextB);
       let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
       let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
 
-console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
+// console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 //alert("labels");
 
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
 
-      console.log("tmp1firstsplitP",tmp1firstsplitP);
+//       console.log("tmp1firstsplitP",tmp1firstsplitP);
 
 // alert("first split P");
 
       var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
 //      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peers);
 
-      console.log("tmp1secondsplit",tmp1secondsplit);
-      console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
+//       console.log("tmp1secondsplit",tmp1secondsplit);
+//       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
-      let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
-console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
+      let tmp1together = {tag: "section", content: tmp1secondsplit}
+      if (document_title) { tmp1together["title"] = document_title }
+
+      let tmp1secondsplitMATH = extract_lists(tmp1together, "extraneous math", display_math_tags);
+   //   let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
+// console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
 
       let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
       let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
@@ -204,23 +214,23 @@ console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
 
       const tmp1secondsplitENV = extract_lists(tmp1secondsplitLI, "oneline environments", ["p"]);
 
- console.log("tmp1secondsplitENV", tmp1secondsplitENV);
+//  console.log("tmp1secondsplitENV", tmp1secondsplitENV);
 
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
-      console.log("tmp1secondsplitP",tmp1secondsplitP);
+//       console.log("tmp1secondsplitP",tmp1secondsplitP);
 
       const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
-      console.log("tmp2:",tmp2);
+//       console.log("tmp2:",tmp2);
 
-console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
+// console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
       const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", tags_containing_text);
-      console.log("tmp3:",tmp3);
+//       console.log("tmp3:",tmp3);
 
 
-console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
+// console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
       const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
@@ -236,14 +246,14 @@ console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
       const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
       const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
       const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);
-console.log("tmp5v", tmp5v);
+// console.log("tmp5v", tmp5v);
       const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
-console.log("tmp5u", tmp5u);
+// console.log("tmp5u", tmp5u);
       const tmp5 = extract_lists(tmp5u, "statements", tags_needing_statements);
-console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
+// console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
-      console.log("tmp2 again",tmp2 );
-      console.log("tmp4",tmp4 );
+//       console.log("tmp2 again",tmp2 );
+//       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
 //      console.log("tmp5p",tmp5p);

@@ -3,6 +3,20 @@ const reassemblePreTeXt = function(content) {
 
     if (typeof content == "string") { return content }
 
+    if (!Array.isArray(content)) {
+       let this_element_text = "";
+       const this_tag = content.tag;
+       let these_tags = outputtags[this_tag];
+       this_element_text +=  these_tags.before_begin + these_tags.begin_tag
+          if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }
+          if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + content.label + '"'}
+          this_element_text += these_tags.after_begin;
+
+          if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
+
+          return this_element_text + reassemblePreTeXt(content.content) +  these_tags.before_end + these_tags.end_tag + these_tags.after_end;
+    }
+
     const  nodelist = content;  // should we check it is an array?
 
     let assembled_text = "";

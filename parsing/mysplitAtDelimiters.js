@@ -39,6 +39,12 @@ const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
     if (typeof nodelist == "string") {return splitTextIntoParagraphs(nodelist) }
 
+    if (!Array.isArray(nodelist)) {
+        let newnodelist = {...nodelist}
+        newnodelist.content = splitIntoParagraphs(newnodelist.content, nodestoparse, peernodes);
+        return newnodelist
+    }
+
     let newnodelist = [];
 
     let current_new_text = "";
@@ -356,13 +362,13 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*[^\n<>+]*>/)) {
-  console.log("maybe found an attribute", this_content.content);
+//  console.log("maybe found an attribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
                 } else {
                   let this_attribute = this_content.content.split(">", 1)[0];
 
-  console.log("this attribute", this_attribute);
+//  console.log("this attribute", this_attribute);
                   this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
                   if ("attributes" in this_content) {
                     this_content.attributes += this_attribute
@@ -446,9 +452,9 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 
        //  because $$ are both begin and end tags, markers were mistakenly also put
        // at the start of $$ math.  So remove them
-console.log("this_content.content AA", this_content.content);
+// console.log("this_content.content AA", this_content.content);
               this_content.content = this_content.content.replace(/^\s*\+\+\+saMePaR/, "");
-console.log("this_content.content BB", this_content.content);
+// console.log("this_content.content BB", this_content.content);
 
           } else if (action == "gather li"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "object" ) {  // actually, must be an array
@@ -469,8 +475,7 @@ console.log("this_content.content BB", this_content.content);
                   found_list = true;
                   new_list_content = [element];
                   new_list_object.tag = element.parenttag;
-console.log("started a new list", new_list_content);
-//alert("new list");
+//console.log("started a new list", new_list_content);
                 } else if (found_list && element.tag == "li") {
                   new_list_content.push(element)
                 } else if (found_list && element.tag != "li") {
@@ -501,14 +506,14 @@ console.log("started a new list", new_list_content);
   // what to do and I have not gone back to refactor
 
 
- console.log("this_content.content", [...this_content.content]);
+// console.log("this_content.content", [...this_content.content]);
             let this_new_content = [];
 
             let element = "";
             let index = 0;
             for (index = 0; index < this_content.content.length; ++index) {
                 element = this_content.content[index]
- console.log("element", element);
+// console.log("element", element);
                 const items_so_far = this_new_content.length;
                 if (display_math_tags.includes(element.tag)) {
          // display math should not start a paragraph, so connect to previous p, if it exists
@@ -528,16 +533,16 @@ console.log("started a new list", new_list_content);
                   }
                 } else if (element.tag == "p") {
          // either connect to previous element, or not
-console.log("element", element.tag, "with", element.content);
+//console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
                     this_new_content[items_so_far - 1].content.push(element.content)
                   } else if (typeof element.content == "string") {
          // simple p, not connected
-console.log("is this the wrong case?", element);
+// console.log("is this the wrong case?", element);
                     this_new_content.push({...element})
-console.log("now this_new_content", this_new_content);
+// console.log("now this_new_content", this_new_content);
 // alert("pause");
                   } else if (element.content[0].tag == "text" 
                                 && typeof element.content[0].content == "string"
