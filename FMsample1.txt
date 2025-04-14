@@ -272,7 +272,7 @@ you are reading now.  Think about why it happens that way.
 
 > An egregious block quote in the markdown style.
 >
-  > Checking that multiple paragraph markdown blockquotes are working.
+  > Checking that multiple paragraph markdown blockquotes are working,
      and that the required markup is not strict.
 
 <figure>
