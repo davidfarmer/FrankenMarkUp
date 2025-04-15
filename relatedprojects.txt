@@ -1,7 +1,15 @@
 
+https://aimath.org/~farmer/spacemath/
+
+https://github.com/KaTeX/KaTeX
+
+https://katex.org/docs/api
+
 https://www.plurimath.org/blog/2023-08-11-introducing-plurimath/
 
 https://www.plurimath.org/
+
+https://github.com/havarddj/typst-preview.el
 
 https://typst.app/docs
 
@@ -12,6 +20,8 @@ https://typst.app/docs/tutorial/writing-in-typst/
 https://typst.app/docs/reference/model/emph/
 
 https://ashki23.github.io/markdown-latex.html
+
+https://live.talknicer.com/
 
 https://github.com/markedjs/marked
 

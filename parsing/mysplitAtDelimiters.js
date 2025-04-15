@@ -216,7 +216,7 @@ const splitTextAtDelimiters = function(this_content, delimiters) {
     let index;
     const data = [];
 
-// console.log("delimiters", delimiters);
+ // console.log("delimiters", delimiters);
 
     const regexLeft = new RegExp(
         "(" + delimiters.map((x) => escapeRegex(x.left)).join("|") + ")"
@@ -273,7 +273,6 @@ const recastSpacedDelimiters = function(this_content) {
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
 
-//console.log("Loooooooooooooooooooooooooooooooooooking at", the_text);
 
 //    delimiters.forEach( (element, index) => {
 // need to do this properly, from spacelike_inline_delimiters
@@ -319,6 +318,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 
     } else if (typeof this_content == "object") {
 
+          // need to rethink how to handle the case where the onlline is an attribute.
           if (action == "oneline environments" &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
@@ -446,6 +446,19 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
               this_content.content = new_content_list;
               this_content.tag = "blockquote";
             }
+
+          } else if (action == "substructure"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+console.log("found substructure of", this_content.tag, "with", this_content.content);
+              const subtags = subenvironments[this_content.tag];
+console.log("looking for:", subtags);
+// ooooo
+              const subtags_as_delims = delimitersFromList(subtags);
+console.log("looking for:", subtags_as_delims);
+              const this_environment_split = splitTextAtDelimiters(this_content.content, subtags_as_delims);
+console.log("found", this_environment_split);
+              this_content.content = [...this_environment_split];
 
           } else if (action == "extraneous math"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) { 

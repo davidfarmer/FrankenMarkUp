@@ -28,7 +28,20 @@ fetch("dictionary.json").then(
       )
       */
 
-// console.log("math_tags`", math_tags);
+const PreTeXtDelimiterOf = function(delim) {
+    return {left:"<" + delim + "", right:"</" + delim + ">", tag:delim}
+}
+const LaTeXDelimiterOf = function(delim) {
+    return {left:"\\begin{" + delim + "}", right:"\\end{" + delim + "}", tag:delim}
+}
+const delimitersFromList = function(lis) {
+    let delim_lis = [];
+    lis.forEach( (el) => {
+        delim_lis.push( PreTeXtDelimiterOf(el) );
+        delim_lis.push( LaTeXDelimiterOf(el) );
+    });
+    return delim_lis
+}
 
 const paragraph_peer_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
@@ -49,27 +62,19 @@ paragraph_peer_ptx_and_latex_text_output.push("p");
 paragraph_peer_ptx_and_latex_text_output.push("statement");
 
 
-const paragraph_peer_ptx_and_latex_other = [
-    "figure"
-];
+// const paragraph_peer_ptx_and_latex_other = [
+//     "figure"
+// ];
 
 // Note: no ">" in opening, because could have attributes,
 // which are parsed later
 paragraph_peer_ptx_and_latex_text.forEach( (el) => {
-    paragraph_peer_delimiters.push(
-        {left:"<" + el + "", right:"</" + el + ">", tag:el}
-    );
-    paragraph_peer_delimiters.push(
-        {left:"\\begin{" + el + "}", right:"\\end{" + el + "}", tag:el}
-    );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
-paragraph_peer_ptx_and_latex_other.forEach( (el) => {
-    paragraph_peer_delimiters.push(
-        {left:"<" + el + "", right:"</" + el + ">", tag:el}
-    );
-    paragraph_peer_delimiters.push(
-        {left:"\\begin{" + el + "}", right:"\\end{" + el + "}", tag:el}
-    );
+other_level_1_p_peers.forEach( (el) => {
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
 
 let paragraph_peers = Array.from(paragraph_peer_delimiters, ({ tag }) => tag);
@@ -86,9 +91,7 @@ let asymmetric_inline_delimiters = [
 // also -- for emdash, and abbreviations, i.e., e.g.
 
 inlinetags.forEach( (el) => {
-    asymmetric_inline_delimiters.push(
-        {left:"<" + el + ">", right:"</" + el + ">", tag:el}
-    )
+    asymmetric_inline_delimiters.push(  PreTeXtDelimiterOf(el) )
 });
 
 /* current;y not used.  See recastSpacedDelimiters
@@ -137,7 +140,13 @@ paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
     before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
-paragraph_peer_ptx_and_latex_other.forEach( (el) => {
+other_level_1_p_peers.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + "",
+                       end_tag: "</" + el + ">",
+    before_begin: "\n", after_begin: ">\n",
+    before_end: "\n", after_end: "\n"}
+    });
+higher_level_tags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: ">\n",
@@ -185,7 +194,7 @@ if (sourceTextArea.addEventListener) {
       let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
 
 // console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
-//alert("labels");
+//alert("labels")
 
       var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
 
@@ -218,9 +227,11 @@ if (sourceTextArea.addEventListener) {
 
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
+      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", ["figure"]);
+
 //       console.log("tmp1secondsplitP",tmp1secondsplitP);
 
-      const tmp2 = splitAtDelimiters(tmp1secondsplitP, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp2 = splitAtDelimiters(tmp1secondsplitPfig, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
 //       console.log("tmp2:",tmp2);
 
@@ -231,6 +242,8 @@ if (sourceTextArea.addEventListener) {
 
 
 // console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
+
+      //have to do this twice, because of nesting
       const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
       const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
@@ -242,7 +255,6 @@ if (sourceTextArea.addEventListener) {
       const tmp5y = extract_lists(tmp5x, "texlike", tags_containing_text);
       const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", tags_containing_text);
 
-//      const tmp5z = extract_lists(tmp5yy, "oneline environments", ["p"]);
       const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
       const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
       const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);

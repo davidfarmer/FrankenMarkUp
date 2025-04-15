@@ -54,18 +54,21 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     "section"
 ];
 
-const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like, ...subpart_like];
+const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
+            ...subpart_like];
 
 const other_level_1_p_peers = ["figure", "image", "table", "tabular", "ol", "ul", "dl"];
 
-//  
+const higher_level_tags = [ // these are inside a previously described tag, and may be subenvironments
+    "caption"
+];
 
 const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like];
 
       // more precisely: can possibly contain just text
 const tags_containing_text = ["text", "p",
     "fn", "em", "term", "alert", "q",
-    "title", "li"];  // li can optionally contain a p or another list
+    "title", "li", "caption"];  // li can optionally contain a p or another list
 
                    // sit alone on a line with their content
 const title_like_tags = ["title", "idx"];
@@ -75,6 +78,16 @@ const remapped_tags = [  // [latex_name, ptx_tag]
     ["equation", "men"],
     ["align", "mdn"],
 ];
+
+const subenvironments = {  // the tags which occun inside specific environments
+   "listing": ["title","caption", "program"], // check
+   "program": ["title","code"], // check
+   "figure": ["title","caption","image"], // check
+   "image": ["description"], // check
+};
+
+//not used yet
+const possibleattributes = ["source", "ref", "width", "label", "attributes"];
 
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)

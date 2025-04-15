@@ -25,7 +25,7 @@ const reassemblePreTeXt = function(content) {
 
       let this_element_text = "";
       const this_tag = element.tag;
-//  console.log("assembling a ", this_tag, "from", element);
+//   console.log("assembling a ", this_tag, "from", element);
       let these_tags = outputtags[this_tag];
 //  console.log("these_tags ", these_tags);
       // DANGER:  is this a bad idea, or is it okay because it
