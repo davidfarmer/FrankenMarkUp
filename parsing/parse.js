@@ -29,6 +29,9 @@ fetch("dictionary.json").then(
       */
 
 const PreTeXtDelimiterOf = function(delim) {
+    return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
+}
+const PreTeXtDelimiterOfAttributes = function(delim) {
     return {left:"<" + delim + "", right:"</" + delim + ">", tag:delim}
 }
 const LaTeXDelimiterOf = function(delim) {
@@ -84,7 +87,7 @@ paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 
 let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"m"},
-          {left:"|", right:"|", tag:"placeholder"}  // just for testing
+//          {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 
 // need to handle self-closing tags
