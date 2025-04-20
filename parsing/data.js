@@ -57,7 +57,7 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
 const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
             ...subpart_like];
 
-const other_level_1_p_peers = ["figure", "image", "table", "tabular", "ol", "ul", "dl"];
+const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
 const higher_level_tags = [ // these are inside a previously described tag, and may be subenvironments
     "caption"
@@ -85,6 +85,8 @@ const subenvironments = {  // the tags which occun inside specific environments
    "figure": ["title","caption","image"], // check
    "image": ["description"], // check
 };
+
+const objects_with_substructure = Object.keys(subenvironments);
 
 //not used yet
 const possibleattributes = ["source", "ref", "width", "label", "attributes"];

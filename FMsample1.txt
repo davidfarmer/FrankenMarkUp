@@ -295,9 +295,6 @@ and a thinner scattering further from the circle.</description>
       </image>
     </figure>
 
-</solution>
-</example>
-
 
 
 Approximate order of next items to implement

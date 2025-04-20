@@ -305,7 +305,7 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
     let current_new_text = "";
 
     if (Array.isArray(this_content)) {
-//  console.log("found an array, length", this_content);
+//  console.log("found an array, length", [...this_content]);
 
         this_content.forEach( (element, index) => {
 
@@ -456,12 +456,32 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 console.log("found substructure of", this_content.tag, "with", this_content.content);
               const subtags = subenvironments[this_content.tag];
 console.log("looking for:", subtags);
-// ooooo
               const subtags_as_delims = delimitersFromList(subtags);
 console.log("looking for:", subtags_as_delims);
               const this_environment_split = splitTextAtDelimiters(this_content.content, subtags_as_delims);
 console.log("found", this_environment_split);
               this_content.content = [...this_environment_split];
+
+          } else if (action == "clean up substructure"  &&  tags_to_process.includes(this_content.tag)
+                      && Array.isArray(this_content.content)) {
+
+             const this_tag = this_content.tag;
+
+             new_content = [];
+             this_content.content.forEach( (el) => {
+                if ( subenvironments[this_tag].includes(el.tag)) {
+                    new_content.push(el)
+                } else {
+console.log("looking for an attribute", el);
+                    if (el.tag == "text" && el.content.match(/^\s*$/) && "attributes" in el) {
+                      if ("attributes" in this_content) { this_content.attributes += el.attributes }
+                      else { this_content.attributes = el.attributes }
+                    } else if (el.tag == "text" && el.content.match(/^\s*$/)) {
+                      // pass
+                    } else { console.log("problem content", el); alert("problem content: see console.log") }
+                }
+    });
+              this_content.content = [...new_content]
 
           } else if (action == "extraneous math"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) { 

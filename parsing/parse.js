@@ -40,7 +40,7 @@ const LaTeXDelimiterOf = function(delim) {
 const delimitersFromList = function(lis) {
     let delim_lis = [];
     lis.forEach( (el) => {
-        delim_lis.push( PreTeXtDelimiterOf(el) );
+        delim_lis.push( PreTeXtDelimiterOfAttributes(el) );
         delim_lis.push( LaTeXDelimiterOf(el) );
     });
     return delim_lis
@@ -72,11 +72,11 @@ paragraph_peer_ptx_and_latex_text_output.push("statement");
 // Note: no ">" in opening, because could have attributes,
 // which are parsed later
 paragraph_peer_ptx_and_latex_text.forEach( (el) => {
-    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
     paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
 other_level_1_p_peers.forEach( (el) => {
-    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
     paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
 
@@ -168,6 +168,12 @@ outputtags["men"] = {begin_tag: "<men", end_tag: "</men>",
          before_begin: "", after_begin: ">\n", // because probably source has the \n
          before_end: "\n", after_end: "\n"};
 
+outputtags["image"] = {begin_tag: "<img", end_tag: "</img>",  // img or image?  should not be a special case?
+         before_begin: "", after_begin: ">\n", 
+         before_end: "\n", after_end: "\n"};
+outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
+         before_begin: "\n", after_begin: "", 
+         before_end: "", after_end: "\n"};
 
 if (sourceTextArea.addEventListener) {
   sourceTextArea.addEventListener('input', function() {
@@ -226,15 +232,22 @@ if (sourceTextArea.addEventListener) {
 
       const tmp1secondsplitENV = extract_lists(tmp1secondsplitLI, "oneline environments", ["p"]);
 
-//  console.log("tmp1secondsplitENV", tmp1secondsplitENV);
-
       var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 
-      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", ["figure"]);
+  console.log("tmp1secondsplitP", tmp1secondsplitP);
 
-//       console.log("tmp1secondsplitP",tmp1secondsplitP);
+alert("pre");
+      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
+     let tmp1finalsplit = extract_lists(tmp1secondsplitPfig, "attributes", "all");
 
-      const tmp2 = splitAtDelimiters(tmp1secondsplitPfig, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
+
+       console.log("tmp1secondsplitPfig",tmp1secondsplitPfigclean);
+
+       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
+alert("tmp1secondsplitPfig");
+
+      const tmp2 = splitAtDelimiters(tmp1secondsplitPfigclean, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
 //       console.log("tmp2:",tmp2);
 
