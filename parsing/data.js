@@ -9,6 +9,7 @@ const randomtags = ["fn", "title", "statement", "reading-questions",
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
 const list_like = ["ol", "ul", "dl"];
+const list_elements = ["li"];
 
 const aside_like = ["aside", "historical", "biographical"];
 
@@ -57,6 +58,10 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
 const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
             ...subpart_like];
 
+const display_environments = ["figure", "tabular", "listing"];
+const display_subenvironments = ["image", "table", "program"];
+const display_subsubenvironments = ["description", "alt"];  // is alt correct?
+
 const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
 const higher_level_tags = [ // these are inside a previously described tag, and may be subenvironments
@@ -90,6 +95,32 @@ const objects_with_substructure = Object.keys(subenvironments);
 
 //not used yet
 const possibleattributes = ["source", "ref", "width", "label", "attributes"];
+
+// start of major refactor: recognize that it takes multiple passes to
+// parse into components, and this requires knowing which objects can occur
+// inside of each other.
+
+// The following lists are related by "can't be inside"
+
+let level = [];
+
+level.push(["paragraphs"]);
+level.push(["sidebyside"]);
+level.push([...project_like]);
+level.push([...example_like, ...exercise_like]);
+level.push([...theorem_like, ...axiom_like, ...remark_like, ...definition_like]);
+level.push([...proof_like, ...hint_like]);
+level.push([...subpart_like]);
+level.push([...aside_like]);
+level.push([...display_environments]);
+level.push([...display_subenvironments]);
+level.push([...display_subsubenvironments]);
+level.push([...list_like]);
+level.push([...list_elements]);
+level.push(["blockquote"]);
+level.push(["equation"]);
+// level[13] = [...display_math_tags];  // what about remapped_tags?
+
 
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)

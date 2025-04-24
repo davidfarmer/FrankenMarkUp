@@ -38,6 +38,7 @@ const LaTeXDelimiterOf = function(delim) {
     return {left:"\\begin{" + delim + "}", right:"\\end{" + delim + "}", tag:delim}
 }
 const delimitersFromList = function(lis) {
+    if (!Array.isArray(lis)) { return lis }
     let delim_lis = [];
     lis.forEach( (el) => {
         delim_lis.push( PreTeXtDelimiterOfAttributes(el) );
@@ -187,14 +188,82 @@ if (sourceTextArea.addEventListener) {
           document_title = originaltextX.replace(/^\s*<title>(.*?)<\/title>.*/s,"$1");
           originaltextX = originaltextX.replace(/^\s*<title>(.*?)<\/title>/,"");
       }
+   // put latex-style labels on a new line
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
+   // have to preprovess blockquote because (of how we handle attributes) the starting > looks
+   // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from somewnere else
+
+      let new1 = NEWsplitAtDelimiters(originaltextB, level[0], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[1], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[2], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[3], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[4], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[5], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[6], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[7], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[8], 0, 0);
+console.log("did level[8]");
+console.log([...new1]);
+      new1 = NEWsplitAtDelimiters(new1, level[9], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[10], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[11], 0, 0);
+      new1 = NEWsplitAtDelimiters(new1, level[12], 0, 0);
+ console.log("preprocessed text", new1);
+
+      let new2 = NEWsplitAtDelimiters(new1, level[0], 0, 1); 
+
+ console.log("processed text 2", new2);
+      alert("pause 1.5");
+      for (let i=1; i<=13; ++i) {
+          new2 = NEWsplitAtDelimiters(new2, level[i], 0, 1);
+      }
+console.log([...new1]);
+ console.log("preprocessed text 2", new2);
+      alert("pause 2");
+
+      let new3 = NEWsplitAtDelimiters(new2, level[0], 0, 2);
+      new3 = NEWsplitAtDelimiters(new3, level[1], 0, 2);
+      new3 = NEWsplitAtDelimiters(new3, level[2], 0, 2);
+console.log("new3", [...new3]);
+      alert("pause 2.5");
+      new3 = NEWsplitAtDelimiters(new3, level[3], 0, 2);
+console.log("new3", [...new3]);
+      alert("pause 2.6");
+      for (let i=3; i<=13; ++i) {
+          new3 = NEWsplitAtDelimiters(new3, level[i], 0, 2);
+      }
+console.log("new3", [...new3]);
+      alert("pause 3");
+
+      let new4 = [...new3];
+
+      level.forEach( (lev) => { new4 = NEWsplitAtDelimiters(new4, lev, 0, 3) } );
+
+ console.log("processed text 4", new4);
+      alert("pause 4");
+
+      let new5 = [...new4];
+      
+      level.forEach( (lev) => { new5 = NEWsplitAtDelimiters(new5, lev, 0, 4) } );
+ 
+ console.log("processed text 5", new5);
+      alert("pause 5");
+
+      let new6 = [...new5];
+
+      level.forEach( (lev) => { new6 = NEWsplitAtDelimiters(new6, lev, 0, 5) } );
+
+ console.log("processed text 6", new6);
+      alert("pause 6");
+
 
 // console.log("preprocessed text", originaltextB);
       var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
 //       console.log("tmpfirstsplit",tmpfirstsplit);
+//alert("pause 3");
 
       let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
 // alert("tmpfirstsplitMATH");
@@ -212,7 +281,6 @@ if (sourceTextArea.addEventListener) {
 // alert("first split P");
 
       var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
-//      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peers);
 
 //       console.log("tmp1secondsplit",tmp1secondsplit);
 //       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));

@@ -295,6 +295,15 @@ and a thinner scattering further from the circle.</description>
       </image>
     </figure>
 
+      <image source="FAKE.png" width="70%">
+        <description>The unit circle with 40 small randomly placed red squares.
+           Inside the circle are thousands of small blue dots.  In the first
+quadrant close to the circle the dots generally are in small isolated clusters.
+In the other quadrants there are many blue dots clustered near the circle
+and a thinner scattering further from the circle.</description>
+      </image>
+
+
 
 
 Approximate order of next items to implement
