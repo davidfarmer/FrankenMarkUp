@@ -183,19 +183,31 @@ if (sourceTextArea.addEventListener) {
 
       let originaltextX = preprocessAliases(originaltext);
 
+console.log("originaltextX", originaltextX);
+alert("aliases")
+     // extract title, label, attributes of parent section (currently only title implemented)
+
       let document_title = "";
       if (originaltextX.match(/^\s*<title>/)) {
           document_title = originaltextX.replace(/^\s*<title>(.*?)<\/title>.*/s,"$1");
           originaltextX = originaltextX.replace(/^\s*<title>(.*?)<\/title>/,"");
+      } else if (originaltextX.match(/^\s*\[/)) {
+          document_title = originaltextX.replace(/^\s*\[([^\[\]]*)\].*/s,"$1");
+          originaltextX = originaltextX.replace(/^\s*\[([^\[\]]*)\]/,"");
       }
    // put latex-style labels on a new line
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from somewnere else
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
-      let new1 = NEWsplitAtDelimiters(originaltextB, level[0], 0, 0);
+      // wrap everything in a section
+      let tmp1together = {tag: "section", content: originaltextB}
+      if (document_title) { tmp1together["title"] = document_title }
+
+
+      let new1 = NEWsplitAtDelimiters(tmp1together, level[0], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[1], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[2], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[3], 0, 0);
@@ -205,7 +217,7 @@ if (sourceTextArea.addEventListener) {
       new1 = NEWsplitAtDelimiters(new1, level[7], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[8], 0, 0);
 console.log("did level[8]");
-console.log([...new1]);
+console.log(new1);
       new1 = NEWsplitAtDelimiters(new1, level[9], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[10], 0, 0);
       new1 = NEWsplitAtDelimiters(new1, level[11], 0, 0);
@@ -215,107 +227,146 @@ console.log([...new1]);
       let new2 = NEWsplitAtDelimiters(new1, level[0], 0, 1); 
 
  console.log("processed text 2", new2);
-      alert("pause 1.5");
+//      alert("pause 1.5");
+      attribute_like.forEach( (attr) => { new2 = NEWextract_lists(new2, attr, 0, 0) } );
+ console.log("re processed text 2", new2);
+//      alert("pause 1.6");
+
       for (let i=1; i<=13; ++i) {
           new2 = NEWsplitAtDelimiters(new2, level[i], 0, 1);
       }
-console.log([...new1]);
  console.log("preprocessed text 2", new2);
-      alert("pause 2");
+ //     alert("pause 2");
 
       let new3 = NEWsplitAtDelimiters(new2, level[0], 0, 2);
       new3 = NEWsplitAtDelimiters(new3, level[1], 0, 2);
       new3 = NEWsplitAtDelimiters(new3, level[2], 0, 2);
-console.log("new3", [...new3]);
-      alert("pause 2.5");
+console.log("new3", {...new3});
+ //     alert("pause 2.5");
       new3 = NEWsplitAtDelimiters(new3, level[3], 0, 2);
-console.log("new3", [...new3]);
-      alert("pause 2.6");
+console.log("new3", {...new3});
+  //    alert("pause 2.6");
       for (let i=3; i<=13; ++i) {
           new3 = NEWsplitAtDelimiters(new3, level[i], 0, 2);
       }
-console.log("new3", [...new3]);
-      alert("pause 3");
+      attribute_like.forEach( (attr) => { new3 = NEWextract_lists(new3, attr, 0, 2) } );
 
-      let new4 = [...new3];
+console.log("new3", {...new3});
+ //     alert("pause 3");
+
+      let new4 = {...new3};
 
       level.forEach( (lev) => { new4 = NEWsplitAtDelimiters(new4, lev, 0, 3) } );
 
+      attribute_like.forEach( (attr) => { new4 = NEWextract_lists(new4, attr, 0, 3) } );
  console.log("processed text 4", new4);
-      alert("pause 4");
+ //     alert("pause 4");
 
-      let new5 = [...new4];
+      let new5 = {...new4};
       
       level.forEach( (lev) => { new5 = NEWsplitAtDelimiters(new5, lev, 0, 4) } );
+      attribute_like.forEach( (attr) => { new5 = NEWextract_lists(new5, attr, 0, 4) } );
  
  console.log("processed text 5", new5);
-      alert("pause 5");
+  //    alert("pause 5");
 
-      let new6 = [...new5];
+      let new6 = {...new5};
 
       level.forEach( (lev) => { new6 = NEWsplitAtDelimiters(new6, lev, 0, 5) } );
+      attribute_like.forEach( (attr) => { new6 = NEWextract_lists(new6, attr, 0, 5) } );
 
  console.log("processed text 6", new6);
-      alert("pause 6");
+ //     alert("pause 6");
 
+      let new7 = {...new6};
 
+      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 6) } );
+      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 6) } );
+      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 7) } );
+      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 7) } );
+
+ console.log("processed text 7", new7);
+  //    alert("pause 7");
+
+      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 8) } );
+      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 8) } );
+
+ console.log("processed text 7", new7);
+ //     alert("pause 8");
+
+      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 8) } );
+      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 8) } );
+
+ console.log("processed text 7", new7);
+  //    alert("pause 9");
+
+      let new8 = {...new7};
+
+      new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
+ console.log("processed text 8", new8);
+  //    alert("pause 10");
 // console.log("preprocessed text", originaltextB);
-      var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
+ //     var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
 
 //       console.log("tmpfirstsplit",tmpfirstsplit);
 //alert("pause 3");
 
-      let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
+//      let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
 // alert("tmpfirstsplitMATH");
-      let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
-      let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
-      let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
+//      let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
+//      let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
+//      let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
 
 // console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
 //alert("labels")
 
-      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
+//      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
 
 //       console.log("tmp1firstsplitP",tmp1firstsplitP);
 
 // alert("first split P");
 
-      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
+//      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
 
 //       console.log("tmp1secondsplit",tmp1secondsplit);
 //       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
 
-      let tmp1together = {tag: "section", content: tmp1secondsplit}
-      if (document_title) { tmp1together["title"] = document_title }
+//      let tmp1together = {tag: "section", content: tmp1secondsplit}
+//      if (document_title) { tmp1together["title"] = document_title }
 
-      let tmp1secondsplitMATH = extract_lists(tmp1together, "extraneous math", display_math_tags);
+//      let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
    //   let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
 // console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
 
-      let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
-      let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
-      let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
+//      let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
+//      let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
+//      let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
 
-      let tmp1secondsplitLI = extract_lists(tmp1secondsplitLABEL, "extract li", ["p"]);
+ let new9 = {...new8};
 
-      const tmp1secondsplitENV = extract_lists(tmp1secondsplitLI, "oneline environments", ["p"]);
+      new9 = NEWextract_lists(new9, "extract li", 0,0);
 
-      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
+      new9 = NEWextract_lists(new9, "oneline environments", 0,0);
+ console.log("processed text 9", new9);
+      alert("pause 11");
 
-  console.log("tmp1secondsplitP", tmp1secondsplitP);
+//      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
+//
+//  console.log("tmp1secondsplitP", tmp1secondsplitP);
+//
+//alert("pre");
+////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
+//     let tmp1finalsplit = extract_lists(tmp1secondsplitPfig, "attributes", "all");
+//
+////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
 
-alert("pre");
-      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
-     let tmp1finalsplit = extract_lists(tmp1secondsplitPfig, "attributes", "all");
+ //      console.log("tmp1secondsplitPfig",tmp1secondsplitPfigclean);
 
-      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
+//       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
+//alert("tmp1secondsplitPfig");
 
-       console.log("tmp1secondsplitPfig",tmp1secondsplitPfigclean);
-
-       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
-alert("tmp1secondsplitPfig");
-
-      const tmp2 = splitAtDelimiters(tmp1secondsplitPfigclean, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+//      const tmp2 = splitAtDelimiters(tmp1secondsplitPfigclean, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, "all", "", tags_containing_text);
 
 //       console.log("tmp2:",tmp2);
 
@@ -352,7 +403,7 @@ alert("tmp1secondsplitPfig");
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
-//      console.log("tmp5p",tmp5p);
+      console.log("tmp5p",tmp5p);
 //      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));
 
       if(echosourceTextArea) {

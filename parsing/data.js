@@ -115,12 +115,19 @@ level.push([...aside_like]);
 level.push([...display_environments]);
 level.push([...display_subenvironments]);
 level.push([...display_subsubenvironments]);
+level.push([...higher_level_tags]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
 level.push(["equation"]);
 // level[13] = [...display_math_tags];  // what about remapped_tags?
 
+const attribute_like = [
+    "extraneous math",
+    "attributes",
+    "title",
+    "label"
+]
 
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)
@@ -142,6 +149,7 @@ let aliases = { // in the format "officialname": [list of synonyms].  Taken from
     "fn" : ["footnote"],
     "hypothesis" : ["hyp"],
     "lemma" : ["lem","lma","lemm"],
+    "mdn" : ["equation"],
     "notation" : ["no","nota","ntn","nt","notn","notat"],
     "observation" : ["obs"],      
     "proof" : ["pf","prf","demo"],
