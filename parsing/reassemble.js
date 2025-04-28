@@ -7,14 +7,17 @@ const reassemblePreTeXt = function(content) {
        let this_element_text = "";
        const this_tag = content.tag;
        let these_tags = outputtags[this_tag];
-       this_element_text +=  these_tags.before_begin + these_tags.begin_tag
-          if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }
-          if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + content.label + '"'}
-          this_element_text += these_tags.after_begin;
+       this_element_text +=  these_tags.before_begin + these_tags.begin_tag;
 
-          if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
+       if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }
+       if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + content.label + '"'}
+       this_element_text += these_tags.after_begin;
 
-          return this_element_text + reassemblePreTeXt(content.content) +  these_tags.before_end + these_tags.end_tag + these_tags.after_end;
+       if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
+
+       const this_assembled_text = this_element_text + reassemblePreTeXt(content.content) +  these_tags.before_end + these_tags.end_tag + these_tags.after_end;
+
+       return this_assembled_text
     }
 
     const  nodelist = content;  // should we check it is an array?
@@ -25,12 +28,11 @@ const reassemblePreTeXt = function(content) {
 
       let this_element_text = "";
       const this_tag = element.tag;
-   console.log("assembling a ", this_tag, "from", element);
+//   console.log("assembling a ", this_tag, "from", element);
       let these_tags = outputtags[this_tag];
-  console.log("these_tags ", these_tags);
+//  console.log("these_tags ", these_tags);
       // DANGER:  is this a bad idea, or is it okay because it
-      // is reasonably to nave a plain text node (and not anode with "text" as its tag"
-//      if (!these_tags) { these_tags = do_nothing_markup }
+      // is reasonably to nave a plain text node (and not a node with "text" as its tag"
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
@@ -40,7 +42,6 @@ const reassemblePreTeXt = function(content) {
 
       if ("title" in element && element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
 
-//      this_element_text = this_element_text.concat(element.content);
       let this_new_text = reassemblePreTeXt(element.content);
       if (this_tag != "text") {
                 // what about a code block?
@@ -65,10 +66,12 @@ const reassemblePreTeXt = function(content) {
 // console.log("this_new_text", this_new_text);
          this_new_text = sanitizeXMLstring(this_new_text)
       }
-//      this_element_text = this_element_text.concat(reassemblePreTeXt(element.content));
       this_element_text = this_element_text + this_new_text;
       this_element_text = this_element_text +
                 these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
+
+      if (this_element_text.match(/^\s*<p>\s*<\/p>\s*$/)) { this_element_text = "" }
+                                                  // should we have eleminated empty p earlier?
 
       assembled_text = assembled_text + this_element_text;
 

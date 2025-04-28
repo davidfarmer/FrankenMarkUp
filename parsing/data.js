@@ -78,7 +78,7 @@ const tags_containing_text = ["text", "p",
                    // sit alone on a line with their content
 const title_like_tags = ["title", "idx"];
 
-const remapped_tags = [  // [latex_name, ptx_tag]
+const remapped_math_tags = [  // [latex_name, ptx_tag]
                          // could these be handled by a alias, like we did with quote -> blockquote?
     ["equation", "men"],
     ["align", "mdn"],
@@ -119,8 +119,7 @@ level.push([...higher_level_tags]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
-level.push(["equation"]);
-// level[13] = [...display_math_tags];  // what about remapped_tags?
+level.push("displaymath");
 
 const attribute_like = [
     "extraneous math",
@@ -149,7 +148,6 @@ let aliases = { // in the format "officialname": [list of synonyms].  Taken from
     "fn" : ["footnote"],
     "hypothesis" : ["hyp"],
     "lemma" : ["lem","lma","lemm"],
-    "mdn" : ["equation"],
     "notation" : ["no","nota","ntn","nt","notn","notat"],
     "observation" : ["obs"],      
     "proof" : ["pf","prf","demo"],

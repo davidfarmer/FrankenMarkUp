@@ -656,7 +656,13 @@ if (unofficialName.match(/at/)) { console.log(trueName, unofficialName) }
 
 const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth ) {
 
-    const delimiters = delimitersFromList(taglist);
+    let delimiters = [];
+    if (typeof taglist == "string") {
+        if (taglist == "displaymath") { delimiters = display_math_delimiters }
+        else { alert("unknown taglist " + taglist) }
+    } else {
+        delimiters = delimitersFromList(taglist)
+    }
 console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters);
 
     // splitting a text node means replacing it by a list of nodes
@@ -771,7 +777,7 @@ const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0
           if (action == "oneline environments" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*([A-Za-z]+):\s/)) {
+            if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s 
                 let split_content = this_content.content.split(":", 1);
                 const new_tag = split_content[0].toLowerCase();
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");

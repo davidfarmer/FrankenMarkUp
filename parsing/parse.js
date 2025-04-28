@@ -47,16 +47,24 @@ const delimitersFromList = function(lis) {
     return delim_lis
 }
 
-const paragraph_peer_delimiters = [
+const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"men"},
           {left:"\\[", right:"\\]", tag:"men"},
-];
-remapped_tags.forEach( (el) => {
-    paragraph_peer_delimiters.push(
+]; 
+remapped_math_tags.forEach( (el) => {
+    display_math_delimiters.push(
         {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
     );
-});
+}); 
+
+const paragraph_peer_delimiters = [];
+
+// remapped_tags.forEach( (el) => {
+//     paragraph_peer_delimiters.push(
+//         {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
+//     );
+// });
 
 
 let paragraph_peer_ptx_and_latex_text = [...level_1_p_peers_containing_p];
@@ -184,7 +192,7 @@ if (sourceTextArea.addEventListener) {
       let originaltextX = preprocessAliases(originaltext);
 
 console.log("originaltextX", originaltextX);
-alert("aliases")
+
      // extract title, label, attributes of parent section (currently only title implemented)
 
       let document_title = "";
@@ -207,52 +215,35 @@ alert("aliases")
       if (document_title) { tmp1together["title"] = document_title }
 
 
-      let new1 = NEWsplitAtDelimiters(tmp1together, level[0], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[1], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[2], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[3], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[4], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[5], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[6], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[7], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[8], 0, 0);
-console.log("did level[8]");
-console.log(new1);
-      new1 = NEWsplitAtDelimiters(new1, level[9], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[10], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[11], 0, 0);
-      new1 = NEWsplitAtDelimiters(new1, level[12], 0, 0);
+      let new1 = {...tmp1together};
+
+      level.forEach( (lev) => { new1 = NEWsplitAtDelimiters(new1, lev, 0, 0) } );
+      attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr, 0, 0) } );
+
  console.log("preprocessed text", new1);
 
-      let new2 = NEWsplitAtDelimiters(new1, level[0], 0, 1); 
-
- console.log("processed text 2", new2);
-//      alert("pause 1.5");
-      attribute_like.forEach( (attr) => { new2 = NEWextract_lists(new2, attr, 0, 0) } );
- console.log("re processed text 2", new2);
-//      alert("pause 1.6");
-
-      for (let i=1; i<=13; ++i) {
-          new2 = NEWsplitAtDelimiters(new2, level[i], 0, 1);
-      }
+      let new2 = {...new1};
+      level.forEach( (lev) => {
+          new2 = NEWsplitAtDelimiters(new2, lev, 0, 1)
+          attribute_like.forEach( (attr) => { new2 = NEWextract_lists(new2, attr, 0, 1) } );
+      } );
  console.log("preprocessed text 2", new2);
- //     alert("pause 2");
+      alert("pause 2");
 
-      let new3 = NEWsplitAtDelimiters(new2, level[0], 0, 2);
-      new3 = NEWsplitAtDelimiters(new3, level[1], 0, 2);
-      new3 = NEWsplitAtDelimiters(new3, level[2], 0, 2);
+      let new3 = {...new2}
+      level.forEach( (lev) => { 
+          new3 = NEWsplitAtDelimiters(new3, lev, 0, 2) 
+          attribute_like.forEach( (attr) => { new3 = NEWextract_lists(new3, attr, 0, 2) } );
+      } );
+
+
+
 console.log("new3", {...new3});
- //     alert("pause 2.5");
-      new3 = NEWsplitAtDelimiters(new3, level[3], 0, 2);
-console.log("new3", {...new3});
-  //    alert("pause 2.6");
-      for (let i=3; i<=13; ++i) {
-          new3 = NEWsplitAtDelimiters(new3, level[i], 0, 2);
-      }
+      alert("pause 2.6");
       attribute_like.forEach( (attr) => { new3 = NEWextract_lists(new3, attr, 0, 2) } );
 
 console.log("new3", {...new3});
- //     alert("pause 3");
+      alert("pause 3");
 
       let new4 = {...new3};
 
@@ -349,6 +340,11 @@ console.log("new3", {...new3});
       new9 = NEWextract_lists(new9, "oneline environments", 0,0);
  console.log("processed text 9", new9);
       alert("pause 11");
+
+      attribute_like.forEach( (attr) => { new9 = NEWextract_lists(new9, attr, 0, 9) } );
+ console.log("processed text 9", new9);
+      alert("pause 12");
+
 
 //      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
 //
