@@ -111,84 +111,6 @@ console.log("made this_new_text", this_new_text);
     return newnodelist
 }
 
-const splitAtDelimiters = function(parse_me, delimiters, toenter="all", donotenter="", processiftext="") {
-
-    // splitting a text node means replacing it by a list of nodes
-    // splitting a non-text node (which is represented by a list)
-    // means replacing its content by a list of nodes
-
-    parsecount += 1;
-//    console.log("parsecount", parsecount, "   spaceline:", spacelike);
-
-    let newnodelist = [];
-
-    if (Array.isArray(parse_me)) {
-//console.log("found an array, of length", parse_me.length);
-
-        parse_me.forEach( (element, index) => {
-
-//console.log("parsing", index);
-
-//console.log("readt to parse", element);
-
-//console.log("from:", element);
-          const this_element_parsed = splitAtDelimiters(element, delimiters, toenter, donotenter, processiftext);
-//console.log("to:", this_element_parsed);
-
-//          if (false && Array.isArray(this_element_parsed)) {
- //           newnodelist.push(...this_element_parsed)
-//          } else {
-//console.log("    CAN THIS HAPPEN?", typeof this_element_parsed, "XX", this_element_parsed);
-//console.log("    content:", this_element_parsed.content);
-            newnodelist.push(this_element_parsed)
-//          }
-        });
-
-        return newnodelist
-
-    } else if (typeof parse_me == 'string') {
-       let new_content = parse_me;
-//console.log("found a string to ", delimiters);
-       if (delimiters === 'spacelike') { new_content = recastSpacedDelimiters(new_content) }
-       else if (delimiters === 'makeparagraphs') { new_content = splitTextIntoParagraphs(new_content) }
-       else { new_content = splitTextAtDelimiters(new_content, delimiters) }
-
-       if (new_content.length == 1 && new_content[0].tag == 'text') {
-           return new_content[0].content
-       } else {
-           return new_content
-       }
-
-    } else {  // parse_me must be an object, but check
-
-       if (typeof parse_me != "object") { alert("wrong category for ", parse_me) }
-
-       if(Array.isArray(parse_me.content) && !donotenter.includes(parse_me.tag)
-                 && (toenter === "all" || toenter.includes(parse_me.tag) ) ) {
-           let new_content = [...parse_me.content];
-           new_content = splitAtDelimiters(new_content, delimiters, toenter, donotenter, processiftext);
-           parse_me.content = new_content
-       } else {  // content is string, but check
-
-           if (typeof parse_me.content != "string") { alert("expected a string: ", parse_me.content) }
-
-           if (processiftext.includes(parse_me.tag)) {
-               const new_content = splitAtDelimiters(parse_me.content, delimiters);
-//               if (delimiters == 'makeparagraphs' && parse_me.tag == "text") {
-//                   parse_me = new_content
-//               } else {
-                   parse_me.content = new_content
-//               }
-           }
-       }
-       return parse_me
-
-    }
-
-    alert("should be unreachable: unrecognized category for ", parse_me)
-
-}
-
 const splitTextAtDelimiters = function(this_content, delimiters) {  // based on Katex
 
     if (typeof this_content != "string") { alert("expected string in splitTextAtDelimiters", this_content) }
@@ -654,7 +576,7 @@ if (unofficialName.match(/at/)) { console.log(trueName, unofficialName) }
 }
 
 
-const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth ) {
+const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toenter="all", toprocess="all", parent_tag="" ) {
 
     let delimiters = [];
     if (typeof taglist == "string") {
@@ -669,7 +591,6 @@ console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag
     // splitting a non-text node (which is represented by a list)
     // means replacing its content by a list of nodes
 
-//    console.log("parsecount", parsecount, "   spaceline:", spacelike);
 
     let newnodelist = [];
 
@@ -689,7 +610,10 @@ console.log("parsing", index, "  ", typeof element, "   ", element);
 //console.log("readt to parse", element);
 
 console.log("from:", element);
-              const this_element_parsed = NEWsplitAtDelimiters(element, taglist, thisdepth+1, maxdepth);
+              let this_element_parsed;
+              if (toenter == "all" || toenter.includes(element.tag)) {
+                  this_element_parsed = NEWsplitAtDelimiters(element, taglist, thisdepth+1, maxdepth, toenter, toprocess, element.tag)
+              } else { this_element_parsed = element }
 console.log("to:", this_element_parsed);
 
 //              newnodelist.push(this_element_parsed)
@@ -703,19 +627,30 @@ console.log("to:", this_element_parsed);
 
     } else if (typeof parse_me == 'string') {
 
+
         if (thisdepth > maxdepth + 2) { return parse_me }   // why +2 ?
 
-       let new_content = parse_me;
-       if (delimiters === 'makeparagraphs') { new_content = splitTextIntoParagraphs(new_content) }
-       else { new_content = splitTextAtDelimiters(new_content, delimiters) }
+        if (delimiters === 'spacelike') {
+            if (toprocess=="all" || toprocess.includes(parent_tag)) { return recastSpacedDelimiters(parse_me) }
+            else { return parse_me }
+        }
 
+        let new_content = parse_me;  // why rename it?
 
-  // check if this is correct even if curentdepth is 1
-//       if (new_content.length == 1 && new_content[0].tag == 'text') {
-//           return new_content[0].content
-//       } else {
-//           return new_content
-//       }
+        if (delimiters === 'makeparagraphs') {
+            if (toprocess=="all" || toprocess.includes(parent_tag)) {
+                new_content = splitTextIntoParagraphs(new_content)
+            } else {
+                //  pass
+            }
+        } else {
+            if (toprocess=="all" || toprocess.includes(parent_tag)) {
+                new_content = splitTextAtDelimiters(new_content, delimiters)
+            } else {
+                //  pass
+            }
+        }
+
         return new_content
 
     } else {  // parse_me must be an object, but check
@@ -728,7 +663,10 @@ console.log("dealing with", current_object);
        if (thisdepth > maxdepth && current_object.tag != "text") { return current_object }
 
        let new_content = current_object.content;
-       new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth);
+
+       if (toprocess == "all" || toprocess.includes(current_object.tag)) {
+           new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, to process, current_object.tag);
+       }
 console.log("now new_content", new_content);
        if (current_object.tag == "text" && typeof new_content == "text") { current_object.content = new_content }
        else if (current_object.tag != "text") {
@@ -750,7 +688,7 @@ console.log("then current_object is", current_object);
 
 }
 
-const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0, maxdepth=0, this_tag = "") {
+const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0, maxdepth=0, tags_to_process="all", this_tag = "") {
 
     let newnodelist = [];
 
@@ -1103,3 +1041,6 @@ console.log("looking for an attribute", el);
 
 }
 
+const splitAtDelimiters = function(parse_me, delimiters, toenter="all", donotenter="", processiftext="") {
+    return parse_me
+}

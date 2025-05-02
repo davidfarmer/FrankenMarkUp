@@ -217,82 +217,17 @@ console.log("originaltextX", originaltextX);
 
       let new1 = {...tmp1together};
 
-      level.forEach( (lev) => { new1 = NEWsplitAtDelimiters(new1, lev, 0, 0) } );
-      attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr, 0, 0) } );
-
- console.log("preprocessed text", new1);
-
-      let new2 = {...new1};
-      level.forEach( (lev) => {
-          new2 = NEWsplitAtDelimiters(new2, lev, 0, 1)
-          attribute_like.forEach( (attr) => { new2 = NEWextract_lists(new2, attr, 0, 1) } );
-      } );
- console.log("preprocessed text 2", new2);
+      const firstdepth = 10;
+      for (let depth = 0; depth < firstdepth; ++depth) {
+          level.forEach( (lev) => {
+              new1 = NEWsplitAtDelimiters(new1, lev, 0, depth)
+              attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr, 0, depth) } );
+          } );
+      }
+ console.log("preprocessed text 2", new1);
       alert("pause 2");
 
-      let new3 = {...new2}
-      level.forEach( (lev) => { 
-          new3 = NEWsplitAtDelimiters(new3, lev, 0, 2) 
-          attribute_like.forEach( (attr) => { new3 = NEWextract_lists(new3, attr, 0, 2) } );
-      } );
-
-
-
-console.log("new3", {...new3});
-      alert("pause 2.6");
-      attribute_like.forEach( (attr) => { new3 = NEWextract_lists(new3, attr, 0, 2) } );
-
-console.log("new3", {...new3});
-      alert("pause 3");
-
-      let new4 = {...new3};
-
-      level.forEach( (lev) => { new4 = NEWsplitAtDelimiters(new4, lev, 0, 3) } );
-
-      attribute_like.forEach( (attr) => { new4 = NEWextract_lists(new4, attr, 0, 3) } );
- console.log("processed text 4", new4);
- //     alert("pause 4");
-
-      let new5 = {...new4};
-      
-      level.forEach( (lev) => { new5 = NEWsplitAtDelimiters(new5, lev, 0, 4) } );
-      attribute_like.forEach( (attr) => { new5 = NEWextract_lists(new5, attr, 0, 4) } );
- 
- console.log("processed text 5", new5);
-  //    alert("pause 5");
-
-      let new6 = {...new5};
-
-      level.forEach( (lev) => { new6 = NEWsplitAtDelimiters(new6, lev, 0, 5) } );
-      attribute_like.forEach( (attr) => { new6 = NEWextract_lists(new6, attr, 0, 5) } );
-
- console.log("processed text 6", new6);
- //     alert("pause 6");
-
-      let new7 = {...new6};
-
-      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 6) } );
-      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 6) } );
-      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 7) } );
-      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 7) } );
-
- console.log("processed text 7", new7);
-  //    alert("pause 7");
-
-      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 8) } );
-      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 8) } );
-
- console.log("processed text 7", new7);
- //     alert("pause 8");
-
-      level.forEach( (lev) => { new7 = NEWsplitAtDelimiters(new7, lev, 0, 8) } );
-      attribute_like.forEach( (attr) => { new7 = NEWextract_lists(new7, attr, 0, 8) } );
-
- console.log("processed text 7", new7);
-  //    alert("pause 9");
-
-      let new8 = {...new7};
-
+      let new8 = {...new1}
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
  console.log("processed text 8", new8);
   //    alert("pause 10");
@@ -335,6 +270,7 @@ console.log("new3", {...new3});
 
  let new9 = {...new8};
 
+      // why do we extract lists before oneline environments?
       new9 = NEWextract_lists(new9, "extract li", 0,0);
 
       new9 = NEWextract_lists(new9, "oneline environments", 0,0);
@@ -362,13 +298,13 @@ console.log("new3", {...new3});
 //alert("tmp1secondsplitPfig");
 
 //      const tmp2 = splitAtDelimiters(tmp1secondsplitPfigclean, asymmetric_inline_delimiters, "all", "", tags_containing_text);
-      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp2 = NEWsplitAtDelimiters(new9, asymmetric_inline_delimiters, 0,0, tags_containing_text);
 
 //       console.log("tmp2:",tmp2);
 
 // console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = splitAtDelimiters(tmp2, "spacelike", "all", "", tags_containing_text);
+      const tmp3 = NEWsplitAtDelimiters(tmp2, "spacelike", 0,0, tags_containing_text);
 //       console.log("tmp3:",tmp3);
 
 
@@ -382,9 +318,9 @@ console.log("new3", {...new3});
 
 //      console.log("tmp4p:",tmp4p);
 
-      const tmp5x = extract_lists(tmp4, "fonts", tags_containing_text);
-      const tmp5y = extract_lists(tmp5x, "texlike", tags_containing_text);
-      const tmp5z = splitAtDelimiters(tmp5y, "spacelike", "all", "", tags_containing_text);
+      const tmp5x = NEWextract_lists(tmp4, "fonts", 0,0,tags_containing_text);
+      const tmp5y = NEWextract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
+      const tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,0, tags_containing_text);
 
       const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
       const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
