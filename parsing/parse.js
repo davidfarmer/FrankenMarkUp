@@ -122,6 +122,10 @@ const do_nothing_markup = {begin_tag: "", end_tag: "",
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
 
+const debugging_output_markup = {begin_tag: "BT", end_tag: "ET",
+         before_begin: "BB", after_begin: "AB",
+         before_end: "BE", after_end: "AE"};
+
 const outputtags = {  // start with the quirky ones
     "text" : do_nothing_markup,
     "placeholder" : do_nothing_markup,
@@ -136,16 +140,6 @@ inlinetags.forEach( (el) => {
     before_end: "", after_end: ""}
     });
 
-/*
-const alone_on_line_tags = ["p", "ol", "ul", "me", "men", "md", "mdn", "blockquote", "statement"];
-
-// need to handle attributes on output tags
-alone_on_line_tags.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + "", end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: ">\n",
-    before_end: "\n", after_end: "\n"}
-    });
-*/
 paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
@@ -225,11 +219,20 @@ console.log("originaltextX", originaltextX);
           } );
       }
  console.log("preprocessed text 2", new1);
-      alert("pause 2");
+      alert("pause 1");
 
-      let new8 = {...new1}
+      let new7 = {...new1}
+      new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
+ console.log("processed text 7", new7);
+      alert("pause 2");
+      let new8 = {...new7}
+      new8 = NEWextract_lists(new8, "oneline environments", 0,0);
+
+      attribute_like.forEach( (attr) => { new8 = NEWextract_lists(new8, attr, 0, "unused") } );
+  // next is maybe overkill, but things like statements contain p's
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
  console.log("processed text 8", new8);
+      alert("pause 2.1");
   //    alert("pause 10");
 // console.log("preprocessed text", originaltextB);
  //     var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
@@ -273,13 +276,13 @@ console.log("originaltextX", originaltextX);
       // why do we extract lists before oneline environments?
       new9 = NEWextract_lists(new9, "extract li", 0,0);
 
-      new9 = NEWextract_lists(new9, "oneline environments", 0,0);
- console.log("processed text 9", new9);
-      alert("pause 11");
+//      new9 = NEWextract_lists(new9, "oneline environments", 0,0);
+// console.log("processed text 9", new9);
+//      alert("pause 11");
 
-      attribute_like.forEach( (attr) => { new9 = NEWextract_lists(new9, attr, 0, 9) } );
- console.log("processed text 9", new9);
-      alert("pause 12");
+//      attribute_like.forEach( (attr) => { new9 = NEWextract_lists(new9, attr, 0, 9) } );
+// console.log("processed text 9", new9);
+//      alert("pause 12");
 
 
 //      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
@@ -320,7 +323,10 @@ console.log("originaltextX", originaltextX);
 
       const tmp5x = NEWextract_lists(tmp4, "fonts", 0,0,tags_containing_text);
       const tmp5y = NEWextract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
-      const tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,0, tags_containing_text);
+console.log("                      AAAAAAAAAA tmp5y", tmp5y);
+      const tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+console.log("tmp5z", tmp5z);
+alert("just did spacelike");
 
       const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
       const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
@@ -328,12 +334,13 @@ console.log("originaltextX", originaltextX);
 // console.log("tmp5v", tmp5v);
       const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
 // console.log("tmp5u", tmp5u);
-      const tmp5 = extract_lists(tmp5u, "statements", tags_needing_statements);
+      let tmp5 = NEWextract_lists(tmp5u, "statements",0,0, tags_needing_statements);
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
+// alert("tmp5");
       const tmp5p = reassemblePreTeXt(tmp5);
       console.log("tmp5p",tmp5p);
 //      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));

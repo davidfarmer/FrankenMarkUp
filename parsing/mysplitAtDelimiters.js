@@ -175,7 +175,6 @@ const recastSpacedDelimiters = function(this_content) {
     let the_text = this_content;
 
 
-//    delimiters.forEach( (element, index) => {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
@@ -581,6 +580,7 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
     let delimiters = [];
     if (typeof taglist == "string") {
         if (taglist == "displaymath") { delimiters = display_math_delimiters }
+        else if (taglist == "spacelike") { delimiters = "spacelike" }    // do nothing, because this is handled later
         else { alert("unknown taglist " + taglist) }
     } else {
         delimiters = delimitersFromList(taglist)
@@ -627,6 +627,7 @@ console.log("to:", this_element_parsed);
 
     } else if (typeof parse_me == 'string') {
 
+console.log("prodeccins a string with parent_tag", parent_tag, "at depth", thisdepth, "of", maxdepth, "eith", delimiters);
 
         if (thisdepth > maxdepth + 2) { return parse_me }   // why +2 ?
 
@@ -659,13 +660,16 @@ console.log("to:", this_element_parsed);
 
        let current_object = {...parse_me}
 
-console.log("dealing with", current_object);
+console.log("dealing with", current_object, "of depth", thisdepth, "with max", maxdepth,toprocess, thisdepth > maxdepth, delimiters);
        if (thisdepth > maxdepth && current_object.tag != "text") { return current_object }
 
        let new_content = current_object.content;
 
-       if (toprocess == "all" || toprocess.includes(current_object.tag)) {
-           new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, to process, current_object.tag);
+// oooooo
+
+       if (toenter == "all" || toprocess.includes(current_object.tag)) {
+console.log("making new_content");
+           new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
        }
 console.log("now new_content", new_content);
        if (current_object.tag == "text" && typeof new_content == "text") { current_object.content = new_content }
@@ -685,10 +689,9 @@ console.log("then current_object is", current_object);
     }
 
     alert("should be unreachable: unrecognized category for ", parse_me)
-
 }
 
-const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0, maxdepth=0, tags_to_process="all", this_tag = "") {
+const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "") {
 
     let newnodelist = [];
 
@@ -700,10 +703,12 @@ const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0
         this_content.forEach( (element, index) => {
 
           let this_node;
-          if (typeof element == "object") { this_node = {...element} }
-          else { this_node = element}
-          if (action == "do_nothing") { this_node = NEWextract_lists(this_node, action, thisdepth+1, maxdepth) }
-          else { this_node = NEWextract_lists(this_node, action, thisdepth+1, maxdepth) }
+          if (typeof element == "object") {
+              this_node = NEWextract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
+          }
+          else {
+              this_node = NEWextract_lists(element, action, thisdepth+1, maxdepth, tags_to_process, parent_tag);
+          }
 
           newnodelist.push(this_node)
 
@@ -803,26 +808,41 @@ const NEWextract_lists = function(this_content, action="do_nothing", thisdepth=0
                   this_content.content = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "")
             }
 
-          } else if (action == "statements"  &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "object" ) {  // actually, must be an array
+          } else if (action == "statements"  // &&  tags_to_process.includes(this_content.tag)
+                      && tags_to_process.includes(parent_tag) ) {
+               //       && typeof this_content.content == "object" ) {  // actually, must be an array
+
+console.log("inserting statements on ", this_content, "with content", {...this_content.content});
 
             let this_statement_content = [];
+            let this_statement = {};
 
-            let element = "";
-            let index = 0;
-            for (index = 0; index < this_content.content.length; ++index) {
-                element = this_content.content[index]
-                if (hint_like.includes(element.tag)) {
-                  break
-                } else {
-                  this_statement_content.push(element)
-                }
+            if (typeof this_content.content == "string") {
+              this_statement_content = [{tag: "text", content: this_content.content}]
+              this_statement = {tag: "statement", content: this_statement_content}
+              this_content.content = [this_statement]
+            } else {
+
+              let element = "";
+              let index = 0;
+              for (index = 0; index < this_content.content.length; ++index) {
+                  element = this_content.content[index]
+                  if (hint_like.includes(element.tag)) {
+                    break
+                  } else {
+                    this_statement_content.push(element)
+                  }
+              }
+
+              this_statement = {tag: "statement", content: this_statement_content}
+              let remaining_pieces = this_content.content.slice(index);
+              remaining_pieces.unshift(this_statement);
+              this_content.content = remaining_pieces
             }
 
-            const this_statement = {tag: "statement", content: this_statement_content}
-            let remaining_pieces = this_content.content.slice(index);
-            remaining_pieces.unshift(this_statement);
-            this_content.content = remaining_pieces
+} else if (action == "statements") {
+console.log("not processing", this_content, "with parent", parent_tag, "with content", this_content.content);
+
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {  // also must handle case of array
@@ -991,7 +1011,7 @@ console.log("looking for an attribute", el);
 
           let this_node = {...this_content};
           if (action == "do_nothing") { this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, this_node.tag) }
-          else { this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, this_node.tag) }
+          else { this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag) }
 
           return this_node
 
@@ -1001,14 +1021,14 @@ console.log("looking for an attribute", el);
 
 //console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
-      else if (action == "fonts" && tags_to_process.includes(this_tag)) {  // note: this_content already known
+      else if (action == "fonts" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
         let new_text = "";
         new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
         new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
 // console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
-      } else if (action == "texlike" && tags_to_process.includes(this_tag)) {  // note: this_content already known
+      } else if (action == "texlike" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
         let new_text = "";
         new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");

@@ -26,16 +26,33 @@ const reassemblePreTeXt = function(content) {
 
     nodelist.forEach( (element, index) => {
 
+     // problmatic case:  "floating" text.  By that we meet a string
+     // which is has not been parsed.  Probably due to bad markup,
+     // such as words after the answer to an exercise but before the
+     // end of the exercise.
+
+     // Current (temporary?) solution is to wrap those in "error" tags.
+console.log("elt is", typeof element);
+      if (typeof element == "string") {
+          // presumably an error, but if white space, silently ignore
+          if (!element.match(/^\s*$/)) {
+              assembled_text += "<error>" + element + "</error>";
+              console.log("just added error of", element)
+          }
+          return  // i.e., go to next of nodelist
+      }
+
       let this_element_text = "";
       const this_tag = element.tag;
-//   console.log("assembling a ", this_tag, "from", element);
+   console.log("assembling a ", this_tag, "from", element);
       let these_tags = outputtags[this_tag];
+      if (typeof these_tags == "undefined") { these_tags = debugging_output_markup }
+
 //  console.log("these_tags ", these_tags);
-      // DANGER:  is this a bad idea, or is it okay because it
-      // is reasonably to nave a plain text node (and not a node with "text" as its tag"
 
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag 
+ console.log(typeof element, "ccc", element);
       if ("attributes" in element && element.attributes) { this_element_text += " " + element.attributes.trim() }
       if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
       this_element_text += these_tags.after_begin;
