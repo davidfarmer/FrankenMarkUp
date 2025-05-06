@@ -32,7 +32,7 @@ const reassemblePreTeXt = function(content) {
      // end of the exercise.
 
      // Current (temporary?) solution is to wrap those in "error" tags.
-console.log("elt is", typeof element);
+// console.log("elt is", typeof element);
       if (typeof element == "string") {
           // presumably an error, but if white space, silently ignore
           if (!element.match(/^\s*$/)) {
@@ -44,15 +44,15 @@ console.log("elt is", typeof element);
 
       let this_element_text = "";
       const this_tag = element.tag;
-   console.log("assembling a ", this_tag, "from", element);
+//    console.log("assembling a ", this_tag, "from", element);
       let these_tags = outputtags[this_tag];
       if (typeof these_tags == "undefined") { these_tags = debugging_output_markup }
 
 //  console.log("these_tags ", these_tags);
 
       this_element_text = this_element_text +
-                these_tags.before_begin + these_tags.begin_tag 
- console.log(typeof element, "ccc", element);
+                these_tags.before_begin + these_tags.begin_tag;
+//  console.log(typeof element, "ccc", element);
       if ("attributes" in element && element.attributes) { this_element_text += " " + element.attributes.trim() }
       if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
       this_element_text += these_tags.after_begin;

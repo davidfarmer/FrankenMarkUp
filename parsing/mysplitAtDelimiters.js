@@ -204,6 +204,8 @@ const extract_lists = function(this_content, action="do_nothing", tags_to_proces
 
     let current_new_text = "";
 
+console.log("extract_lists of", action);
+
     if (Array.isArray(this_content)) {
 //  console.log("found an array, length", [...this_content]);
 
@@ -582,10 +584,12 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
         if (taglist == "displaymath") { delimiters = display_math_delimiters }
         else if (taglist == "spacelike") { delimiters = "spacelike" }    // do nothing, because this is handled later
         else { alert("unknown taglist " + taglist) }
-    } else {
+    } else if (typeof taglist[0] == "string") {
         delimiters = delimitersFromList(taglist)
+    } else {
+        delimiters = taglist
     }
-console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters);
+console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters, "from taglist", taglist);
 
     // splitting a text node means replacing it by a list of nodes
     // splitting a non-text node (which is represented by a list)
@@ -672,7 +676,7 @@ console.log("making new_content");
            new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
        }
 console.log("now new_content", new_content);
-       if (current_object.tag == "text" && typeof new_content == "text") { current_object.content = new_content }
+       if (current_object.tag == "text" && typeof new_content == "string") { current_object.content = new_content }
        else if (current_object.tag != "text") {
           if (new_content.length == 1 && new_content[0].tag == "text") {
             current_object.content = new_content[0].content
@@ -697,6 +701,7 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
 
     let current_new_text = "";
 
+console.log("NEWextract_lists of ", action, "this_content");
     if (Array.isArray(this_content)) {
 //  console.log("found an array, length", [...this_content]);
 
@@ -704,6 +709,7 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
 
           let this_node;
           if (typeof element == "object") {
+ console.log("going to extract", element);
               this_node = NEWextract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
           }
           else {
@@ -799,7 +805,7 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
           } else if (action == "label" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*(\\*)label{/)) {
+            if (this_content.content.match(/^\s*(\\*)label{[^{}]*}/)) {
 //  console.log("maybe found a label", this_content.content);
                   let this_label = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
 //console.log("found a label:", this_label);
@@ -810,7 +816,6 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
 
           } else if (action == "statements"  // &&  tags_to_process.includes(this_content.tag)
                       && tags_to_process.includes(parent_tag) ) {
-               //       && typeof this_content.content == "object" ) {  // actually, must be an array
 
 console.log("inserting statements on ", this_content, "with content", {...this_content.content});
 
@@ -952,7 +957,7 @@ console.log("looking for an attribute", el);
   // what to do and I have not gone back to refactor
 
 
-// console.log("this_content.content", [...this_content.content]);
+ console.log("this_content.content", [...this_content.content]);
             let this_new_content = [];
 
             let element = "";
@@ -1009,9 +1014,11 @@ console.log("looking for an attribute", el);
 
           }    // last of many special transformations
 
+console.log("past the special trans", action, "xx", this_content);
+
           let this_node = {...this_content};
-          if (action == "do_nothing") { this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, this_node.tag) }
-          else { this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag) }
+console.log("now re-extracting", this_node.content);
+          this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag);
 
           return this_node
 

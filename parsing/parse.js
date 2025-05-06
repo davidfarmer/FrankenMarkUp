@@ -57,6 +57,10 @@ remapped_math_tags.forEach( (el) => {
         {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
     );
 }); 
+display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
+display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
+display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
+display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
 
 const paragraph_peer_delimiters = [];
 
@@ -167,6 +171,12 @@ outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
          before_begin: "\n", after_begin: "\n",
          before_end: "\n", after_end: "\n"};
 
+display_math_tags.forEach( (el) => {
+    outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
+         before_begin: "", after_begin: ">\n", // because probably source has the \n
+         before_end: "\n", after_end: "\n"};
+});
+
 outputtags["men"] = {begin_tag: "<men", end_tag: "</men>",
          before_begin: "", after_begin: ">\n", // because probably source has the \n
          before_end: "\n", after_end: "\n"};
@@ -186,7 +196,9 @@ if (sourceTextArea.addEventListener) {
       let originaltextX = preprocessAliases(originaltext);
 
 console.log("originaltextX", originaltextX);
+console.log("display_math_delimiters", display_math_delimiters);
 
+      alert("pause 1a");
      // extract title, label, attributes of parent section (currently only title implemented)
 
       let document_title = "";
@@ -202,8 +214,10 @@ console.log("originaltextX", originaltextX);
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
+console.log("originaltextB", originaltextB);
+    alert("pause B");
       // wrap everything in a section
       let tmp1together = {tag: "section", content: originaltextB}
       if (document_title) { tmp1together["title"] = document_title }
@@ -217,9 +231,12 @@ console.log("originaltextX", originaltextX);
               new1 = NEWsplitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr, 0, depth) } );
           } );
+if (depth == 2) {
+console.log("new1", new1);
+    alert("pause 1");
+}
       }
  console.log("preprocessed text 2", new1);
-      alert("pause 1");
 
       let new7 = {...new1}
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
@@ -231,6 +248,9 @@ console.log("originaltextX", originaltextX);
       attribute_like.forEach( (attr) => { new8 = NEWextract_lists(new8, attr, 0, "unused") } );
   // next is maybe overkill, but things like statements contain p's
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
+
+      new8 = NEWextract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
+
  console.log("processed text 8", new8);
       alert("pause 2.1");
   //    alert("pause 10");
@@ -275,6 +295,8 @@ console.log("originaltextX", originaltextX);
 
       // why do we extract lists before oneline environments?
       new9 = NEWextract_lists(new9, "extract li", 0,0);
+console.log("tmp9", new9);
+alert("just did extract li");
 
 //      new9 = NEWextract_lists(new9, "oneline environments", 0,0);
 // console.log("processed text 9", new9);
@@ -300,22 +322,25 @@ console.log("originaltextX", originaltextX);
 //       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
 //alert("tmp1secondsplitPfig");
 
-//      const tmp2 = splitAtDelimiters(tmp1secondsplitPfigclean, asymmetric_inline_delimiters, "all", "", tags_containing_text);
-      const tmp2 = NEWsplitAtDelimiters(new9, asymmetric_inline_delimiters, 0,0, tags_containing_text);
+      const tmp2 = NEWsplitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
+console.log("tmp2", tmp2);
+alert("just did asymmetric_inline_delimiters");
 
 //       console.log("tmp2:",tmp2);
 
 // console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = NEWsplitAtDelimiters(tmp2, "spacelike", 0,0, tags_containing_text);
+      const tmp3 = NEWsplitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
 //       console.log("tmp3:",tmp3);
+console.log("tmp3", tmp3);
+alert("just did spacelike");
 
 
 // console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
       //have to do this twice, because of nesting
-      const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters, "all", "", tags_containing_text);
-      const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, "all", "", tags_containing_text);
+      const tmp4x = NEWsplitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
+      const tmp4 = NEWsplitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
 
  //     const tmp4p = reassemblePreTeXt(tmp4);
 
@@ -324,23 +349,29 @@ console.log("originaltextX", originaltextX);
       const tmp5x = NEWextract_lists(tmp4, "fonts", 0,0,tags_containing_text);
       const tmp5y = NEWextract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
 console.log("                      AAAAAAAAAA tmp5y", tmp5y);
-      const tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+      let tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+      tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
 console.log("tmp5z", tmp5z);
-alert("just did spacelike");
+alert("just re-did asymmetric_inline_delimiters");
+      tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
+console.log("tmp5z", tmp5z);
+alert("just re-re-did asymmetric_inline_delimiters");
 
-      const tmp5t = extract_lists(tmp5z, "blockquotes", ["p"]);  // meaning: Markdown style
-      const tmp5w = extract_lists(tmp5t, "extract li", ["p"]);
-      const tmp5v = extract_lists(tmp5w, "gather li", tags_containing_paragraphs);
-// console.log("tmp5v", tmp5v);
-      const tmp5u = extract_lists(tmp5v, "absorb math", tags_containing_paragraphs);
-// console.log("tmp5u", tmp5u);
+      const tmp5t = tmp5z;
+ //     const tmp5t = NEWextract_lists(tmp5z, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
+      const tmp5w = NEWextract_lists(tmp5t, "extract li",0,0, ["p"]);
+      const tmp5v = NEWextract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
+ console.log("tmp5v", tmp5v);
+ alert("tmp5v");
+      const tmp5u = NEWextract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
+console.log("tmp5u", tmp5u);
+ alert("tmp5u");
       let tmp5 = NEWextract_lists(tmp5u, "statements",0,0, tags_needing_statements);
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
-// alert("tmp5");
       const tmp5p = reassemblePreTeXt(tmp5);
       console.log("tmp5p",tmp5p);
 //      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));

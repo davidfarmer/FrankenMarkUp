@@ -122,7 +122,7 @@ level.push(["blockquote"]);
 level.push("displaymath");
 
 const attribute_like = [
-    "extraneous math",
+ //   "extraneous math",
     "attributes",
     "title",
     "label"
