@@ -118,7 +118,7 @@ const splitTextAtDelimiters = function(this_content, delimiters) {  // based on 
     let index;
     const data = [];
 
-  console.log("delimiters", delimiters);
+//  console.log("delimiters", delimiters);
 
     const regexLeft = new RegExp(
         "(" + delimiters.map((x) => escapeRegex(x.left)).join("|") + ")"
@@ -208,7 +208,6 @@ const preprocessAliases = function(this_content) {
 // console.log("a key=trueName", key);
       value.forEach( (element) => {
           let unofficialName = element;
-if (unofficialName.match(/at/)) { console.log(trueName, unofficialName) }
           the_text = the_text.replace("<" + unofficialName + ">", "<" + trueName + ">");
           the_text = the_text.replace("<" + unofficialName + " ", "<" + trueName + " ");
           the_text = the_text.replace("</" + unofficialName + ">", "</" + trueName + ">");
@@ -234,7 +233,7 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
     } else {
         delimiters = taglist
     }
-console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters, "from taglist", taglist);
+// console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters, "from taglist", taglist);
 
     // splitting a text node means replacing it by a list of nodes
     // splitting a non-text node (which is represented by a list)
@@ -254,16 +253,16 @@ console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag
               newnodelist.push(element) 
            } else {
 
-console.log("parsing", index, "  ", typeof element, "   ", element);
+// console.log("parsing", index, "  ", typeof element, "   ", element);
 
 //console.log("readt to parse", element);
 
-console.log("from:", element);
+// console.log("from:", element);
               let this_element_parsed;
               if (toenter == "all" || toenter.includes(element.tag)) {
                   this_element_parsed = NEWsplitAtDelimiters(element, taglist, thisdepth+1, maxdepth, toenter, toprocess, element.tag)
               } else { this_element_parsed = element }
-console.log("to:", this_element_parsed);
+// console.log("to:", this_element_parsed);
 
 //              newnodelist.push(this_element_parsed)
               if(Array.isArray(this_element_parsed)) {
@@ -276,7 +275,7 @@ console.log("to:", this_element_parsed);
 
     } else if (typeof parse_me == 'string') {
 
-console.log("prodeccins a string with parent_tag", parent_tag, "at depth", thisdepth, "of", maxdepth, "eith", delimiters);
+// console.log("prodeccins a string with parent_tag", parent_tag, "at depth", thisdepth, "of", maxdepth, "eith", delimiters);
 
         if (thisdepth > maxdepth + 2) { return parse_me }   // why +2 ?
 
@@ -309,7 +308,7 @@ console.log("prodeccins a string with parent_tag", parent_tag, "at depth", thisd
 
        let current_object = {...parse_me}
 
-console.log("dealing with", current_object, "of depth", thisdepth, "with max", maxdepth,toprocess, thisdepth > maxdepth, delimiters);
+// console.log("dealing with", current_object, "of depth", thisdepth, "with max", maxdepth,toprocess, thisdepth > maxdepth, delimiters);
        if (thisdepth > maxdepth && current_object.tag != "text") { return current_object }
 
        let new_content = current_object.content;
@@ -317,10 +316,10 @@ console.log("dealing with", current_object, "of depth", thisdepth, "with max", m
 // oooooo
 
        if (toenter == "all" || toprocess.includes(current_object.tag)) {
-console.log("making new_content");
+// console.log("making new_content");
            new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
        }
-console.log("now new_content", new_content);
+// console.log("now new_content", new_content);
        if (current_object.tag == "text" && typeof new_content == "string") { current_object.content = new_content }
        else if (current_object.tag != "text") {
           if (new_content.length == 1 && new_content[0].tag == "text") {
@@ -332,7 +331,7 @@ console.log("now new_content", new_content);
           current_object = new_content
        }
 
-console.log("then current_object is", current_object);
+// console.log("then current_object is", current_object);
        return current_object
 
     }
@@ -346,7 +345,7 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
 
     let current_new_text = "";
 
-console.log("NEWextract_lists of ", action, "this_content");
+// console.log("NEWextract_lists of ", action, "this_content");
     if (Array.isArray(this_content)) {
 //  console.log("found an array, length", [...this_content]);
 
@@ -354,7 +353,7 @@ console.log("NEWextract_lists of ", action, "this_content");
 
           let this_node;
           if (typeof element == "object") {
- console.log("going to extract", element);
+//  console.log("going to extract", element);
               this_node = NEWextract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
           }
           else {
@@ -462,7 +461,7 @@ console.log("NEWextract_lists of ", action, "this_content");
           } else if (action == "statements"  // &&  tags_to_process.includes(this_content.tag)
                       && tags_to_process.includes(parent_tag) ) {
 
-console.log("inserting statements on ", this_content, "with content", {...this_content.content});
+// console.log("inserting statements on ", this_content, "with content", {...this_content.content});
 
             let this_statement_content = [];
             let this_statement = {};
@@ -491,7 +490,7 @@ console.log("inserting statements on ", this_content, "with content", {...this_c
             }
 
 } else if (action == "statements") {
-console.log("not processing", this_content, "with parent", parent_tag, "with content", this_content.content);
+// console.log("not processing", this_content, "with parent", parent_tag, "with content", this_content.content);
 
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
@@ -513,13 +512,13 @@ console.log("not processing", this_content, "with parent", parent_tag, "with con
           } else if (action == "substructure"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-console.log("found substructure of", this_content.tag, "with", this_content.content);
+// console.log("found substructure of", this_content.tag, "with", this_content.content);
               const subtags = subenvironments[this_content.tag];
-console.log("looking for:", subtags);
+// console.log("looking for:", subtags);
               const subtags_as_delims = delimitersFromList(subtags);
-console.log("looking for:", subtags_as_delims);
+// console.log("looking for:", subtags_as_delims);
               const this_environment_split = splitTextAtDelimiters(this_content.content, subtags_as_delims);
-console.log("found", this_environment_split);
+// console.log("found", this_environment_split);
               this_content.content = [...this_environment_split];
 
           } else if (action == "clean up substructure"  &&  tags_to_process.includes(this_content.tag)
@@ -532,7 +531,7 @@ console.log("found", this_environment_split);
                 if ( subenvironments[this_tag].includes(el.tag)) {
                     new_content.push(el)
                 } else {
-console.log("looking for an attribute", el);
+// console.log("looking for an attribute", el);
                     if (el.tag == "text" && el.content.match(/^\s*$/) && "attributes" in el) {
                       if ("attributes" in this_content) { this_content.attributes += el.attributes }
                       else { this_content.attributes = el.attributes }
@@ -602,7 +601,7 @@ console.log("looking for an attribute", el);
   // what to do and I have not gone back to refactor
 
 
- console.log("this_content.content", [...this_content.content]);
+ // console.log("this_content.content", [...this_content.content]);
             let this_new_content = [];
 
             let element = "";
@@ -633,7 +632,7 @@ console.log("looking for an attribute", el);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
-console.log("               about to push", element.content);
+// console.log("               about to push", element.content);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
@@ -647,7 +646,7 @@ console.log("               about to push", element.content);
                                 && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
          // also connect to previous p, but we have multiple items to connect
                     element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
-console.log("               now element.content[0].content is", element.content[0].content);
+// console.log("               now element.content[0].content is", element.content[0].content);
                     element.content.forEach( (el) => { this_new_content[items_so_far - 1].content.push(el) });
                   } else {
          // not connected
@@ -662,10 +661,10 @@ console.log("               now element.content[0].content is", element.content[
 
           }    // last of many special transformations
 
-console.log("past the special trans", action, "xx", this_content);
+// console.log("past the special trans", action, "xx", this_content);
 
           let this_node = {...this_content};
-console.log("now re-extracting", this_node.content);
+// console.log("now re-extracting", this_node.content);
           this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag);
 
           return this_node
@@ -716,6 +715,3 @@ console.log("now re-extracting", this_node.content);
 
 }
 
-const splitAtDelimiters = function(parse_me, delimiters, toenter="all", donotenter="", processiftext="") {
-    return parse_me
-}

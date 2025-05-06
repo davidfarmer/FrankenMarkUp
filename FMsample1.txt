@@ -43,7 +43,7 @@ Note: Currently there is no support for sections or other divisions, only the
 contents of just one (sub)section.
 
 
-\begin{definition}
+\begin{definition}[Group]
 A _group_ is a set $G$ along with a binary operation $of$ such that:
 
   - The operation is associative: if $a,b,c in G$ then <m>a of (b of c) = (a of b) of c</m>.
@@ -111,7 +111,7 @@ which we will explore later,
 tell you whether there exists a nice formula for the roots.
 
 These days "Galois theory" is an entire branch of research mathematics.
-One of the (many) problems which have not been solved is:
+One of the (many) problems which has not been solved is:
 Is every finite group the Galois group of a polynomial with rational coefficients?
 This is known as _The Inverse Galois Problem_.
 As of this writing, the most recent advance on this problem

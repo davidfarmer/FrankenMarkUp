@@ -177,10 +177,6 @@ display_math_tags.forEach( (el) => {
          before_end: "\n", after_end: "\n"};
 });
 
-outputtags["men"] = {begin_tag: "<men", end_tag: "</men>",
-         before_begin: "", after_begin: ">\n", // because probably source has the \n
-         before_end: "\n", after_end: "\n"};
-
 outputtags["image"] = {begin_tag: "<img", end_tag: "</img>",  // img or image?  should not be a special case?
          before_begin: "", after_begin: ">\n", 
          before_end: "\n", after_end: "\n"};
@@ -195,10 +191,9 @@ if (sourceTextArea.addEventListener) {
 
       let originaltextX = preprocessAliases(originaltext);
 
-console.log("originaltextX", originaltextX);
-console.log("display_math_delimiters", display_math_delimiters);
+// console.log("originaltextX", originaltextX);
+// console.log("display_math_delimiters", display_math_delimiters);
 
-      alert("pause 1a");
      // extract title, label, attributes of parent section (currently only title implemented)
 
       let document_title = "";
@@ -216,8 +211,6 @@ console.log("display_math_delimiters", display_math_delimiters);
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
-console.log("originaltextB", originaltextB);
-    alert("pause B");
       // wrap everything in a section
       let tmp1together = {tag: "section", content: originaltextB}
       if (document_title) { tmp1together["title"] = document_title }
@@ -231,42 +224,25 @@ console.log("originaltextB", originaltextB);
               new1 = NEWsplitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr[0], 0, depth, attr[1]) } );
           } );
-if (depth == 2) {
-console.log("new1", new1);
-    alert("pause 1");
-}
       }
- console.log("preprocessed text 2", new1);
+// console.log("preprocessed text 2", new1);
 
       let new7 = {...new1}
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
- console.log("processed text 7", new7);
-      alert("pause 2");
+// console.log("processed text 7", new7);
+//      alert("pause 2");
       let new8 = {...new7}
-      new8 = NEWextract_lists(new8, "oneline environments", 0,0);
+      new8 = NEWextract_lists(new8, "oneline environments", 0,0, "all");
 
       attribute_like.forEach( (attr) => { new8 = NEWextract_lists(new8, attr, 0, "unused") } );
   // next is maybe overkill, but things like statements contain p's
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
       new8 = NEWextract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
-      new8 = NEWextract_lists(new8, "extraneous math",0,0, display_math_tags);
+//      new8 = NEWextract_lists(new8, "extraneous math",0,0, display_math_tags);
 
- console.log("processed text 8", new8);
-      alert("pause 2.1");
-  //    alert("pause 10");
-// console.log("preprocessed text", originaltextB);
- //     var tmpfirstsplit = splitTextAtDelimiters(originaltextB, paragraph_peer_delimiters);
-
-//       console.log("tmpfirstsplit",tmpfirstsplit);
-//alert("pause 3");
-
-//      let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
-//      let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
-//      let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
-
-// console.log("tmpfirstsplitLABEL", tmpfirstsplitLABEL);
-//alert("labels")
+// console.log("processed text 8", new8);
+//      alert("pause 2.1");
 
 //      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
 
@@ -283,24 +259,13 @@ console.log("new1", new1);
 //      if (document_title) { tmp1together["title"] = document_title }
 
 
-//      let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
-//      let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");
-//      let tmp1secondsplitLABEL = extract_lists(tmp1secondsplitTITLE, "label", "all");
 
  let new9 = {...new8};
 
       // why do we extract lists before oneline environments?
-      new9 = NEWextract_lists(new9, "extract li", 0,0);
-console.log("tmp9", new9);
-alert("just did extract li");
-
-//      new9 = NEWextract_lists(new9, "oneline environments", 0,0);
-// console.log("processed text 9", new9);
-//      alert("pause 11");
-
-//      attribute_like.forEach( (attr) => { new9 = NEWextract_lists(new9, attr, 0, 9) } );
-// console.log("processed text 9", new9);
-//      alert("pause 12");
+      new9 = NEWextract_lists(new9, "extract li", 0,0, "new");
+// console.log("tmp9", new9);
+// alert("just did extract li");
 
 
 //      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
@@ -309,7 +274,6 @@ alert("just did extract li");
 //
 //alert("pre");
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
-//     let tmp1finalsplit = extract_lists(tmp1secondsplitPfig, "attributes", "all");
 //
 ////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
 
@@ -319,8 +283,8 @@ alert("just did extract li");
 //alert("tmp1secondsplitPfig");
 
       const tmp2 = NEWsplitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
-console.log("tmp2", tmp2);
-alert("just did asymmetric_inline_delimiters");
+//  console.log("tmp2", tmp2);
+//  alert("just did asymmetric_inline_delimiters");
 
 //       console.log("tmp2:",tmp2);
 
@@ -328,8 +292,8 @@ alert("just did asymmetric_inline_delimiters");
 
       const tmp3 = NEWsplitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
 //       console.log("tmp3:",tmp3);
-console.log("tmp3", tmp3);
-alert("just did spacelike");
+//  console.log("tmp3", tmp3);
+//  alert("just did spacelike");
 
 
 // console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
@@ -344,24 +308,23 @@ alert("just did spacelike");
 
       const tmp5x = NEWextract_lists(tmp4, "fonts", 0,0,tags_containing_text);
       const tmp5y = NEWextract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
-console.log("                      AAAAAAAAAA tmp5y", tmp5y);
+// console.log("                      AAAAAAAAAA tmp5y", tmp5y);
       let tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
       tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
-console.log("tmp5z", tmp5z);
-alert("just re-did asymmetric_inline_delimiters");
+// console.log("tmp5z", tmp5z);
+// alert("just re-did asymmetric_inline_delimiters");
       tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
-console.log("tmp5z", tmp5z);
-alert("just re-re-did asymmetric_inline_delimiters");
+// console.log("tmp5z", tmp5z);
+// alert("just re-re-did asymmetric_inline_delimiters");
 
       const tmp5t = tmp5z;
- //     const tmp5t = NEWextract_lists(tmp5z, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
       const tmp5w = NEWextract_lists(tmp5t, "extract li",0,0, ["p"]);
       const tmp5v = NEWextract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
- console.log("tmp5v", tmp5v);
- alert("tmp5v");
+//  console.log("tmp5v", tmp5v);
+//  alert("tmp5v");
       const tmp5u = NEWextract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
-console.log("tmp5u", tmp5u);
- alert("tmp5u");
+// console.log("tmp5u", tmp5u);
+//  alert("tmp5u");
       let tmp5 = NEWextract_lists(tmp5u, "statements",0,0, tags_needing_statements);
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
@@ -369,8 +332,6 @@ console.log("tmp5u", tmp5u);
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
-      console.log("tmp5p",tmp5p);
-//      console.log("t4mp2 3",JSON.stringify(tmp2) == JSON.stringify(tmp3));
 
       if(echosourceTextArea) {
           echosourceTextArea.innerText = tmp5p
