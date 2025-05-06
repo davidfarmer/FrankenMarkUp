@@ -229,7 +229,7 @@ console.log("originaltextB", originaltextB);
       for (let depth = 0; depth < firstdepth; ++depth) {
           level.forEach( (lev) => {
               new1 = NEWsplitAtDelimiters(new1, lev, 0, depth)
-              attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr, 0, depth) } );
+              attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr[0], 0, depth, attr[1]) } );
           } );
 if (depth == 2) {
 console.log("new1", new1);
@@ -250,6 +250,7 @@ console.log("new1", new1);
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
       new8 = NEWextract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
+      new8 = NEWextract_lists(new8, "extraneous math",0,0, display_math_tags);
 
  console.log("processed text 8", new8);
       alert("pause 2.1");
@@ -260,8 +261,6 @@ console.log("new1", new1);
 //       console.log("tmpfirstsplit",tmpfirstsplit);
 //alert("pause 3");
 
-//      let tmpfirstsplitMATH = extract_lists(tmpfirstsplit, "extraneous math", display_math_tags);
-// alert("tmpfirstsplitMATH");
 //      let tmpfirstsplitATT = extract_lists(tmpfirstsplitMATH, "attributes", "all");
 //      let tmpfirstsplitTITLE = extract_lists(tmpfirstsplitATT, "title", "all");
 //      let tmpfirstsplitLABEL = extract_lists(tmpfirstsplitTITLE, "label", "all");
@@ -283,9 +282,6 @@ console.log("new1", new1);
 //      let tmp1together = {tag: "section", content: tmp1secondsplit}
 //      if (document_title) { tmp1together["title"] = document_title }
 
-//      let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
-   //   let tmp1secondsplitMATH = extract_lists(tmp1secondsplit, "extraneous math", display_math_tags);
-// console.log("tmp1secondsplitMATH", tmpfirstsplitMATH);
 
 //      let tmp1secondsplitATT = extract_lists(tmp1secondsplitMATH, "attributes", "all");
 //      let tmp1secondsplitTITLE = extract_lists(tmp1secondsplitATT, "title", "all");

@@ -122,10 +122,10 @@ level.push(["blockquote"]);
 level.push("displaymath");
 
 const attribute_like = [
- //   "extraneous math",
-    "attributes",
-    "title",
-    "label"
+    ["extraneous math", display_math_tags],
+    ["attributes", "all"],
+    ["title", "all"],
+    ["label", "all"],
 ]
 
 // Tags can have many aliases

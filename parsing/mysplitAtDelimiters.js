@@ -898,7 +898,7 @@ console.log("looking for an attribute", el);
     });
               this_content.content = [...new_content]
 
-          } else if (action == "extraneous math" // &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "extraneous math"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) { 
 
        //  because $$ are both begin and end tags, markers were mistakenly also put
