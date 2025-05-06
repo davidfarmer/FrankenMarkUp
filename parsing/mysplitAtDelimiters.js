@@ -988,7 +988,9 @@ console.log("looking for an attribute", el);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
-                    this_new_content[items_so_far - 1].content.push(element.content)
+console.log("               about to push", element.content);
+               //     this_new_content[items_so_far - 1].content.push(element.content)
+                    this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
          // simple p, not connected
 // console.log("is this the wrong case?", element);
@@ -1000,6 +1002,7 @@ console.log("looking for an attribute", el);
                                 && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
          // also connect to previous p, but we have multiple items to connect
                     element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
+console.log("               now element.content[0].content is", element.content[0].content);
                     element.content.forEach( (el) => { this_new_content[items_so_far - 1].content.push(el) });
                   } else {
          // not connected

@@ -36,7 +36,7 @@ const reassemblePreTeXt = function(content) {
       if (typeof element == "string") {
           // presumably an error, but if white space, silently ignore
           if (!element.match(/^\s*$/)) {
-              assembled_text += "<error>" + element + "</error>";
+              assembled_text += "<TEXT>" + element + "</TEXT>";
               console.log("just added error of", element)
           }
           return  // i.e., go to next of nodelist
