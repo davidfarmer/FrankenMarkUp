@@ -239,83 +239,33 @@ if (sourceTextArea.addEventListener) {
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
       new8 = extract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
-//      new8 = NEWextract_lists(new8, "extraneous math",0,0, display_math_tags);
 
-// console.log("processed text 8", new8);
-//      alert("pause 2.1");
-
-//      var tmp1firstsplitP = splitIntoParagraphs(tmpfirstsplitLABEL, "all", paragraph_peers);
-
-//       console.log("tmp1firstsplitP",tmp1firstsplitP);
-
-// alert("first split P");
-
-//      var tmp1secondsplit = splitAtDelimiters(tmp1firstsplitP, paragraph_peer_delimiters, "all", "", paragraph_peers);
-
-//       console.log("tmp1secondsplit",tmp1secondsplit);
-//       console.log("tmp1secondsplit expanded",JSON.stringify(tmp1secondsplit));
-
-//      let tmp1together = {tag: "section", content: tmp1secondsplit}
-//      if (document_title) { tmp1together["title"] = document_title }
-
-
-
- let new9 = {...new8};
+      let new9 = {...new8};
 
       // why do we extract lists before oneline environments?
       new9 = extract_lists(new9, "extract li", 0,0, "new");
-// console.log("tmp9", new9);
-// alert("just did extract li");
 
-
-//      var tmp1secondsplitP = splitIntoParagraphs(tmp1secondsplitENV, "all", paragraph_peers);
-//
-//  console.log("tmp1secondsplitP", tmp1secondsplitP);
-//
-//alert("pre");
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 //
 ////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
 
- //      console.log("tmp1secondsplitPfig",tmp1secondsplitPfigclean);
-
-//       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
-//alert("tmp1secondsplitPfig");
-
       const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
-//  console.log("tmp2", tmp2);
-//  alert("just did asymmetric_inline_delimiters");
-
-//       console.log("tmp2:",tmp2);
-
-// console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
       const tmp3 = splitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
-//       console.log("tmp3:",tmp3);
-//  console.log("tmp3", tmp3);
-//  alert("just did spacelike");
-
-
-// console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
       //have to do this twice, because of nesting
       const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
       const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
 
- //     const tmp4p = reassemblePreTeXt(tmp4);
-
-//      console.log("tmp4p:",tmp4p);
-
       const tmp5x = extract_lists(tmp4, "fonts", 0,0,tags_containing_text);
       const tmp5y = extract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
-// console.log("                      AAAAAAAAAA tmp5y", tmp5y);
+
       let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+
       tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
-// console.log("tmp5z", tmp5z);
-// alert("just re-did asymmetric_inline_delimiters");
       tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
-// console.log("tmp5z", tmp5z);
-// alert("just re-re-did asymmetric_inline_delimiters");
+
+
 
       const tmp5t = tmp5z;
       const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
@@ -336,41 +286,6 @@ if (sourceTextArea.addEventListener) {
       if(echosourceTextArea) {
           echosourceTextArea.innerText = tmp5p
       }
-/*
-      if(echosourceTextArea) {
-          echosourceTextArea.value = convert(sourceTextArea.value, "LaTeX");
-      }
-
-      if(speechTextArea) {
-          speechTextArea.innerHTML = '" ' + convert(sourceTextArea.value, "Speech") + ' "';
-      }
-
-      if(mathmlTextArea ||  mathmlDisplayArea) {
-          theSpaceMathInML = convert(sourceTextArea.value, "MathML");
-
-          if(mathmlTextArea) { mathmlTextArea.value = theSpaceMathInML }
-          if(mathmlDisplayArea) { mathmlDisplayArea.innerHTML = theSpaceMathInML }
-      }
-*/
-
-/*
-      mathJaxArea.innerHTML = convert(echosourceTextArea.value, "LaTeX2MathJax");
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"MathJaxArea"]);
-*/
   }, false);
 }
-/* is this part ever used? */
-/*
- else if (sourceTextArea.attachEvent) {
-  error
-  sourceTextArea.attachEvent('onpropertychange', function() {
-      echosourceTextArea.value = convert(sourceTextArea.value, "LaTeX");
-      mathmlTextArea.value = convert(sourceTextArea.value, "LaTeX");
-      speechTextArea.value = '"' + convert(sourceTextArea.value, "LaTeX") + '"';
-      pretextTextArea.value = convert(sourceTextArea.value, "LaTeX");
-      mathJaxArea.innerHTML = convert(echosourceTextArea.value, "LaTeX2MathJax");
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"MathJaxArea"]);
-  });
-}
-*/
 

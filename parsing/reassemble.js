@@ -72,17 +72,11 @@ const reassemblePreTeXt = function(content) {
       if (["m","md","me","mdn","men"].includes(this_tag)) {
     //     this_new_text = sanitizeXMLstring(this_new_text);
          if (this_new_text.match(/^.*(\.|,|;)\s*$/s)) {
-// console.log("math punctuation",this_new_text);
-// console.log(" the match", this_new_text.replace("^.*(\.|,|;)$", "$1"));
             this_new_text = this_new_text.replace(/\s*$/,"");
             mathpunctuation = this_new_text.slice(-1);
-// console.log("mathpunctuation", mathpunctuation);
             this_new_text = this_new_text.slice(0,-1)
          }
-console.log("this_new_text was" + this_new_text+"ggg");
          this_new_text = convertMathSnippet(this_new_text, "LaTeX");
-console.log("this_new_text" + this_new_text+"ggg");
-// console.log("this_new_text", this_new_text);
          this_new_text = sanitizeXMLstring(this_new_text)
       }
       this_element_text = this_element_text + this_new_text;
