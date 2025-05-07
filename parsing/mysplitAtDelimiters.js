@@ -221,7 +221,7 @@ const preprocessAliases = function(this_content) {
 }
 
 
-const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toenter="all", toprocess="all", parent_tag="" ) {
+const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toenter="all", toprocess="all", parent_tag="" ) {
 
     let delimiters = [];
     if (typeof taglist == "string") {
@@ -260,7 +260,7 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
 // console.log("from:", element);
               let this_element_parsed;
               if (toenter == "all" || toenter.includes(element.tag)) {
-                  this_element_parsed = NEWsplitAtDelimiters(element, taglist, thisdepth+1, maxdepth, toenter, toprocess, element.tag)
+                  this_element_parsed = splitAtDelimiters(element, taglist, thisdepth+1, maxdepth, toenter, toprocess, element.tag)
               } else { this_element_parsed = element }
 // console.log("to:", this_element_parsed);
 
@@ -317,7 +317,7 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
 
        if (toenter == "all" || toprocess.includes(current_object.tag)) {
 // console.log("making new_content");
-           new_content = NEWsplitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
+           new_content = splitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
        }
 // console.log("now new_content", new_content);
        if (current_object.tag == "text" && typeof new_content == "string") { current_object.content = new_content }
@@ -339,13 +339,13 @@ const NEWsplitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, to
     alert("should be unreachable: unrecognized category for ", parse_me)
 }
 
-const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "") {
+const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "") {
 
     let newnodelist = [];
 
     let current_new_text = "";
 
-// console.log("NEWextract_lists of ", action, "this_content");
+// console.log("extract_lists of ", action, "this_content");
     if (Array.isArray(this_content)) {
 //  console.log("found an array, length", [...this_content]);
 
@@ -354,10 +354,10 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
           let this_node;
           if (typeof element == "object") {
 //  console.log("going to extract", element);
-              this_node = NEWextract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
+              this_node = extract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
           }
           else {
-              this_node = NEWextract_lists(element, action, thisdepth+1, maxdepth, tags_to_process, parent_tag);
+              this_node = extract_lists(element, action, thisdepth+1, maxdepth, tags_to_process, parent_tag);
           }
 
           newnodelist.push(this_node)
@@ -665,7 +665,7 @@ const NEWextract_lists = function(this_content, action, thisdepth=0, maxdepth=0,
 
           let this_node = {...this_content};
 // console.log("now re-extracting", this_node.content);
-          this_node.content = NEWextract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag);
+          this_node.content = extract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag);
 
           return this_node
 

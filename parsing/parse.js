@@ -221,8 +221,8 @@ if (sourceTextArea.addEventListener) {
       const firstdepth = 10;
       for (let depth = 0; depth < firstdepth; ++depth) {
           level.forEach( (lev) => {
-              new1 = NEWsplitAtDelimiters(new1, lev, 0, depth)
-              attribute_like.forEach( (attr) => { new1 = NEWextract_lists(new1, attr[0], 0, depth, attr[1]) } );
+              new1 = splitAtDelimiters(new1, lev, 0, depth)
+              attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );
           } );
       }
 // console.log("preprocessed text 2", new1);
@@ -232,13 +232,13 @@ if (sourceTextArea.addEventListener) {
 // console.log("processed text 7", new7);
 //      alert("pause 2");
       let new8 = {...new7}
-      new8 = NEWextract_lists(new8, "oneline environments", 0,0, "all");
+      new8 = extract_lists(new8, "oneline environments", 0,0, "all");
 
-      attribute_like.forEach( (attr) => { new8 = NEWextract_lists(new8, attr, 0, "unused") } );
+      attribute_like.forEach( (attr) => { new8 = extract_lists(new8, attr, 0, "unused") } );
   // next is maybe overkill, but things like statements contain p's
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
-      new8 = NEWextract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
+      new8 = extract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
 //      new8 = NEWextract_lists(new8, "extraneous math",0,0, display_math_tags);
 
 // console.log("processed text 8", new8);
@@ -263,7 +263,7 @@ if (sourceTextArea.addEventListener) {
  let new9 = {...new8};
 
       // why do we extract lists before oneline environments?
-      new9 = NEWextract_lists(new9, "extract li", 0,0, "new");
+      new9 = extract_lists(new9, "extract li", 0,0, "new");
 // console.log("tmp9", new9);
 // alert("just did extract li");
 
@@ -282,7 +282,7 @@ if (sourceTextArea.addEventListener) {
 //       console.log("tmp1finalsplit",tmp1secondsplitPfigclean);
 //alert("tmp1secondsplitPfig");
 
-      const tmp2 = NEWsplitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
+      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
 //  console.log("tmp2", tmp2);
 //  alert("just did asymmetric_inline_delimiters");
 
@@ -290,7 +290,7 @@ if (sourceTextArea.addEventListener) {
 
 // console.log("    x  xxxxxx xxxx x x x x xx  x x x  x x x x x x  x x x x x  x");
 
-      const tmp3 = NEWsplitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
+      const tmp3 = splitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
 //       console.log("tmp3:",tmp3);
 //  console.log("tmp3", tmp3);
 //  alert("just did spacelike");
@@ -299,33 +299,33 @@ if (sourceTextArea.addEventListener) {
 // console.log("    X  XXXXXX XXXX X X X X XX  X X X  X X X X X X  X X X X X  x");
 
       //have to do this twice, because of nesting
-      const tmp4x = NEWsplitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
-      const tmp4 = NEWsplitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
+      const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
+      const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
 
  //     const tmp4p = reassemblePreTeXt(tmp4);
 
 //      console.log("tmp4p:",tmp4p);
 
-      const tmp5x = NEWextract_lists(tmp4, "fonts", 0,0,tags_containing_text);
-      const tmp5y = NEWextract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
+      const tmp5x = extract_lists(tmp4, "fonts", 0,0,tags_containing_text);
+      const tmp5y = extract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
 // console.log("                      AAAAAAAAAA tmp5y", tmp5y);
-      let tmp5z = NEWsplitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
-      tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
+      let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
 // console.log("tmp5z", tmp5z);
 // alert("just re-did asymmetric_inline_delimiters");
-      tmp5z = NEWsplitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
+      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
 // console.log("tmp5z", tmp5z);
 // alert("just re-re-did asymmetric_inline_delimiters");
 
       const tmp5t = tmp5z;
-      const tmp5w = NEWextract_lists(tmp5t, "extract li",0,0, ["p"]);
-      const tmp5v = NEWextract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
+      const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
+      const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
 //  console.log("tmp5v", tmp5v);
 //  alert("tmp5v");
-      const tmp5u = NEWextract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
+      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
-      let tmp5 = NEWextract_lists(tmp5u, "statements",0,0, tags_needing_statements);
+      let tmp5 = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
 //       console.log("tmp2 again",tmp2 );

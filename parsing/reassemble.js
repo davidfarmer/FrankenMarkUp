@@ -61,7 +61,7 @@ const reassemblePreTeXt = function(content) {
 
       let this_new_text = reassemblePreTeXt(element.content);
       if (this_tag != "text") {
-                // what about a code block?
+                // what about a code block?  do we mean verbatim?
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
@@ -79,7 +79,9 @@ const reassemblePreTeXt = function(content) {
 // console.log("mathpunctuation", mathpunctuation);
             this_new_text = this_new_text.slice(0,-1)
          }
+console.log("this_new_text was" + this_new_text+"ggg");
          this_new_text = convertMathSnippet(this_new_text, "LaTeX");
+console.log("this_new_text" + this_new_text+"ggg");
 // console.log("this_new_text", this_new_text);
          this_new_text = sanitizeXMLstring(this_new_text)
       }
@@ -87,7 +89,7 @@ const reassemblePreTeXt = function(content) {
       this_element_text = this_element_text +
                 these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
 
-      if (this_element_text.match(/^\s*<p>\s*<\/p>\s*$/)) { this_element_text = "" }
+      if (this_element_text.match(/^\s*<p>\s*<\/p>\s*$/)) { console.log("empty p"); this_element_text = "" }
                                                   // should we have eleminated empty p earlier?
 
       assembled_text = assembled_text + this_element_text;
