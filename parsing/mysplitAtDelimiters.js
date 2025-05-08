@@ -439,7 +439,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
         
             if (this_content.content.match(/^\s*\[/) ||
                  this_content.content.match(/^\s*<title>/)) {
-//  console.log("maybe found a title", this_content.content);
+  console.log("maybe found a title", this_content.content);
                 if (this_content.content.match(/^\s*\[/)) { //LaTeX style
                   let this_title = this_content.content.split("]", 1)[0];
                   this_title = this_title.replace(/\s*\[/,"");
