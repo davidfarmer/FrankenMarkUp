@@ -342,7 +342,7 @@ const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toent
     alert("should be unreachable: unrecognized category for ", parse_me)
 }
 
-const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "") {
+const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "", root_tag="section") {
 
     let newnodelist = [];
 
@@ -439,7 +439,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
         
             if (this_content.content.match(/^\s*\[/) ||
                  this_content.content.match(/^\s*<title>/)) {
-  console.log("maybe found a title", this_content.content);
+//  console.log("maybe found a title", this_content.content);
                 if (this_content.content.match(/^\s*\[/)) { //LaTeX style
                   let this_title = this_content.content.split("]", 1)[0];
                   this_title = this_title.replace(/\s*\[/,"");
@@ -608,7 +608,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
 
             this_content.content = this_statement_content
 
-          } else if (action == "absorb math"  &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "absorb math"  && ( tags_to_process.includes(this_content.tag) || this_content.tag == root_tag )
                       && typeof this_content.content == "object" ) {  // actually, must be an array
 
   // these cases can be consolidated, but it took me a while to figure out

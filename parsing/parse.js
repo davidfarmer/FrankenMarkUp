@@ -197,7 +197,7 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
          before_begin: "\n", after_begin: "", 
          before_end: "", after_end: "\n"};
 
-const fmToPTX = function(originaltext, wrapper="section") {
+const fmToPTX = function(originaltext, wrapper="stuff") {
 
       let originaltextX = preprocessAliases(originaltext);
 
@@ -240,21 +240,21 @@ const fmToPTX = function(originaltext, wrapper="section") {
               attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );
           } );
       }
- console.log("preprocessed text 2", new1);
-alert("preprocessed text 2");
+// console.log("preprocessed text 2", new1);
+//alert("preprocessed text 2");
 
       let new7 = {...new1}
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
- console.log("processed text 7", new7);
-      alert("pause 2");
+// console.log("processed text 7", new7);
+//      alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
- console.log("processed text 8", new8);
-      alert("pause 3");
+// console.log("processed text 8", new8);
+//      alert("pause 3");
 
       attribute_like.forEach( (attr) => { new8 = extract_lists(new8, attr[0], 0, 0, attr[1]) } );
- console.log("processed text 8b", new8);
-      alert("pause 3");
+// console.log("processed text 8b", new8);
+//      alert("pause 3");
   // next is maybe overkill, but things like statements contain p's
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
@@ -292,7 +292,7 @@ alert("preprocessed text 2");
       const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
 //  console.log("tmp5v", tmp5v);
 //  alert("tmp5v");
-      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
+      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", wrapper);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
       let tmp5 = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
@@ -313,7 +313,7 @@ if (sourceTextArea.addEventListener) {
 
       const originaltext = sourceTextArea.value;
 
-      let newtext = fmToPTX(originaltext, "fragment");
+      let newtext = fmToPTX(originaltext, "placeholder");
 
       if(echosourceTextArea) {
           echosourceTextArea.innerText = newtext
