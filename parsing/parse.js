@@ -258,7 +258,7 @@ const fmToPTX = function(originaltext, wrapper="section") {
       let new9 = {...new8};
 
       // why do we extract lists before oneline environments?
-      new9 = extract_lists(new9, "extract li", 0,0, "new");
+      new9 = extract_lists(new9, "extract li", 0,0, "all");   // "all" is wrong, but later code assumes "p"
 
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 //

@@ -387,7 +387,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                 }
             }
 
-          } else if (action == "extract li" // &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "extract li"  && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*\-+\s/)) {
