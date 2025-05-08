@@ -225,7 +225,7 @@ const fmToPTX = function(originaltext, wrapper="section") {
                                   const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
                                   return y + hiddenz + w
                               });
-console.log("originaltextC", originaltextC);
+// console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }

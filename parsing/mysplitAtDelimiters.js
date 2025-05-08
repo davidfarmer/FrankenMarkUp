@@ -642,7 +642,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                   }
                 } else if (element.tag == "p") {
          // either connect to previous element, or not
-console.log("element", element.tag, "with", element.content);
+// console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
