@@ -1,4 +1,7 @@
 
+let debugtags = "STart";
+debugtags = "";
+
 const reassemblePreTeXt = function(content) {
 
     if (typeof content == "string") { return content }
@@ -7,7 +10,7 @@ const reassemblePreTeXt = function(content) {
        let this_element_text = "";
        const this_tag = content.tag;
        let these_tags = outputtags[this_tag];
-       this_element_text +=  these_tags.before_begin + these_tags.begin_tag;
+       this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
        if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }
        if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + content.label + '"'}
@@ -51,7 +54,7 @@ const reassemblePreTeXt = function(content) {
 //  console.log("these_tags ", these_tags);
 
       this_element_text = this_element_text +
-                these_tags.before_begin + these_tags.begin_tag;
+                these_tags.before_begin + these_tags.begin_tag + debugtags;
 //  console.log(typeof element, "ccc", element);
       if ("attributes" in element && element.attributes) { this_element_text += " " + element.attributes.trim() }
       if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}

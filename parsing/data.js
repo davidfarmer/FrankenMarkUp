@@ -1,10 +1,13 @@
 
 // this list is not used, it serves to help keep track of tags requiring special attention
-const randomtags = ["fn", "title", "statement", "reading-questions",
-              "introduction", "output",
-              "exercisegroup", "exercises", "mrow", "sidebyside",
-              "worksheet" // is that a "division"?
-];
+const randomtags = ["fn", "title",
+              "output",
+              "mrow"];
+
+const randomtags_containing_p = ["reading-questions", "introduction","statement", "task", "worksheet","page"];
+                      // exercisegroup should be in a different category
+
+const containers = ["exercisegroup", "exercises"];  // only contain tags, not p
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
@@ -36,7 +39,7 @@ const hint_like = ["hint", "answer", "solution"];
 
 const subpart_like = ["case", "task"];
 
-const inlinetags = ["em", "term", "alert", "m", "q", "c"];
+const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 // also need to handle self-closing tags
 
 const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
@@ -56,11 +59,11 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
 ];
 
 const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
-            ...subpart_like];
+            ...subpart_like, ...randomtags_containing_p];
 
 const display_environments = ["figure", "tabular", "listing"];
 const display_subenvironments = ["image", "table", "program"];
-const display_subsubenvironments = ["description", "alt"];  // is alt correct?
+const display_subsubenvironments = ["latex-image", "description", "alt"];  // is alt correct?
 
 const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
@@ -68,7 +71,7 @@ const higher_level_tags = [ // these are inside a previously described tag, and 
     "caption"
 ];
 
-const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like];
+const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
 
       // more precisely: can possibly contain just text
 const tags_containing_text = ["text", "p",
@@ -104,11 +107,16 @@ const possibleattributes = ["source", "ref", "width", "label", "attributes"];
 
 let level = [];
 
+level.push(["worksheet"]);
+level.push(["page"]);
 level.push(["paragraphs"]);
 level.push(["sidebyside"]);
 level.push([...project_like]);
 level.push([...example_like, ...exercise_like]);
+level.push(["introduction", "conclusion"]);
 level.push([...theorem_like, ...axiom_like, ...remark_like, ...definition_like]);
+level.push(["task"]);
+level.push(["statement"]);
 level.push([...proof_like, ...hint_like]);
 level.push([...subpart_like]);
 level.push([...aside_like]);
@@ -120,9 +128,13 @@ level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
 level.push("displaymath");
+level.push(["p"]);
 
 const attribute_like = [
     ["extraneous math", display_math_tags],
+    ["workspace", [...exercise_like]],
+    ["margins", ["worksheet", "sidebyside"]],
+    ["margin", ["worksheet", "sidebyside"]],
     ["attributes", "all"],
     ["title", "all"],
     ["label", "all"],

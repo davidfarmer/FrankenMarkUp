@@ -126,7 +126,7 @@ const do_nothing_markup = {begin_tag: "", end_tag: "",
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
 
-const debugging_output_markup = {begin_tag: "BT", end_tag: "ET",
+const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
          before_begin: "BB", after_begin: "AB",
          before_end: "BE", after_end: "AE"};
 
@@ -157,6 +157,12 @@ other_level_1_p_peers.forEach( (el) => {
     before_end: "\n", after_end: "\n"}
     });
 higher_level_tags.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + "",
+                       end_tag: "</" + el + ">",
+    before_begin: "\n", after_begin: ">\n",
+    before_end: "\n", after_end: "\n"}
+    });
+randomtags_containing_p.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: ">\n",
@@ -218,7 +224,7 @@ if (sourceTextArea.addEventListener) {
 
       let new1 = {...tmp1together};
 
-      const firstdepth = 10;
+      const firstdepth = 12;
       for (let depth = 0; depth < firstdepth; ++depth) {
           level.forEach( (lev) => {
               new1 = splitAtDelimiters(new1, lev, 0, depth)
@@ -249,21 +255,21 @@ if (sourceTextArea.addEventListener) {
 //
 ////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
 
-      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,10, "all", tags_containing_text);
+      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
 
-      const tmp3 = splitAtDelimiters(tmp2, "spacelike", 0,10, "all", tags_containing_text);
+      const tmp3 = splitAtDelimiters(tmp2, "spacelike", 0,firstdepth+1, "all", tags_containing_text);
 
       //have to do this twice, because of nesting
-      const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
-      const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
+      const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,firstdepth+1, "all", tags_containing_text);
+      const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,firstdepth+1,"all", tags_containing_text);
 
       const tmp5x = extract_lists(tmp4, "fonts", 0,0,tags_containing_text);
       const tmp5y = extract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
 
-      let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,10, "all", tags_containing_text);
+      let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,firstdepth+1, "all", tags_containing_text);
 
-      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,10, "all", tags_containing_text);
-      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,10,"all", tags_containing_text);
+      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters,0,firstdepth+1, "all", tags_containing_text);
+      tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,firstdepth+1,"all", tags_containing_text);
 
 
 
@@ -275,7 +281,9 @@ if (sourceTextArea.addEventListener) {
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
-      let tmp5 = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);
+      let tmp5 = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
+ //     let tmp5 = tmp5u;
+
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
 //       console.log("tmp2 again",tmp2 );

@@ -155,7 +155,8 @@ const splitTextAtDelimiters = function(this_content, delimiters) {  // based on 
         text = text.slice(index + delimiters[i].right.length);
     }
 
-    if (text !== "") {
+//    if (text !== "") {    // are there times we want to save whitespace text nodes?
+    if (!text.match(/^\s*$/)) {
         data.push({
             tag: "text",
             content: text,
@@ -202,6 +203,8 @@ const preprocessAliases = function(this_content) {
 
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
+
+    the_text = the_text.replace(/<!--.*?-->/g,"");
 
     for (let [key, value] of Object.entries(aliases)) {
       let trueName = key;
@@ -466,32 +469,38 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
             let this_statement_content = [];
             let this_statement = {};
 
-            if (typeof this_content.content == "string") {
+            if (typeof this_content.content == "string") {  // unlabeled statement and no hint/answer/etc
               this_statement_content = [{tag: "text", content: this_content.content}]
               this_statement = {tag: "statement", content: this_statement_content}
               this_content.content = [this_statement]
-            } else {
+            } else {  // first check if ther explicitly is a statement
 
-              let element = "";
-              let index = 0;
-              for (index = 0; index < this_content.content.length; ++index) {
-                  element = this_content.content[index]
-                  if (hint_like.includes(element.tag)) {
-                    break
-                  } else {
-                    this_statement_content.push(element)
-                  }
+              let foundstatement = false;
+              this_content.content.forEach( (el) => { if (el.tag == "statement") { foundstatement = true } });
+
+              if (!foundstatement) {
+                let element = "";
+                let index = 0;
+                for (index = 0; index < this_content.content.length; ++index) {
+                    element = this_content.content[index]
+                    if (hint_like.includes(element.tag)) {
+                      break
+                    } else {
+                      this_statement_content.push(element)
+                    }
+                }
+
+                this_statement = {tag: "statement", content: this_statement_content}
+                let remaining_pieces = this_content.content.slice(index);
+                remaining_pieces.unshift(this_statement);
+                this_content.content = remaining_pieces
               }
-
-              this_statement = {tag: "statement", content: this_statement_content}
-              let remaining_pieces = this_content.content.slice(index);
-              remaining_pieces.unshift(this_statement);
-              this_content.content = remaining_pieces
             }
 
 } else if (action == "statements") {
 // console.log("not processing", this_content, "with parent", parent_tag, "with content", this_content.content);
 
+// laft over from debugging, should delete
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {  // also must handle case of array
