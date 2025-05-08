@@ -7,7 +7,7 @@ const randomtags = ["fn", "title",
 const randomtags_containing_p = ["reading-questions", "introduction","statement", "task", "worksheet","page"];
                       // exercisegroup should be in a different category
 
-const containers = ["exercisegroup", "exercises"];  // only contain tags, not p
+//  const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];  // only contain tags, not p
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
@@ -63,13 +63,10 @@ const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_lik
 
 const display_environments = ["figure", "tabular", "listing"];
 const display_subenvironments = ["image", "table", "program"];
-const display_subsubenvironments = ["latex-image", "description", "alt"];  // is alt correct?
+const display_subsubenvironments = ["latex-image", "prefigure", "description", "alt"];  // is alt correct?
 
 const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
-const higher_level_tags = [ // these are inside a previously described tag, and may be subenvironments
-    "caption"
-];
 
 const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
 
@@ -88,16 +85,22 @@ const remapped_math_tags = [  // [latex_name, ptx_tag]
 ];
 
 const subenvironments = {  // the tags which occun inside specific environments
-   "listing": ["title","caption", "program"], // check
-   "program": ["title","code"], // check
-   "figure": ["title","caption","image"], // check
-   "image": ["description"], // check
+   "listing": ["caption", "program"], // check
+   "figure": ["caption","image"], // check
+// missing: tabular > table
+   "program": ["code"], // check
+   "image": ["latex-image", "description", "prefigure"], // check
+   "prefigure": ["diagram"], // check
+   "diagram": ["predefinition", "coordinates", "annotations"], // check
 };
+
+const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ]; 
 
 const objects_with_substructure = Object.keys(subenvironments);
 
 //not used yet
-const possibleattributes = ["source", "ref", "width", "label", "attributes"];
+const possibleattributes = ["source", "ref", "width", "margins", "label", "attributes",
+                           "bbox", "dimensions", "destination", "text"];
 
 // start of major refactor: recognize that it takes multiple passes to
 // parse into components, and this requires knowing which objects can occur
@@ -123,7 +126,9 @@ level.push([...aside_like]);
 level.push([...display_environments]);
 level.push([...display_subenvironments]);
 level.push([...display_subsubenvironments]);
-level.push([...higher_level_tags]);
+level.push(["prefigure"]);
+level.push(["diagram"]);
+level.push(subenvironments["diagram"]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);

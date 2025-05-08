@@ -377,9 +377,14 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                 let split_content = this_content.content.split(":", 1);
                 const new_tag = split_content[0].toLowerCase();
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
+                  // it might be a oneline environment, or it might be an attribute
+
+                if (possibleattributes.includes(new_tag)) {  // it is an attribute, of the *parent*
+                } else {
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
+                }
             }
 
           } else if (action == "extract li" // &&  tags_to_process.includes(this_content.tag)
@@ -637,7 +642,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                   }
                 } else if (element.tag == "p") {
          // either connect to previous element, or not
-//console.log("element", element.tag, "with", element.content);
+console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p         
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
@@ -650,16 +655,18 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                     this_new_content.push({...element})
 // console.log("now this_new_content", this_new_content);
 // alert("pause");
-                  } else if (element.content[0].tag == "text" 
+                  } else if (element.content.length > 0 && element.content[0].tag == "text" 
                                 && typeof element.content[0].content == "string"
                                 && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
          // also connect to previous p, but we have multiple items to connect
                     element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
 // console.log("               now element.content[0].content is", element.content[0].content);
                     element.content.forEach( (el) => { this_new_content[items_so_far - 1].content.push(el) });
-                  } else {
+                  } else if (element.content.length > 0) {
          // not connected
                     this_new_content.push({...element})
+                  } else {
+                       // empty list, so throw it away
                   }
                 } else {  // some other element, so just save it
                     this_new_content.push({...element})

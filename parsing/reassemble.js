@@ -10,6 +10,7 @@ const reassemblePreTeXt = function(content) {
        let this_element_text = "";
        const this_tag = content.tag;
        let these_tags = outputtags[this_tag];
+       if (!these_tags) { these_tags = PTXdisplayoutput(this_tag) }
        this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
        if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }

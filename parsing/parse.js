@@ -47,6 +47,13 @@ const delimitersFromList = function(lis) {
     return delim_lis
 }
 
+const PTXdisplayoutput = function(tag) {
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "\n", after_begin: ">\n",
+        before_end: "\n", after_end: "\n"}
+}
+
 const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"men"},
@@ -156,13 +163,13 @@ other_level_1_p_peers.forEach( (el) => {
     before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
-higher_level_tags.forEach( (el) => {
+randomtags_containing_p.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: ">\n",
     before_end: "\n", after_end: "\n"}
     });
-randomtags_containing_p.forEach( (el) => {
+containers.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + "",
                        end_tag: "</" + el + ">",
     before_begin: "\n", after_begin: ">\n",
@@ -190,10 +197,7 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
          before_begin: "\n", after_begin: "", 
          before_end: "", after_end: "\n"};
 
-if (sourceTextArea.addEventListener) {
-  sourceTextArea.addEventListener('input', function() {
-
-      const originaltext = sourceTextArea.value;
+const fmToPTX = function(originaltext, wrapper="section") {
 
       let originaltextX = preprocessAliases(originaltext);
 
@@ -211,14 +215,19 @@ if (sourceTextArea.addEventListener) {
           originaltextX = originaltextX.replace(/^\s*\[([^\[\]]*)\]/,"");
       }
    // put latex-style labels on a new line
-      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");
+      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
+      let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
+                                  const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+                                  return y + hiddenz + w
+                              });
+console.log("originaltextC", originaltextC);
       // wrap everything in a section
-      let tmp1together = {tag: "section", content: originaltextB}
+      let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }
 
 
@@ -291,9 +300,19 @@ if (sourceTextArea.addEventListener) {
       console.log("tmp5",tmp5 );
       const tmp5p = reassemblePreTeXt(tmp5);
 
+      return tmp5p
+};
+
+if (sourceTextArea.addEventListener) {
+  sourceTextArea.addEventListener('input', function() {
+
+      const originaltext = sourceTextArea.value;
+
+      let newtext = fmToPTX(originaltext, "fragment");
+
       if(echosourceTextArea) {
-          echosourceTextArea.innerText = tmp5p
+          echosourceTextArea.innerText = newtext
       }
   }, false);
-}
+};
 
