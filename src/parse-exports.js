@@ -216,7 +216,7 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
 
-console.log("in parse.js");
+console.log("in parse-exports.js");
 
 export function fmToPTX(originaltext, wrapper="stuff"){
 
@@ -330,16 +330,5 @@ export function fmToPTX(originaltext, wrapper="stuff"){
       return tmp5p
 };
 
-if (sourceTextArea.addEventListener) {
-  sourceTextArea.addEventListener('input', function() {
 
-      const originaltext = sourceTextArea.value;
-
-      let newtext = fmToPTX(originaltext, "placeholder");
-
-      if(echosourceTextArea) {
-          echosourceTextArea.innerText = newtext
-      }
-  }, false);
-};
 

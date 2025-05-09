@@ -1,8 +1,8 @@
 /* eslint no-constant-condition:0 */
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
-import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
-import { display_math_delimiters } from "./parse";
+import { delimitersFromList, paragraph_peer_delimiters  } from "./parse-exports";
+import { display_math_delimiters } from "./parse-exports";
 
 const findEndOfMath = function(delimiter, text, startIndex) {
     // Adapted from
