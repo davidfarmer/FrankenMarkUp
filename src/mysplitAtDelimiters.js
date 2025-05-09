@@ -1,4 +1,9 @@
 /* eslint no-constant-condition:0 */
+
+import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
+import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
+import { display_math_delimiters } from "./parse";
+
 const findEndOfMath = function(delimiter, text, startIndex) {
     // Adapted from
     // https://github.com/Khan/perseus/blob/master/src/perseus-markdown.jsx
@@ -35,7 +40,7 @@ const amsRegex = /^\\AAAAAAAbegin{/;
 
 var parsecount = 0;
 
-const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
+export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
     if (typeof nodelist == "string") {return splitTextIntoParagraphs(nodelist) }
 
@@ -199,7 +204,7 @@ const accentedASCII = function(fullstring, accent, letter) {
     return toUnicode[accent + letter]
 }
 
-const preprocessAliases = function(this_content) {
+export const preprocessAliases = function(this_content) {
 
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
@@ -224,7 +229,7 @@ const preprocessAliases = function(this_content) {
 }
 
 
-const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toenter="all", toprocess="all", parent_tag="" ) {
+export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toenter="all", toprocess="all", parent_tag="" ) {
 
     let delimiters = [];
     if (typeof taglist == "string") {
@@ -253,7 +258,7 @@ const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toent
 // console.log(index, "  ", typeof element, " ", element.tag);
 
            if (thisdepth > maxdepth && element.tag != "text") {
-              newnodelist.push(element) 
+              newnodelist.push(element)
            } else {
 
 // console.log("parsing", index, "  ", typeof element, "   ", element);
@@ -342,7 +347,7 @@ const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth, toent
     alert("should be unreachable: unrecognized category for ", parse_me)
 }
 
-const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "", root_tag="section") {
+export const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "", root_tag="section") {
 
     let newnodelist = [];
 
@@ -373,7 +378,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
           if (action == "oneline environments" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s 
+            if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s
                 let split_content = this_content.content.split(":", 1);
                 const new_tag = split_content[0].toLowerCase();
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
@@ -436,7 +441,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
 
           } else if (action == "title" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
-        
+
             if (this_content.content.match(/^\s*\[/) ||
                  this_content.content.match(/^\s*<title>/)) {
 //  console.log("maybe found a title", this_content.content);
@@ -557,7 +562,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
               this_content.content = [...new_content]
 
           } else if (action == "extraneous math"  &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string" ) { 
+                      && typeof this_content.content == "string" ) {
 
        //  because $$ are both begin and end tags, markers were mistakenly also put
        // at the start of $$ math.  So remove them
@@ -594,7 +599,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                   new_list_object = {};
                   new_list_content = [];
                   this_statement_content.push(element);
-                } 
+                }
             }
 
             if (found_list) { //this means the environment ended with at list, which has not been saved
@@ -628,7 +633,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
          // display math should not start a paragraph, so connect to previous p, if it exists
                   if (items_so_far == 0) {
          // should not happen, but just in case
-                    this_new_content.push({...element}) 
+                    this_new_content.push({...element})
                   } else if(this_new_content[items_so_far - 1].tag != "p") {   // again, should not happen
                     this_new_content.push({...element})
                   } else {  //last was a p, so put the display math on the end
@@ -644,7 +649,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
          // either connect to previous element, or not
 // console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
-         // connect to previous p         
+         // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
 // console.log("               about to push", element.content);
                //     this_new_content[items_so_far - 1].content.push(element.content)
@@ -655,9 +660,9 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                     this_new_content.push({...element})
 // console.log("now this_new_content", this_new_content);
 // alert("pause");
-                  } else if (element.content.length > 0 && element.content[0].tag == "text" 
+                  } else if (element.content.length > 0 && element.content[0].tag == "text"
                                 && typeof element.content[0].content == "string"
-                                && element.content[0].content.match(/\s*\+\+\+saMePaR/)) { 
+                                && element.content[0].content.match(/\s*\+\+\+saMePaR/)) {
          // also connect to previous p, but we have multiple items to connect
                     element.content[0].content = element.content[0].content.replace(/\s*\+\+\+saMePaR\s*/,"");
 // console.log("               now element.content[0].content is", element.content[0].content);
@@ -723,7 +728,7 @@ const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, ta
                               });
 // console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
-      
+
       } else { return this_content }
     }
 

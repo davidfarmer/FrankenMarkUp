@@ -6,6 +6,25 @@ The js file for the test interface.
 2022.10.17 add global call
 2022.10.25 add MathJax support
 */
+import '../spacemath.css'
+import {
+    remapped_math_tags,
+    level_1_p_peers_containing_p,
+    other_level_1_p_peers,
+    list_like,
+    inlinetags,
+    randomtags_containing_p,
+    containers,
+    display_math_tags,
+    level,
+    attribute_like,
+    tags_containing_text,
+    tags_containing_paragraphs,
+    tags_needing_statements,
+} from './data.js'
+import {splitIntoParagraphs, preprocessAliases, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
+import {reassemblePreTeXt} from './reassemble.js'
+
 
 "use strict";
 let sourceTextArea = document.getElementById("sourceTextArea");
@@ -37,7 +56,7 @@ const PreTeXtDelimiterOfAttributes = function(delim) {
 const LaTeXDelimiterOf = function(delim) {
     return {left:"\\begin{" + delim + "}", right:"\\end{" + delim + "}", tag:delim}
 }
-const delimitersFromList = function(lis) {
+export const delimitersFromList = function(lis) {
     if (!Array.isArray(lis)) { return lis }
     let delim_lis = [];
     lis.forEach( (el) => {
@@ -54,22 +73,22 @@ const PTXdisplayoutput = function(tag) {
         before_end: "\n", after_end: "\n"}
 }
 
-const display_math_delimiters = [
+export const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"men"},
           {left:"\\[", right:"\\]", tag:"men"},
-]; 
+];
 remapped_math_tags.forEach( (el) => {
     display_math_delimiters.push(
         {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
     );
-}); 
+});
 display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
 display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
 display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
 display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
 
-const paragraph_peer_delimiters = [];
+export const paragraph_peer_delimiters = [];
 
 // remapped_tags.forEach( (el) => {
 //     paragraph_peer_delimiters.push(
@@ -133,11 +152,11 @@ const do_nothing_markup = {begin_tag: "", end_tag: "",
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
 
-const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
+export const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
          before_begin: "BB", after_begin: "AB",
          before_end: "BE", after_end: "AE"};
 
-const outputtags = {  // start with the quirky ones
+export const outputtags = {  // start with the quirky ones
     "text" : do_nothing_markup,
     "placeholder" : do_nothing_markup,
     "title": {begin_tag: "<title>", end_tag: "</title>",
@@ -191,13 +210,15 @@ display_math_tags.forEach( (el) => {
 });
 
 outputtags["image"] = {begin_tag: "<img", end_tag: "</img>",  // img or image?  should not be a special case?
-         before_begin: "", after_begin: ">\n", 
+         before_begin: "", after_begin: ">\n",
          before_end: "\n", after_end: "\n"};
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
-         before_begin: "\n", after_begin: "", 
+         before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
 
-const fmToPTX = function(originaltext, wrapper="stuff") {
+
+
+export function fmToPTX(originaltext, wrapper="stuff"){
 
       let originaltextX = preprocessAliases(originaltext);
 

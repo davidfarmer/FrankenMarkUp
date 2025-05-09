@@ -1,53 +1,53 @@
 
 // this list is not used, it serves to help keep track of tags requiring special attention
-const randomtags = ["fn", "title",
+export const randomtags = ["fn", "title",
               "output",
               "mrow"];
 
-const randomtags_containing_p = ["reading-questions", "introduction","statement", "task", "worksheet","page"];
+export const randomtags_containing_p = ["reading-questions", "introduction","statement", "task", "worksheet","page"];
                       // exercisegroup should be in a different category
 
 //  const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];  // only contain tags, not p
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-const list_like = ["ol", "ul", "dl"];
-const list_elements = ["li"];
+export const list_like = ["ol", "ul", "dl"];
+export const list_elements = ["li"];
 
-const aside_like = ["aside", "historical", "biographical"];
+export const aside_like = ["aside", "historical", "biographical"];
 
-const theorem_like = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"];
+export const theorem_like = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"];
 
 // can definition be axiom_like?
-const axiom_like = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"]
+export const axiom_like = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"]
 
-const remark_like = ["convention", "insight", "note", "observation", "remark", "warning"];
+export const remark_like = ["convention", "insight", "note", "observation", "remark", "warning"];
 
-const example_like = ["example", "problem", "question"]
+export const example_like = ["example", "problem", "question"]
 
-const definition_like = ["definition"]
+export const definition_like = ["definition"]
 
-const exercise_like = ["exercise"];
+export const exercise_like = ["exercise"];
 
-const proof_like = ["proof"];
+export const proof_like = ["proof"];
 
-const project_like = ["activity", "exploration", "investigation", "project"];
+export const project_like = ["activity", "exploration", "investigation", "project"];
 
-const display_math_tags = ["md", "mdn", "me", "men"];  // let's get rid of me and men
+export const display_math_tags = ["md", "mdn", "me", "men"];  // let's get rid of me and men
 
-const hint_like = ["hint", "answer", "solution"];
+export const hint_like = ["hint", "answer", "solution"];
 
-const subpart_like = ["case", "task"];
+export const subpart_like = ["case", "task"];
 
-const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
+export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 // also need to handle self-closing tags
 
-const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
-const possibly_self_closing_inline_tags = ["url"];
+export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
+export const possibly_self_closing_inline_tags = ["url"];
 
-const math_tags = ["m", ...display_math_tags];
+export const math_tags = ["m", ...display_math_tags];
 
-let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
+export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)
     ...remark_like, ...example_like, ...definition_like, ...exercise_like,
     ...proof_like,
@@ -58,33 +58,33 @@ let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     "section"
 ];
 
-const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
+export const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
             ...subpart_like, ...randomtags_containing_p];
 
-const display_environments = ["figure", "tabular", "listing"];
-const display_subenvironments = ["image", "table", "program"];
-const display_subsubenvironments = ["latex-image", "prefigure", "description", "alt"];  // is alt correct?
+export const display_environments = ["figure", "tabular", "listing"];
+export const display_subenvironments = ["image", "table", "program"];
+export const display_subsubenvironments = ["latex-image", "prefigure", "description", "alt"];  // is alt correct?
 
-const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
+export const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
 
-const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
+export const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
 
       // more precisely: can possibly contain just text
-const tags_containing_text = ["text", "p",
+export const tags_containing_text = ["text", "p",
     "fn", "em", "term", "alert", "q",
     "title", "li", "caption"];  // li can optionally contain a p or another list
 
                    // sit alone on a line with their content
-const title_like_tags = ["title", "idx"];
+export const title_like_tags = ["title", "idx"];
 
-const remapped_math_tags = [  // [latex_name, ptx_tag]
+export const remapped_math_tags = [  // [latex_name, ptx_tag]
                          // could these be handled by a alias, like we did with quote -> blockquote?
     ["equation", "men"],
     ["align", "mdn"],
 ];
 
-const subenvironments = {  // the tags which occun inside specific environments
+export const subenvironments = {  // the tags which occun inside specific environments
    "listing": ["caption", "program"], // check
    "figure": ["caption","image"], // check
 // missing: tabular > table
@@ -94,12 +94,12 @@ const subenvironments = {  // the tags which occun inside specific environments
    "diagram": ["predefinition", "coordinates", "annotations"], // check
 };
 
-const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ]; 
+export const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];
 
-const objects_with_substructure = Object.keys(subenvironments);
+export const objects_with_substructure = Object.keys(subenvironments);
 
 //not used yet
-const possibleattributes = ["source", "ref", "width", "margins", "label", "attributes",
+export const possibleattributes = ["source", "ref", "width", "margins", "label", "attributes",
                            "bbox", "dimensions", "destination", "text"];
 
 // start of major refactor: recognize that it takes multiple passes to
@@ -108,7 +108,7 @@ const possibleattributes = ["source", "ref", "width", "margins", "label", "attri
 
 // The following lists are related by "can't be inside"
 
-let level = [];
+export let level = [];
 
 level.push(["worksheet"]);
 level.push(["page"]);
@@ -135,7 +135,7 @@ level.push(["blockquote"]);
 level.push("displaymath");
 level.push(["p"]);
 
-const attribute_like = [
+export const attribute_like = [
     ["extraneous math", display_math_tags],
     ["workspace", [...exercise_like]],
     ["margins", ["worksheet", "sidebyside"]],
@@ -148,13 +148,13 @@ const attribute_like = [
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)
 
-let aliases = { // in the format "officialname": [list of synonyms].  Taken from SL3X
+export let aliases = { // in the format "officialname": [list of synonyms].  Taken from SL3X
     "abstract" : ["abs","abstr"],
     "acknowledgement" : ["ack"],
     "assumption" : ["assu","ass"],
-    "axiom" : ["axm"], 
-    "blockquote" : ["quote"], 
-    "claim" : ["cla"], 
+    "axiom" : ["axm"],
+    "blockquote" : ["quote"],
+    "claim" : ["cla"],
     "conjecture" : ["con","conj","conjec"],
     "convention" : ["conv"],
     "corollary" : ["cor","corr","coro","corol","corss"],
@@ -166,19 +166,19 @@ let aliases = { // in the format "officialname": [list of synonyms].  Taken from
     "hypothesis" : ["hyp"],
     "lemma" : ["lem","lma","lemm"],
     "notation" : ["no","nota","ntn","nt","notn","notat"],
-    "observation" : ["obs"],      
+    "observation" : ["obs"],
     "proof" : ["pf","prf","demo"],
     "proposition" : ["prop","pro","prp","props"],
     "question" : ["qu","ques","quest","qsn"],
     "remark" : ["rem","rmk","rema","bem","subrem","rems","rmks"],
     "theorem" : ["thm","theo","theor","thmss"],
     "verbatim" : ["verb"],
-    "warning" : ["warn", "wrn"] 
+    "warning" : ["warn", "wrn"]
 }
 
 
 // the TeX \'{x} maps to 'x which becomes the key below
-const toUnicode = {
+export const toUnicode = {
     "'a" : "á",
     "`a" : "à",
     '"a' : "ä",
