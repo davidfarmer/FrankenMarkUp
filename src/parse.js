@@ -51,7 +51,7 @@ const PreTeXtDelimiterOf = function(delim) {
     return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
 }
 const PreTeXtDelimiterOfAttributes = function(delim) {
-    return {left:"<" + delim + "", right:"</" + delim + ">", tag:delim}
+    return {left:"<" + delim + " ", right:"</" + delim + ">", tag:delim}
 }
 const LaTeXDelimiterOf = function(delim) {
     return {left:"\\begin{" + delim + "}", right:"\\end{" + delim + "}", tag:delim}
@@ -61,6 +61,7 @@ export const delimitersFromList = function(lis) {
     let delim_lis = [];
     lis.forEach( (el) => {
         delim_lis.push( PreTeXtDelimiterOfAttributes(el) );
+        delim_lis.push( PreTeXtDelimiterOf(el) );
         delim_lis.push( LaTeXDelimiterOf(el) );
     });
     return delim_lis
@@ -112,10 +113,12 @@ paragraph_peer_ptx_and_latex_text_output.push("statement");
 // which are parsed later
 paragraph_peer_ptx_and_latex_text.forEach( (el) => {
     paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
     paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
 other_level_1_p_peers.forEach( (el) => {
     paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
     paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
 
@@ -209,9 +212,8 @@ display_math_tags.forEach( (el) => {
          before_end: "\n", after_end: "\n"};
 });
 
-outputtags["image"] = {begin_tag: "<img", end_tag: "</img>",  // img or image?  should not be a special case?
-         before_begin: "", after_begin: ">\n",
-         before_end: "\n", after_end: "\n"};
+outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
+         before_begin: "", after_begin: ">\n", 
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
@@ -247,6 +249,13 @@ export function fmToPTX(originaltext, wrapper="stuff"){
                                   const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
                                   return y + hiddenz + w
                               });
+      let findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
+      originaltextC = originaltextC.replace(findattributes, "$1\n$2");
+
+// end of preprocessor
+
+
+
 // console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
@@ -260,19 +269,21 @@ export function fmToPTX(originaltext, wrapper="stuff"){
           level.forEach( (lev) => {
               new1 = splitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );
+
           } );
       }
-// console.log("preprocessed text 2", new1);
-//alert("preprocessed text 2");
+ console.log("preprocessed text 2", new1);
+alert("preprocessed text 2");
 
       let new7 = {...new1}
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
-// console.log("processed text 7", new7);
-//      alert("pause 2");
+ console.log("processed text 7", new7);
+      alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
-// console.log("processed text 8", new8);
-//      alert("pause 3");
+      new8 = extract_lists(new8, "attributes", 0,0, "all");
+ console.log("processed text 8", new8);
+      alert("pause 3");
 
       attribute_like.forEach( (attr) => { new8 = extract_lists(new8, attr[0], 0, 0, attr[1]) } );
 // console.log("processed text 8b", new8);
@@ -290,6 +301,10 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 //
 ////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
+ console.log("about to clean up substructure", new9);
+      alert("pause 3");
+  // next is maybe overkill, but things like statements contain p's
+      new9 = extract_lists(new9, "clean up substructure", 0,0,objects_with_substructure);
 
       const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
 
@@ -335,7 +350,7 @@ if (sourceTextArea.addEventListener) {
 
       const originaltext = sourceTextArea.value;
 
-      let newtext = fmToPTX(originaltext, "placeholder");
+      let newtext = fmToPTX(originaltext, "worksheet");
 
       if(echosourceTextArea) {
           echosourceTextArea.innerText = newtext

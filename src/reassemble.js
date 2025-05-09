@@ -16,8 +16,17 @@ export const reassemblePreTeXt = function(content) {
        if (!these_tags) { these_tags = PTXdisplayoutput(this_tag) }
        this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
-       if ("attributes" in content && content.attributes) { this_element_text += " " + content.attributes.trim() }
+       if ("xmlattributes" in content && content.xmlattributes) { this_element_text += " " + content.xmlattributes.trim() }
        if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + content.label + '"'}
+
+// console.log("content", content);
+       const possible_attributes = Object.keys(content);
+       possible_attributes.forEach( (el) => {
+           if (!["tag", "content", "title", "xmlattributes"].includes(el)) {
+               this_element_text += " " + el + '="' + content.el + '"';
+           }
+       });
+
        this_element_text += these_tags.after_begin;
 
        if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
@@ -60,8 +69,17 @@ export const reassemblePreTeXt = function(content) {
       this_element_text = this_element_text +
                 these_tags.before_begin + these_tags.begin_tag + debugtags;
 //  console.log(typeof element, "ccc", element);
-      if ("attributes" in element && element.attributes) { this_element_text += " " + element.attributes.trim() }
+      if ("xmlattributes" in element && element.xmlattributes) { this_element_text += " " + element.xmlattributes.trim() }
       if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
+
+if (element.tag == "prefigure") { console.log("element", element) }
+      const possible_attributes = Object.keys(element);
+           possible_attributes.forEach( (el) => {
+           if (!["tag", "content", "title", "xmlattributes"].includes(el)) {
+               this_element_text += " " + el + '="' + element[el] + '"';
+           }
+      });
+
       this_element_text += these_tags.after_begin;
 
       if ("title" in element && element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }

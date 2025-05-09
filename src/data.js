@@ -4,7 +4,7 @@ export const randomtags = ["fn", "title",
               "output",
               "mrow"];
 
-export const randomtags_containing_p = ["reading-questions", "introduction","statement", "task", "worksheet","page"];
+export const randomtags_containing_p = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet","page"];
                       // exercisegroup should be in a different category
 
 //  const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];  // only contain tags, not p
@@ -99,8 +99,8 @@ export const containers = ["exercisegroup", "exercises", "prefigure", "diagram",
 export const objects_with_substructure = Object.keys(subenvironments);
 
 //not used yet
-export const possibleattributes = ["source", "ref", "width", "margins", "label", "attributes",
-                           "bbox", "dimensions", "destination", "text"];
+export const possibleattributes = ["source", "ref", "width", "margins", "label", "xmlattributes",
+                           "bbox", "dimensions", "destination", "text", "xml:id", "xmlns"];
 
 // start of major refactor: recognize that it takes multiple passes to
 // parse into components, and this requires knowing which objects can occur
@@ -112,7 +112,7 @@ export let level = [];
 
 level.push(["worksheet"]);
 level.push(["page"]);
-level.push(["paragraphs"]);
+level.push(["paragraphs", "objectives"]);
 level.push(["sidebyside"]);
 level.push([...project_like]);
 level.push([...example_like, ...exercise_like]);
@@ -140,7 +140,7 @@ export const attribute_like = [
     ["workspace", [...exercise_like]],
     ["margins", ["worksheet", "sidebyside"]],
     ["margin", ["worksheet", "sidebyside"]],
-    ["attributes", "all"],
+    ["xmlattributes", "all"],
     ["title", "all"],
     ["label", "all"],
 ]

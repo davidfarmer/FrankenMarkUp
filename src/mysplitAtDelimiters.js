@@ -241,7 +241,9 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
     } else {
         delimiters = taglist
     }
+// if(taglist == "p") {
 // console.log(thisdepth, " ", maxdepth, " type of parse_me", typeof parse_me, "tag search", delimiters, "from taglist", taglist);
+// }
 
     // splitting a text node means replacing it by a list of nodes
     // splitting a non-text node (which is represented by a list)
@@ -321,8 +323,6 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
 
        let new_content = current_object.content;
 
-// oooooo
-
        if (toenter == "all" || toprocess.includes(current_object.tag)) {
 // console.log("making new_content");
            new_content = splitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
@@ -375,21 +375,25 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
     } else if (typeof this_content == "object") {
 
           // need to rethink how to handle the case where the oneline is an attribute.
-          if (action == "oneline environments" // &&  tags_to_process.includes(this_content.tag)
+          if (action == "oneline environments" && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s
                 let split_content = this_content.content.split(":", 1);
-                const new_tag = split_content[0].toLowerCase();
+                let new_tag = split_content[0].toLowerCase();
+                new_tag = new_tag.trim();
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
                   // it might be a oneline environment, or it might be an attribute
-
-                if (possibleattributes.includes(new_tag)) {  // it is an attribute, of the *parent*
-                } else {
+                  // clean that up later with substructure
+console.log("found oneline: X" + new_tag + "Y");
+console.log("this_content.content was",this_content.content);
+console.log("and new_content is",new_content);
+//                if (possibleattributes.includes(new_tag)) {  // it is an attribute, of the *parent*
+//                } else {
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
-                }
+//                }
             }
 
           } else if (action == "extract li"  && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
@@ -419,24 +423,52 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 this_content.parenttag = "ol"
             }
 
-          } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "xmlattributes" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*[^\n<>+]*>/)) {
-//  console.log("maybe found an attribute", this_content.content);
+            var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>]*>", "s");
+            if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+]*>/)) {
+   console.log("maybe found an xmlattribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
                 } else {
                   let this_attribute = this_content.content.split(">", 1)[0];
 
 //  console.log("this attribute", this_attribute);
-                  this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
-                  if ("attributes" in this_content) {
-                    this_content.attributes += this_attribute
+           //       this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
+                  this_content.content = this_content.content.replace(/^\s*[^<>]*>/s, "")
+// console.log("now this_content.content",this_content.content);
+                  if ("xmlattributes" in this_content) {
+                    this_content.xmlattributes += this_attribute
                   } else {
-                    this_content.attributes = this_attribute
+                    this_content.xmlattributes = this_attribute
                   }
                 }
+              }
+            } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+            const this_text = this_content.content.split(/\n{2,}/);
+
+            if (this_text.length > 1) {
+              let new_content = "";
+              var regex = new RegExp("^(" + possibleattributes.join("|") + ")");
+
+              this_text.forEach( (txt) => { 
+                let this_txt = txt.trim();
+                if (regex.test(this_txt)) {
+console.log("found an attribute", this_txt);
+console.log("split1", this_txt.split(":", 1));
+console.log("split2", this_txt.split(":", 2));
+                    let this_attribute = this_txt.split(":", 1)[0];
+                    let this_attribute_value = this_txt.split(":", 2)[1].trim();
+                    this_content[this_attribute] = this_attribute_value
+                } else {
+                   new_content += txt
+                } 
+              });
+
+              this_content.content = new_content
             }
 
           } else if (action == "title" // &&  tags_to_process.includes(this_content.tag)
@@ -549,6 +581,8 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
              this_content.content.forEach( (el) => {
                 if ( subenvironments[this_tag].includes(el.tag)) {
                     new_content.push(el)
+                } else if (possibleattributes.includes(el.tag)) {
+                    this_content[el.tag] = el.content;
                 } else {
 // console.log("looking for an attribute", el);
                     if (el.tag == "text" && el.content.match(/^\s*$/) && "attributes" in el) {
