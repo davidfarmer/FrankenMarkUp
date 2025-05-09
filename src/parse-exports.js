@@ -66,7 +66,7 @@ export const delimitersFromList = function(lis) {
     return delim_lis
 }
 
-const PTXdisplayoutput = function(tag) {
+export const PTXdisplayoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
                        end_tag: "</" + tag + ">",
         before_begin: "\n", after_begin: ">\n",
