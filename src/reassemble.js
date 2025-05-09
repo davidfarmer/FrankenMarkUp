@@ -1,8 +1,11 @@
 
+import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
+import { convertMathSnippet } from '../../Space_Math/src/main.js';
+
 let debugtags = "STart";
 debugtags = "";
 
-const reassemblePreTeXt = function(content) {
+export const reassemblePreTeXt = function(content) {
 
     if (typeof content == "string") { return content }
 

@@ -1,0 +1,21 @@
+{
+  "name": "frankenmarkup",
+  "version": "0.0.1",
+  "description": "FlexTeXt",
+  "main": "dist/flextext.es.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "David Farmer",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "space_math": "github:oscarlevin/space_math"
+  }
+}
