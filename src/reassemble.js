@@ -118,7 +118,7 @@ if (element.tag == "prefigure") { console.log("element", element) }
     return assembled_text
 }
 
-const sanitizeXMLattributes = function(text) {
+export const sanitizeXMLattributes = function(text) {
 
     let new_text = text;
 
@@ -137,3 +137,4 @@ const sanitizeXMLstring = function(text) {
 
     return new_text
 }
+

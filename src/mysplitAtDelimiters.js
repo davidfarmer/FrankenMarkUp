@@ -1,8 +1,10 @@
 /* eslint no-constant-condition:0 */
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
+import { toUnicode, subenvironments} from "./data";
 import { delimitersFromList, paragraph_peer_delimiters  } from "./parse-exports";
 import { display_math_delimiters } from "./parse-exports";
+import { sanitizeXMLattributes } from "./reassemble";
 
 const findEndOfMath = function(delimiter, text, startIndex) {
     // Adapted from
@@ -577,7 +579,7 @@ console.log("split2", this_txt.split(":", 2));
 
              const this_tag = this_content.tag;
 
-             new_content = [];
+             let new_content = [];
              this_content.content.forEach( (el) => {
                 if ( subenvironments[this_tag].includes(el.tag)) {
                     new_content.push(el)

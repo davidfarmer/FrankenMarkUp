@@ -15,6 +15,8 @@ import {
     inlinetags,
     randomtags_containing_p,
     containers,
+    possibleattributes,
+    objects_with_substructure,
     display_math_tags,
     level,
     attribute_like,
@@ -273,18 +275,18 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 
           } );
       }
- console.log("preprocessed text 2", new1);
-alert("preprocessed text 2");
+//  console.log("preprocessed text 2", new1);
+// alert("preprocessed text 2");
 
       let new7 = {...new1}
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
- console.log("processed text 7", new7);
-      alert("pause 2");
+//  console.log("processed text 7", new7);
+//       alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
       new8 = extract_lists(new8, "attributes", 0,0, "all");
- console.log("processed text 8", new8);
-      alert("pause 3");
+//  console.log("processed text 8", new8);
+//       alert("pause 3");
 
       attribute_like.forEach( (attr) => { new8 = extract_lists(new8, attr[0], 0, 0, attr[1]) } );
 // console.log("processed text 8b", new8);
@@ -302,8 +304,8 @@ alert("preprocessed text 2");
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 //
 ////////////      var tmp1secondsplitPfigclean = extract_lists(tmp1finalsplit, "clean up substructure", objects_with_substructure);
- console.log("about to clean up substructure", new9);
-      alert("pause 3");
+//  console.log("about to clean up substructure", new9);
+//       alert("pause 3");
   // next is maybe overkill, but things like statements contain p's
       new9 = extract_lists(new9, "clean up substructure", 0,0,objects_with_substructure);
 
