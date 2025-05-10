@@ -44,13 +44,18 @@ var parsecount = 0;
 
 export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
-    if (typeof nodelist == "string") {return splitTextIntoParagraphs(nodelist) }
+    if (typeof nodelist == "string") {    // seems that this never happens?
+        return splitTextIntoParagraphs(nodelist) 
+    }
 
     if (!Array.isArray(nodelist)) {
+// console.log("splitting of non-array content:", nodelist);
         let newnodelist = {...nodelist}
         newnodelist.content = splitIntoParagraphs(newnodelist.content, nodestoparse, peernodes);
         return newnodelist
     }
+
+// console.log("splitting of an array content:", nodelist);
 
     let newnodelist = [];
 
@@ -79,8 +84,8 @@ export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
           newnodelist.push(element);
       } else if (element.tag == "text") {
 
-          const this_text = element.content.split(/\n{2,}/);
-// console.log("found ", this_text.length, " pieces, which are:", this_text);
+          const this_text = element.content.split(/\n\s*\n{1,}/);
+ // console.log("found ", this_text.length, " pieces, which are:", this_text);
           this_text.forEach( (element) => {
               const this_new_text = current_new_text + element;
               if (this_new_text) {  // skip empty paragraphs
@@ -90,6 +95,21 @@ export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
               }
               current_new_text = ""
           })
+
+      } else if (typeof element.content == "string" && tags_containing_paragraphs.includes(element.tag)) {
+
+          let this_new_content = [];
+          const this_text = element.content.split(/\n\s*\n{1,}/);
+// console.log("found ", this_text.length, " pieces, which are:", this_text);
+          this_text.forEach( (element) => {
+              const element_trimmed = element.trim();
+              if (element_trimmed) {
+                  this_new_content.push({tag: "p", content: element_trimmed})
+              }
+          });
+
+          element.content = this_new_content;
+          newnodelist.push(element)
 
       } else { newnodelist.push(element) }
     });
@@ -103,7 +123,7 @@ const splitTextIntoParagraphs = function(text) {
 
     let current_new_text = "";
 
-    const this_text = text.split(/\n{2,}/);
+    const this_text = text.split(/\n\s*\n{1,}/);
 console.log("found ", this_text.length, " pieces, which are:", this_text);
     this_text.forEach( (element) => {
         const this_new_text = current_new_text + element;
@@ -387,9 +407,9 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
                   // it might be a oneline environment, or it might be an attribute
                   // clean that up later with substructure
-console.log("found oneline: X" + new_tag + "Y");
-console.log("this_content.content was",this_content.content);
-console.log("and new_content is",new_content);
+// console.log("found oneline: X" + new_tag + "Y");
+// console.log("this_content.content was",this_content.content);
+// console.log("and new_content is",new_content);
 //                if (possibleattributes.includes(new_tag)) {  // it is an attribute, of the *parent*
 //                } else {
 
@@ -407,14 +427,14 @@ console.log("and new_content is",new_content);
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
-                this_content.parenttag = "ul"
+                this_content._parenttag = "ul"
             } else if (this_content.content.match(/^\s*\++\s/)) {
                 const new_tag = "li";
                 const new_content = this_content.content.replace(/^\s*\++\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
-                this_content.parenttag = "ol"
+                this_content._parenttag = "ol"
             } else if (this_content.content.match(/^\s*\(*[0-9]+\.*\)*\s/)) {
                 //looking for 1 or 1. or 1) or (1) or (1.)
                 const new_tag = "li";
@@ -422,13 +442,13 @@ console.log("and new_content is",new_content);
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
-                this_content.parenttag = "ol"
+                this_content._parenttag = "ol"
             }
 
           } else if (action == "xmlattributes" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>]*>", "s");
+            var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>+]*>", "s");
             if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+]*>/)) {
    console.log("maybe found an xmlattribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
@@ -450,7 +470,7 @@ console.log("and new_content is",new_content);
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            const this_text = this_content.content.split(/\n{2,}/);
+            const this_text = this_content.content.split(/\n\s*\n{1,}/);
 
             if (this_text.length > 1) {
               let new_content = "";
@@ -459,9 +479,9 @@ console.log("and new_content is",new_content);
               this_text.forEach( (txt) => { 
                 let this_txt = txt.trim();
                 if (regex.test(this_txt)) {
-console.log("found an attribute", this_txt);
-console.log("split1", this_txt.split(":", 1));
-console.log("split2", this_txt.split(":", 2));
+// console.log("found an attribute", this_txt);
+// console.log("split1", this_txt.split(":", 1));
+// console.log("split2", this_txt.split(":", 2));
                     let this_attribute = this_txt.split(":", 1)[0];
                     let this_attribute_value = this_txt.split(":", 2)[1].trim();
                     this_content[this_attribute] = this_attribute_value
@@ -553,7 +573,7 @@ console.log("split2", this_txt.split(":", 2));
               let new_content_text = this_content.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
               new_content_text = new_content_text.replace(/\n\s*>/g, "\n");
       // need to handle the case that there are multiple paragraphs
-              let new_content_separated = new_content_text.split(/\n{2,}/);
+              let new_content_separated = new_content_text.split(/\n\s*\n{1,}/);
               let new_content_list = [];
               new_content_separated.forEach( (element, index) => {
                   new_content_list.push({tag: "p", content: element});
@@ -624,7 +644,7 @@ console.log("split2", this_txt.split(":", 2));
                 } else if (!found_list && element.tag == "li") {
                   found_list = true;
                   new_list_content = [element];
-                  new_list_object.tag = element.parenttag;
+                  new_list_object.tag = element._parenttag;
 //console.log("started a new list", new_list_content);
                 } else if (found_list && element.tag == "li") {
                   new_list_content.push(element)

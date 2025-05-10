@@ -195,6 +195,7 @@ containers.forEach( (el) => {
     before_end: "\n", after_end: "\n"}
     });
 
+/*
 // some special cases
 outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
          before_begin: "\n", after_begin: "\n",
@@ -215,6 +216,7 @@ outputtags["image"] = {begin_tag: "<img", end_tag: "</img>",  // img or image?  
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
+*/
 
 console.log("in parse-exports.js");
 

@@ -216,16 +216,16 @@ display_math_tags.forEach( (el) => {
 
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
          before_begin: "", after_begin: ">\n", 
-         before_end: "", after_end: "\n"};
+         before_end: "\n", after_end: "\n"};
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
 
-console.log("in parse.js");
+// console.log("in parse.js");
 
 export function fmToPTX(originaltext, wrapper="stuff"){
 
-    console.log("fmToPTX", originaltext);
+//    console.log("fmToPTX", originaltext);
     let originaltextX = preprocessAliases(originaltext);
 
 // console.log("originaltextX", originaltextX);
@@ -245,7 +245,7 @@ export function fmToPTX(originaltext, wrapper="stuff"){
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
-      let originaltextB = originaltextA.replace(/\n\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+      let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
       let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
@@ -259,7 +259,7 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 
 
 
-// console.log("originaltextC", originaltextC);
+ console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }
@@ -279,9 +279,11 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 // alert("preprocessed text 2");
 
       let new7 = {...new1}
+// console.log("about to process new7", new7);
+// alert("7");
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
-//  console.log("processed text 7", new7);
-//       alert("pause 2");
+//   console.log("processed text 7", new7);
+//        alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
       new8 = extract_lists(new8, "attributes", 0,0, "all");

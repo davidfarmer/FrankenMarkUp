@@ -1,5 +1,7 @@
 
-import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
+// import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
+import { debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
+import { outputtags} from "./parse";
 import { convertMathSnippet } from '../../Space_Math/src/main.js';
 
 let debugtags = "STart";
@@ -72,10 +74,10 @@ export const reassemblePreTeXt = function(content) {
       if ("xmlattributes" in element && element.xmlattributes) { this_element_text += " " + element.xmlattributes.trim() }
       if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + element.label + '"'}
 
-if (element.tag == "prefigure") { console.log("element", element) }
+// if (element.tag == "prefigure") { console.log("element", element) }
       const possible_attributes = Object.keys(element);
            possible_attributes.forEach( (el) => {
-           if (!["tag", "content", "title", "xmlattributes"].includes(el)) {
+           if (!["tag", "content", "title", "xmlattributes"].includes(el) && !el.startsWith("_")) {
                this_element_text += " " + el + '="' + element[el] + '"';
            }
       });
