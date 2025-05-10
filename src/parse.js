@@ -15,6 +15,9 @@ import {
     inlinetags,
     randomtags_containing_p,
     containers,
+    display_environments,
+    display_subenvironments,
+    display_subsubenvironments,
     possibleattributes,
     objects_with_substructure,
     display_math_tags,
@@ -169,28 +172,19 @@ inlinetags.forEach( (el) => {
     });
 
 paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + "",
-                       end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: ">\n",
-    before_end: "\n", after_end: "\n"}
+    outputtags[el] = PTXdisplayoutput(el)
     });
 other_level_1_p_peers.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + "",
-                       end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: ">\n",
-    before_end: "\n", after_end: "\n"}
+    outputtags[el] = PTXdisplayoutput(el)
     });
 randomtags_containing_p.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + "",
-                       end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: ">\n",
-    before_end: "\n", after_end: "\n"}
+    outputtags[el] = PTXdisplayoutput(el)
     });
 containers.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + "",
-                       end_tag: "</" + el + ">",
-    before_begin: "\n", after_begin: ">\n",
-    before_end: "\n", after_end: "\n"}
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+[...display_environments, ...display_subenvironments, ...display_subsubenvironments].forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
     });
 
 // some special cases
@@ -327,10 +321,11 @@ export function fmToPTX(originaltext, wrapper="stuff"){
       const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
 //  console.log("tmp5v", tmp5v);
 //  alert("tmp5v");
-      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", wrapper);
+      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
-      let tmp5 = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
+      let tmp5s = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
+      let tmp5 = extract_lists(tmp5s, "prefigure",0,0, ["prefigure"]);  // statemetns now part of level
  //     let tmp5 = tmp5u;
 
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));

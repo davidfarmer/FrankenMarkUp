@@ -369,7 +369,7 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
     alert("should be unreachable: unrecognized category for ", parse_me)
 }
 
-export const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag = "", root_tag="section") {
+export const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag="", parent_parent_tag="", root_tag="section") {
 
     let newnodelist = [];
 
@@ -384,10 +384,10 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
           let this_node;
           if (typeof element == "object") {
 //  console.log("going to extract", element);
-              this_node = extract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag);
+              this_node = extract_lists({...element}, action, thisdepth+1, maxdepth, tags_to_process, element.tag, parent_tag);
           }
           else {
-              this_node = extract_lists(element, action, thisdepth+1, maxdepth, tags_to_process, parent_tag);
+              this_node = extract_lists(element, action, thisdepth+1, maxdepth, tags_to_process, parent_tag, parent_parent_tag);
           }
 
           newnodelist.push(this_node)
@@ -561,10 +561,45 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
               }
             }
 
-} else if (action == "statements") {
-// console.log("not processing", this_content, "with parent", parent_tag, "with content", this_content.content);
+            } else if (action == "prefigure" && tags_to_process.includes(this_content.tag)) {
+ console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
 
-// laft over from debugging, should delete
+            if (!("xmlns" in this_content)) { this_content["xmlns"] = "https://prefigure.org" }
+
+            let this_diagram_content = [];
+            let this_diagram = {};
+
+            if (typeof this_content.content == "string") {  // unlabeled diagram and no hint/answer/etc
+              this_diagram_content = [{tag: "text", content: this_content.content}]
+              this_diagram = {tag: "diagram", content: this_diagram_content}
+              if ("dimensions" in this_content) {
+                  this_diagram["dimensions"] = this_content.dimensions;
+                  delete this_content["dimensions"]
+              }
+              if ("margins" in this_content) {
+                  this_diagram["margins"] = this_content.margins;
+                  delete this_content["margins"]
+              }
+              this_content.content = [this_diagram]
+
+              if ("bbox" in this_content) {  // need to make a coordinates child
+
+              }
+            } 
+            
+            if (parent_parent_tag != "image") {  // need to wrap in image
+                let this_content_copy = {...this_content};
+                this_content_copy["content"] = [...this_content["content"]];
+                this_content = {tag: "image", content: [this_content_copy]};
+ //               if ("label" in this_content_copy && !("label" in this_content)) {
+ //                   this_content["label"] = this_content_copy["label"];
+ //                   delete this_content_copy["label"]
+ //               }
+                if ("width" in this_content_copy) {
+                    this_content["width"] = this_content_copy["width"];
+                    delete this_content_copy["width"]
+                }
+            }
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {  // also must handle case of array
@@ -742,7 +777,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
           let this_node = {...this_content};
 // console.log("now re-extracting", this_node.content);
-          this_node.content = extract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag);
+          this_node.content = extract_lists(this_node.content, action, thisdepth+1, maxdepth, tags_to_process, this_node.tag, parent_tag);
 
           return this_node
 

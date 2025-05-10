@@ -63,7 +63,7 @@ export const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...h
 
 export const display_environments = ["figure", "tabular", "listing"];
 export const display_subenvironments = ["image", "table", "program"];
-export const display_subsubenvironments = ["latex-image", "prefigure", "description", "alt"];  // is alt correct?
+export const display_subsubenvironments = ["latex-image", "prefigure", "description", "caption"];
 
 export const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
