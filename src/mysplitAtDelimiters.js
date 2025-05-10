@@ -562,7 +562,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             }
 
             } else if (action == "prefigure" && tags_to_process.includes(this_content.tag)) {
- console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
+// console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
 
             if (!("xmlns" in this_content)) { this_content["xmlns"] = "https://prefigure.org" }
 
@@ -570,7 +570,11 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             let this_diagram = {};
 
             if (typeof this_content.content == "string") {  // unlabeled diagram and no hint/answer/etc
-              this_diagram_content = [{tag: "text", content: this_content.content}]
+
+              const this_content_was = this_content.content;
+
+         //     this_diagram_content = [{tag: "text", content: this_content_was}]
+              this_diagram_content = this_content_was;
               this_diagram = {tag: "diagram", content: this_diagram_content}
               if ("dimensions" in this_content) {
                   this_diagram["dimensions"] = this_content.dimensions;
@@ -582,9 +586,17 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
               }
               this_content.content = [this_diagram]
 
+// console.log("so far, this_content", this_content);
+// alert("a prefigure");
               if ("bbox" in this_content) {  // need to make a coordinates child
+// console.log("found bbox");
+                let this_coordinates = {tag: "coordinates", bbox: this_content["bbox"], content: this_content_was };
+                delete this_content["bbox"];
+                this_diagram.content = [this_coordinates];
 
               }
+
+// alert("b prefigure");
             } 
             
             if (parent_parent_tag != "image") {  // need to wrap in image
