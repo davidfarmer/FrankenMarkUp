@@ -450,7 +450,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
             var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>+]*>", "s");
             if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+]*>/)) {
-   console.log("maybe found an xmlattribute", this_content.content);
+//   console.log("maybe found an xmlattribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
                 } else {

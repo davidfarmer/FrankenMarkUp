@@ -252,7 +252,7 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 
 
 
- console.log("originaltextC", originaltextC);
+// console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }
