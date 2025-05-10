@@ -1,3 +1,3 @@
-import { fmToPTX } from "./parse-exports";
+import { fmToPTX } from "./parse";
 
 export { fmToPTX as FlexTeXtConvert };
