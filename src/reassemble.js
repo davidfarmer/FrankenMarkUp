@@ -1,7 +1,7 @@
 
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
 import { debugging_output_markup, PTXdisplayoutput, outputtags } from "./parse";
-import { convertMathSnippet } from '../../Space_Math/src/main.js';
+import { convertMathSnippet } from 'space_math';
 
 let debugtags = "STart";
 debugtags = "";
