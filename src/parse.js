@@ -6,7 +6,7 @@ The js file for the test interface.
 2022.10.17 add global call
 2022.10.25 add MathJax support
 */
-import '../spacemath.css'
+//import '../spacemath.css'
 import {
     remapped_math_tags,
     level_1_p_peers_containing_p,
@@ -28,13 +28,6 @@ import {splitIntoParagraphs, preprocessAliases, splitAtDelimiters, extract_lists
 import {reassemblePreTeXt} from './reassemble.js'
 
 
-//"use strict";
-//let sourceTextArea = document.getElementById("sourceTextArea");
-//let echosourceTextArea = document.getElementById("echosourceTextArea");
-//let mathmlTextArea = document.getElementById("mathmlTextArea");
-//let pretextTextArea = document.getElementById("pretextTextArea");
-//let speechTextArea = document.getElementById("speechTextArea");
-//let mathJaxArea = document.getElementById("MathJaxArea");
 
 // let translateTable = new TranslateTable();
 
@@ -69,7 +62,7 @@ export const delimitersFromList = function(lis) {
     return delim_lis
 }
 
-const PTXdisplayoutput = function(tag) {
+export const PTXdisplayoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
                        end_tag: "</" + tag + ">",
         before_begin: "\n", after_begin: ">\n",
@@ -350,16 +343,4 @@ export function fmToPTX(originaltext, wrapper="stuff"){
       return tmp5p
 };
 
-if (sourceTextArea.addEventListener) {
-  sourceTextArea.addEventListener('input', function() {
-
-      const originaltext = sourceTextArea.value;
-
-      let newtext = fmToPTX(originaltext, "worksheet");
-
-      if(echosourceTextArea) {
-          echosourceTextArea.innerText = newtext
-      }
-  }, false);
-};
 
