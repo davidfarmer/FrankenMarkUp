@@ -1,6 +1,6 @@
 
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
-import { debugging_output_markup, PTXdisplayoutput, outputtags } from "./parse";
+import { debugging_output_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
 import { convertMathSnippet } from 'space_math';
 
 let debugtags = "STart";
@@ -14,6 +14,11 @@ export const reassemblePreTeXt = function(content) {
        let this_element_text = "";
        const this_tag = content.tag;
        let these_tags = outputtags[this_tag];
+
+   // spacemath
+//       if (this_tag == "sm") { these_tags = PTXinlineoutput("m") }
+//       else if (this_tag == "smen") { these_tags = PTXinlineoutput("men") }
+
        if (!these_tags) { these_tags = PTXdisplayoutput(this_tag) }
        this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
@@ -95,15 +100,17 @@ export const reassemblePreTeXt = function(content) {
           this_new_text = sanitizeXMLstring(this_new_text)
       }
       let mathpunctuation = "";
-      if (["m","md","me","mdn","men"].includes(this_tag)) {
+      if (["m","md","me","mdn","men", "sm", "smen"].includes(this_tag)) {
     //     this_new_text = sanitizeXMLstring(this_new_text);
          if (this_new_text.match(/^.*(\.|,|;)\s*$/s)) {
             this_new_text = this_new_text.replace(/\s*$/,"");
             mathpunctuation = this_new_text.slice(-1);
             this_new_text = this_new_text.slice(0,-1)
          }
-         this_new_text = convertMathSnippet(this_new_text, "LaTeX");
-         this_new_text = sanitizeXMLstring(this_new_text)
+         if (["sm", "smen"].includes(this_tag)) {
+             this_new_text = convertMathSnippet(this_new_text, "LaTeX");
+         }
+         this_new_text = sanitizeXMLmathstring(this_new_text)
       }
       this_element_text = this_element_text + this_new_text;
       this_element_text = this_element_text +
@@ -135,6 +142,17 @@ const sanitizeXMLstring = function(text) {
     new_text = new_text.replace(/&/g, "&amp;");
     new_text = new_text.replace(/</g, "&lt;");
     new_text = new_text.replace(/>/g, "&gt;");
+
+    return new_text
+}
+
+const sanitizeXMLmathstring = function(text) {
+
+    let new_text = text;
+
+    new_text = new_text.replace(/&/g, "&amp;");
+    new_text = new_text.replace(/</g, "\\lt ");
+    new_text = new_text.replace(/>/g, "\\gt ");
 
     return new_text
 }

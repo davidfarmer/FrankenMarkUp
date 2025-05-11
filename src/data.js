@@ -33,19 +33,19 @@ export const proof_like = ["proof"];
 
 export const project_like = ["activity", "exploration", "investigation", "project"];
 
-export const display_math_tags = ["md", "mdn", "me", "men"];  // let's get rid of me and men
+export const display_math_tags = ["md", "mdn", "me", "men","smen"];  // let's get rid of me and men
 
 export const hint_like = ["hint", "answer", "solution"];
 
 export const subpart_like = ["case", "task"];
 
-export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
+export const inlinetags = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
 // also need to handle self-closing tags
 
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
 
-export const math_tags = ["m", ...display_math_tags];
+export const math_tags = ["m", "sm", ...display_math_tags];
 
 export let structural_components = ["section", "subsection", "worksheet", "paragraphs"];
 

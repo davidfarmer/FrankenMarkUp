@@ -72,11 +72,17 @@ export const PTXdisplayoutput = function(tag) {
         before_begin: "\n", after_begin: ">\n",
         before_end: "\n", after_end: "\n"}
 }
+export const PTXinlineoutput = function(tag) {
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "", after_begin: ">",
+        before_end: "", after_end: ""}
+}
 
 export const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
-          {left:"$$", right:"$$", tag:"men"},
-          {left:"\\[", right:"\\]", tag:"men"},
+          {left:"$$", right:"$$", tag:"smen"},
+          {left:"\\[", right:"\\]", tag:"smen"},   // these don;t work: not sure why
 ];
 remapped_math_tags.forEach( (el) => {
     display_math_delimiters.push(
@@ -127,7 +133,7 @@ paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 // console.log("paragraph_peers", paragraph_peers);
 
 let asymmetric_inline_delimiters = [
-          {left:"\\(", right:"\\)", tag:"m"},
+          {left:"\\(", right:"\\)", tag:"sm"},
 //          {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 
@@ -202,6 +208,10 @@ display_math_tags.forEach( (el) => {
          before_end: "\n", after_end: "\n"};
 });
 
+// spacemath
+outputtags["sm"] = PTXinlineoutput("m");
+outputtags["smen"] = PTXdisplayoutput("men");
+
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
          before_begin: "", after_begin: ">\n", 
          before_end: "\n", after_end: "\n"};
@@ -217,7 +227,6 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
     let originaltextX = preprocessAliases(originaltext);
 
 // console.log("originaltextX", originaltextX);
-// console.log("display_math_delimiters", display_math_delimiters);
 
      // extract title, label, attributes of parent section (currently only title implemented)
 
