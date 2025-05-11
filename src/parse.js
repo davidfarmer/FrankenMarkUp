@@ -9,6 +9,7 @@ The js file for the test interface.
 //import '../spacemath.css'
 import {
     remapped_math_tags,
+    structural_components,
     level_1_p_peers_containing_p,
     other_level_1_p_peers,
     list_like,
@@ -96,7 +97,7 @@ export const paragraph_peer_delimiters = [];
 // });
 
 
-let paragraph_peer_ptx_and_latex_text = [...level_1_p_peers_containing_p];
+let paragraph_peer_ptx_and_latex_text = [...structural_components, ...level_1_p_peers_containing_p];
 let paragraph_peer_ptx_and_latex_text_output = [...paragraph_peer_ptx_and_latex_text, ...list_like];
 // plus some tags we don't expect people to type (go back and rethink this)
 paragraph_peer_ptx_and_latex_text_output.push("p");
@@ -210,7 +211,7 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
 
 // console.log("in parse.js");
 
-export function fmToPTX(originaltext, wrapper="stuff"){
+export function fmToPTX(originaltext, wrapper="placeholder"){
 
 //    console.log("fmToPTX", originaltext);
     let originaltextX = preprocessAliases(originaltext);
@@ -254,9 +255,10 @@ export function fmToPTX(originaltext, wrapper="stuff"){
 
       let new1 = {...tmp1together};
 
-      const firstdepth = 12;
+      const firstdepth = 15;
       for (let depth = 0; depth < firstdepth; ++depth) {
-          level.forEach( (lev) => {
+          let trimmed_levels = level;      // need to actually trim them!
+          trimmed_levels.forEach( (lev) => {
               new1 = splitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );
 

@@ -18,12 +18,12 @@ export const reassemblePreTeXt = function(content) {
        this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
        if ("xmlattributes" in content && content.xmlattributes) { this_element_text += " " + content.xmlattributes.trim() }
-       if ("label" in content && content.label) { this_element_text += " " + 'xml:id="' + sanitizeXMLattributes(content.label) + '"'}
+       if ("id" in content && content.id) { this_element_text += " " + 'xml:id="' + sanitizeXMLattributes(content.id) + '"'}
 
 // console.log("content", content);
        const possible_attributes = Object.keys(content);
        possible_attributes.forEach( (el) => {
-           if (!["tag", "content", "title", "xmlattributes", "label"].includes(el)) {
+           if (!["tag", "content", "title", "xmlattributes", "id"].includes(el)) {
                this_element_text += " " + el + '="' + content.el + '"';
            }
        });
@@ -71,12 +71,12 @@ export const reassemblePreTeXt = function(content) {
                 these_tags.before_begin + these_tags.begin_tag + debugtags;
 //  console.log(typeof element, "ccc", element);
       if ("xmlattributes" in element && element.xmlattributes) { this_element_text += " " + element.xmlattributes.trim() }
-      if ("label" in element && element.label) { this_element_text += " " + 'xml:id="' + sanitizeXMLattributes(element.label) + '"'}
+      if ("id" in element && element.id) { this_element_text += " " + 'xml:id="' + sanitizeXMLattributes(element.id) + '"'}
 
 // if (element.tag == "prefigure") { console.log("element", element) }
       const possible_attributes = Object.keys(element);
            possible_attributes.forEach( (el) => {
-           if (!["tag", "content", "title", "xmlattributes", "label"].includes(el) && !el.startsWith("_")) {
+           if (!["tag", "content", "title", "xmlattributes", "id"].includes(el) && !el.startsWith("_")) {
                this_element_text += " " + el + '="' + element[el] + '"';
            }
       });

@@ -521,7 +521,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                   let this_label = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
 //console.log("found a label:", this_label);
                   this_label = sanitizeXMLattributes(this_label);
-                  this_content.label = this_label;
+                  this_content.id = this_label;
                   this_content.content = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "")
             }
 

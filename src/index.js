@@ -26,7 +26,7 @@ if (sourceTextArea.addEventListener) {
 
         const originaltext = sourceTextArea.value;
 
-        let newtext = fmToPTX(originaltext, "worksheet");
+        let newtext = fmToPTX(originaltext);
 
         if(echosourceTextArea) {
             echosourceTextArea.innerText = newtext

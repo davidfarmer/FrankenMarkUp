@@ -47,6 +47,8 @@ export const possibly_self_closing_inline_tags = ["url"];
 
 export const math_tags = ["m", ...display_math_tags];
 
+export let structural_components = ["section", "subsection", "worksheet", "paragraphs"];
+
 export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)
     ...remark_like, ...example_like, ...definition_like, ...exercise_like,
@@ -54,11 +56,9 @@ export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)section
     ...project_like,
     ...hint_like,
     "blockquote", "sidebyside", "li",
-    "paragraphs",
-    "section"
 ];
 
-export const tags_containing_paragraphs = [...level_1_p_peers_containing_p, ...hint_like,
+export const tags_containing_paragraphs = [...structural_components, ...level_1_p_peers_containing_p, ...hint_like,
             ...subpart_like, ...randomtags_containing_p];
 
 export const display_environments = ["figure", "tabular", "listing"];
