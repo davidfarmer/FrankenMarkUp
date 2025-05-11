@@ -45,7 +45,7 @@ var parsecount = 0;
 export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
 
     if (typeof nodelist == "string") {    // seems that this never happens?
-        return splitTextIntoParagraphs(nodelist) 
+        return splitTextIntoParagraphs(nodelist)
     }
 
     if (!Array.isArray(nodelist)) {
@@ -476,7 +476,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
               let new_content = "";
               var regex = new RegExp("^(" + possibleattributes.join("|") + ")");
 
-              this_text.forEach( (txt) => { 
+              this_text.forEach( (txt) => {
                 let this_txt = txt.trim();
                 if (regex.test(this_txt)) {
 // console.log("found an attribute", this_txt);
@@ -487,7 +487,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                     this_content[this_attribute] = this_attribute_value
                 } else {
                    new_content += txt
-                } 
+                }
               });
 
               this_content.content = new_content
@@ -562,9 +562,11 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             }
 
             } else if (action == "prefigure" && tags_to_process.includes(this_content.tag)) {
-// console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
-
-            if (!("xmlns" in this_content)) { this_content["xmlns"] = "https://prefigure.org" }
+ console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
+alert("looking for xmlns");
+            if (!("xmlns" in this_content)
+                     && !("xmlattributes" in this_content && this_content["xmlattributes"].includes("xmlns"))) {
+                            this_content["xmlns"] = "https://prefigure.org" }
 
             let this_diagram_content = [];
             let this_diagram = {};
@@ -597,8 +599,8 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
               }
 
 // alert("b prefigure");
-            } 
-            
+            }
+
             if (parent_parent_tag != "image") {  // need to wrap in image
                 let this_content_copy = {...this_content};
                 this_content_copy["content"] = [...this_content["content"]];
