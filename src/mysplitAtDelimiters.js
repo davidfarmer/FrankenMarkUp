@@ -562,8 +562,8 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             }
 
             } else if (action == "prefigure" && tags_to_process.includes(this_content.tag)) {
- console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
-alert("looking for xmlns");
+// console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
+// alert("looking for xmlns");
             if (!("xmlns" in this_content)
                      && !("xmlattributes" in this_content && this_content["xmlattributes"].includes("xmlns"))) {
                             this_content["xmlns"] = "https://prefigure.org" }

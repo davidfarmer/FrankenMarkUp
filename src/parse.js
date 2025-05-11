@@ -257,7 +257,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       const firstdepth = 15;
       for (let depth = 0; depth < firstdepth; ++depth) {
-          let trimmed_levels = level;      // need to actually trim them!
+          let trimmed_levels = level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {
               new1 = splitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );

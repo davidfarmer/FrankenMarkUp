@@ -110,6 +110,8 @@ export const possibleattributes = ["source", "ref", "width", "margins", "label",
 
 export let level = [];
 
+level.push(["section"]);
+level.push(["subsection"]);
 level.push(["worksheet"]);
 level.push(["page"]);
 level.push(["paragraphs", "objectives"]);
