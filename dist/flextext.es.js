@@ -93,8 +93,8 @@ $.push(Q.diagram);
 $.push([...Ee]);
 $.push([...et]);
 $.push(["blockquote"]);
-$.push("displaymath");
 $.push(["p"]);
+$.push("displaymath");
 const we = [
   ["extraneous math", re],
   ["workspace", [...te]],
