@@ -11,7 +11,7 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-export const list_like = ["ol", "ul", "dl"];
+export const list_like = ["ol", "ul", "dl", "code"];   // should be pure_containers ?
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
