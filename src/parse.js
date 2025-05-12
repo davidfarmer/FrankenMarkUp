@@ -245,6 +245,9 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
       let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
+      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");  
+      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");  
+
       let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
                                   const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
                                   return y + hiddenz + w
@@ -266,7 +269,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       const firstdepth = 15;
       for (let depth = 0; depth < firstdepth; ++depth) {
-          let trimmed_levels = level.slice(depth);      // need to actually trim them!
+          let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {
               new1 = splitAtDelimiters(new1, lev, 0, depth)
               attribute_like.forEach( (attr) => { new1 = extract_lists(new1, attr[0], 0, depth, attr[1]) } );

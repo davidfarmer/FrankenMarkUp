@@ -123,6 +123,34 @@ or you can <url href="https://www.lmfdb.org/NumberField/?galois_group=17T7">see
 examples in the LMFDB</url>.
 \end{historical}
 
+<p>
+<ul>
+<li>
+tags in <c>title</c>
+</li>
+
+<li>
+<c>figure</c> and bare <c>image</c>
+</li>
+
+<li>
+<c>foreign</c> and other missing inline tags (such as the new <c>pf</c>)
+</li>
+
+<li>
+investigate what is missing for a worksheet
+</li>
+
+<li>
+some Typst compatibility (some of Typst has an
+  irreconcilable conflict with other formats).
+</li>
+
+<li>
+<c>ol</c> and <c>ul</c> as source (not just markdown style)
+</li>
+</ul>
+</p>
 
 Beyond questions about roots of polynomials,
 why are groups important?  In particular, why are those three
