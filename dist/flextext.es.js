@@ -3742,7 +3742,7 @@ const ce = function(t) {
   return e = e.replace(/&/g, "&amp;"), e = e.replace(/</g, "&lt;"), e = e.replace(/>/g, "&gt;"), e;
 }, tr = function(t) {
   let e = t;
-  return e = e.replace(/&/g, "&amp;"), e = e.replace(/</g, "\\lt "), e = e.replace(/>/g, "\\gt "), e;
+  return e = e.replace(/&/g, "\\amp "), e = e.replace(/</g, "\\lt "), e = e.replace(/>/g, "\\gt "), e;
 }, rr = function(t, e, r) {
   let n = r, o = 0;
   const i = t.length;

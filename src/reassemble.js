@@ -150,7 +150,7 @@ const sanitizeXMLmathstring = function(text) {
 
     let new_text = text;
 
-    new_text = new_text.replace(/&/g, "&amp;");
+    new_text = new_text.replace(/&/g, "\\amp ");
     new_text = new_text.replace(/</g, "\\lt ");
     new_text = new_text.replace(/>/g, "\\gt ");
 

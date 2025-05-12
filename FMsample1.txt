@@ -306,6 +306,12 @@ you are reading now.  Think about why it happens that way.
   > Checking that multiple paragraph markdown blockquotes are working,
      and that the required markup is not strict.
 
+$$
+f(x) = cases:
+    1 if x=1
+    0 if x != 1
+$$
+
 <figure>
 
   This is to check that the contents of a `figure` are *not*
