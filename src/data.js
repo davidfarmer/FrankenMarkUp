@@ -134,8 +134,8 @@ level.push(subenvironments["diagram"]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
-level.push("displaymath");
 level.push(["p"]);
+level.push("displaymath");
 
 export const attribute_like = [
     ["extraneous math", display_math_tags],
