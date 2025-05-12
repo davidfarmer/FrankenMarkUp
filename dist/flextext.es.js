@@ -23,7 +23,7 @@ const U = [
   ...ne,
   ...je,
   ..._e
-], Ze = ["figure", "tabular", "listing"], Be = ["image", "table", "program"], Ce = ["latex-image", "prefigure", "description", "caption"], Fe = ["figure", "table", "tabular", "ol", "ul", "dl"], tt = [...me, ...ge, ...te, "task"], z = [
+], Ze = ["figure", "table", "listing"], Be = ["image", "tabular", "program"], Ce = ["latex-image", "prefigure", "description", "caption"], Fe = ["figure", "table", "tabular", "ol", "ul", "dl"], tt = [...me, ...ge, ...te, "task"], z = [
   "text",
   "p",
   "fn",
@@ -4224,7 +4224,7 @@ function pr(t, e = "placeholder") {
 
 +++sTaRTbQ>`);
   i = i.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, `$1
-+++saMePaR$2`);
++++saMePaR$2`), i = i.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1"), i = i.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
   let s = i.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(q, _, P, T) {
     const Je = P.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
     return _ + Je + T;
@@ -4236,7 +4236,7 @@ $2`);
   let d = { ...c };
   const a = 15;
   for (let q = 0; q < a; ++q)
-    $.slice(q).forEach((P) => {
+    $.forEach((P) => {
       d = R(d, P, 0, q), we.forEach((T) => {
         d = A(d, T[0], 0, q, T[1]);
       });
