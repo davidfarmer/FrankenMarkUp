@@ -113,8 +113,10 @@ export const reassemblePreTeXt = function(content) {
          this_new_text = sanitizeXMLmathstring(this_new_text)
       }
       this_element_text = this_element_text + this_new_text;
-      this_element_text = this_element_text +
-                these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
+      let after_tag = these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
+ //     this_element_text = this_element_text +
+ //               these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;
+      this_element_text = this_element_text + after_tag;
 
       if (this_element_text.match(/^\s*<p>\s*<\/p>\s*$/)) { console.log("empty p"); this_element_text = "" }
                                                   // should we have eleminated empty p earlier?
@@ -122,6 +124,8 @@ export const reassemblePreTeXt = function(content) {
       assembled_text = assembled_text + this_element_text;
 
     });
+
+    assembled_text = assembled_text.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3");
 
     return assembled_text
 }

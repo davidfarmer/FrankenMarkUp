@@ -243,7 +243,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+      originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
       originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");  
       originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");  
@@ -259,7 +260,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
 
 
-// console.log("originaltextC", originaltextC);
+ console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }

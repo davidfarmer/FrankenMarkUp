@@ -3725,15 +3725,17 @@ const ce = function(t) {
     let i = "";
     const s = n.tag;
     let p = S[s];
-    typeof p > "u" && (p = sr), i = i + p.before_begin + p.begin_tag + ue, "xmlattributes" in n && n.xmlattributes && (i += " " + n.xmlattributes.trim()), "id" in n && n.id && (i += ' xml:id="' + V(n.id) + '"'), Object.keys(n).forEach((u) => {
-      !["tag", "content", "title", "xmlattributes", "id"].includes(u) && !u.startsWith("_") && (i += " " + u + '="' + n[u] + '"');
+    typeof p > "u" && (p = sr), i = i + p.before_begin + p.begin_tag + ue, "xmlattributes" in n && n.xmlattributes && (i += " " + n.xmlattributes.trim()), "id" in n && n.id && (i += ' xml:id="' + V(n.id) + '"'), Object.keys(n).forEach((l) => {
+      !["tag", "content", "title", "xmlattributes", "id"].includes(l) && !l.startsWith("_") && (i += " " + l + '="' + n[l] + '"');
     }), i += p.after_begin, "title" in n && n.title && (i += "<title>" + n.title + `</title>
 `);
     let d = ce(n.content);
     s != "text" && (d = d.replace(/^[\r\n]+/, ""), d = d.replace(/[\r\n]+$/, "")), ["c", "code"].includes(s) && (d = er(d));
     let a = "";
-    ["m", "md", "me", "mdn", "men", "sm", "smen"].includes(s) && (d.match(/^.*(\.|,|;)\s*$/s) && (d = d.replace(/\s*$/, ""), a = d.slice(-1), d = d.slice(0, -1)), ["sm", "smen"].includes(s) && (d = Qe(d, "LaTeX")), d = tr(d)), i = i + d, i = i + p.before_end + p.end_tag + a + p.after_end, i.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), i = ""), r = r + i;
-  }), r;
+    ["m", "md", "me", "mdn", "men", "sm", "smen"].includes(s) && (d.match(/^.*(\.|,|;)\s*$/s) && (d = d.replace(/\s*$/, ""), a = d.slice(-1), d = d.slice(0, -1)), ["sm", "smen"].includes(s) && (d = Qe(d, "LaTeX")), d = tr(d)), i = i + d;
+    let u = p.before_end + p.end_tag + a + p.after_end;
+    i = i + u, i.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), i = ""), r = r + i;
+  }), r = r.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3"), r;
 }, V = function(t) {
   let e = t;
   return e = e.replace(/ /g, "-"), e = e.replace(/[^a-zA-Z0-9\-]/g, "_"), e;
@@ -4223,14 +4225,15 @@ function pr(t, e = "placeholder") {
 \\label$2`).replace(/\n\s*\n\s*>/g, `
 
 +++sTaRTbQ>`);
-  i = i.replace(/(\$\$|\\end{equation}|<\/men>|\\end{align}|\\\]) *\n([^\n])/g, `$1
+  i = i.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, `$1
++++saMePaR$2`), i = i.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, `$1
 +++saMePaR$2`), i = i.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1"), i = i.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
   let s = i.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(q, _, P, T) {
     const Je = P.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
     return _ + Je + T;
   }), p = new RegExp("([^\\n])(\\n *(" + K.join("|") + ") *:)", "g");
   s = s.replace(p, `$1
-$2`);
+$2`), console.log("originaltextC", s);
   let c = { tag: e, content: s };
   n && (c.title = n);
   let d = { ...c };
