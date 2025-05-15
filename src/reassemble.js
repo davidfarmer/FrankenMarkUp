@@ -1,12 +1,21 @@
 
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
 import { debugging_output_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
+import { verbatim_tags } from "./data";
 import { convertMathSnippet } from 'space_math';
+// import { convertMathSnippet } from '../../Space_Math/src/main';
 
 let debugtags = "STart";
 debugtags = "";
 
 export const reassemblePreTeXt = function(content) {
+
+// console.log("math",convertMathSnippet("x", "LaTeX") );
+
+//console.log("reassemblePreTeXt of", content);
+if (Array.isArray(content)) {
+// console.log("first content", content[0].content, "III", content[0].content.replace(/\n/,"AAAA"));
+}
 
     if (typeof content == "string") { return content }
 
@@ -37,7 +46,9 @@ export const reassemblePreTeXt = function(content) {
 
        if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
 
+//console.log("reprocessing", content.content);
        const this_assembled_text = this_element_text + reassemblePreTeXt(content.content) +  these_tags.before_end + these_tags.end_tag + these_tags.after_end;
+//console.log("got back", this_assembled_text);
 
        return this_assembled_text
     }
@@ -90,8 +101,11 @@ export const reassemblePreTeXt = function(content) {
 
       if ("title" in element && element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
 
+// console.log("reassem element.content", element.content);
       let this_new_text = reassemblePreTeXt(element.content);
-      if (this_tag != "text") {
+  //    if (this_tag != "text") {
+// console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
+      if ( false && !verbatim_tags.includes(this_tag)) {
                 // what about a code block?  do we mean verbatim?
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
@@ -108,9 +122,12 @@ export const reassemblePreTeXt = function(content) {
             this_new_text = this_new_text.slice(0,-1)
          }
          if (["sm", "smen"].includes(this_tag)) {
+//console.log("about to convert:", this_new_text);
              this_new_text = convertMathSnippet(this_new_text, "LaTeX");
+             this_new_text = this_new_text.replace(/&/g, " \\amp ");
+         } else {
+               this_new_text = sanitizeXMLmathstring(this_new_text)
          }
-         this_new_text = sanitizeXMLmathstring(this_new_text)
       }
       this_element_text = this_element_text + this_new_text;
       let after_tag = these_tags.before_end + these_tags.end_tag + mathpunctuation + these_tags.after_end;

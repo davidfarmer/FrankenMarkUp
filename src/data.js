@@ -33,7 +33,7 @@ export const proof_like = ["proof"];
 
 export const project_like = ["activity", "exploration", "investigation", "project"];
 
-export const display_math_tags = ["md", "mdn", "me", "men","smen"];  // let's get rid of me and men
+export const display_math_tags = ["md", "mdn", "me", "men","smen", "smdn"];  // let's get rid of me and men
 
 export const hint_like = ["hint", "answer", "solution"];
 
@@ -46,6 +46,8 @@ export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie",
 export const possibly_self_closing_inline_tags = ["url"];
 
 export const math_tags = ["m", "sm", ...display_math_tags];
+
+export const verbatim_tags = [...math_tags, "c", "code", "mrow"];
 
 export let structural_components = ["section", "subsection", "worksheet", "paragraphs"];
 

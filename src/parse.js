@@ -209,8 +209,10 @@ display_math_tags.forEach( (el) => {
 });
 
 // spacemath
-outputtags["sm"] = PTXinlineoutput("m");
-outputtags["smen"] = PTXdisplayoutput("men");
+ outputtags["sm"] = PTXinlineoutput("m");
+// outputtags["sm"] = do_nothing_markup;
+//outputtags["smen"] = PTXdisplayoutput("men");
+ outputtags["smen"] = do_nothing_markup;
 
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
          before_begin: "", after_begin: ">\n", 
@@ -260,7 +262,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
 
 
- console.log("originaltextC", originaltextC);
+ // console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }
@@ -288,7 +290,11 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 //        alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
+// console.log("new8", new8);
+// alert("new8")
       new8 = extract_lists(new8, "attributes", 0,0, "all");
+// console.log("new8a", new8);
+// alert("new8a")
 //  console.log("processed text 8", new8);
 //       alert("pause 3");
 
@@ -302,6 +308,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       let new9 = {...new8};
 
+// console.log("new9", new9);
+// alert("new9")
       // why do we extract lists before oneline environments?
       new9 = extract_lists(new9, "extract li", 0,0, "all");   // "all" is wrong, but later code assumes "p"
 

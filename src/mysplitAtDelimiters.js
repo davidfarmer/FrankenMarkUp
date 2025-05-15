@@ -182,7 +182,7 @@ const splitTextAtDelimiters = function(this_content, delimiters) {  // based on 
         text = text.slice(index + delimiters[i].right.length);
     }
 
-//    if (text !== "") {    // are there times we want to save whitespace text nodes?
+//    if (text !== "") { }    // are there times we want to save whitespace text nodes?
     if (!text.match(/^\s*$/)) {
         data.push({
             tag: "text",
@@ -271,6 +271,7 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
     // splitting a non-text node (which is represented by a list)
     // means replacing its content by a list of nodes
 
+// console.log("starting splitAtDelimiters", parse_me, taglist, toenter, toprocess, parent_tag);
 
     let newnodelist = [];
 
@@ -331,15 +332,16 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
                 //  pass
             }
         }
-
+// console.log("new_content", new_content);
         return new_content
 
     } else {  // parse_me must be an object, but check
 
        if (typeof parse_me != "object") { alert("wrong category for ", parse_me) }
 
+// console.log("parse_me",parse_me, taglist);
        let current_object = {...parse_me}
-
+//  console.log("now current_object is", current_object);
 // console.log("dealing with", current_object, "of depth", thisdepth, "with max", maxdepth,toprocess, thisdepth > maxdepth, delimiters);
        if (thisdepth > maxdepth && current_object.tag != "text") { return current_object }
 
@@ -350,9 +352,11 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
            new_content = splitAtDelimiters(new_content, taglist, thisdepth+1, maxdepth, toenter, toprocess, current_object.tag)
        }
 // console.log("now new_content", new_content);
+//  console.log("renow current_object is", current_object);
        if (current_object.tag == "text" && typeof new_content == "string") { current_object.content = new_content }
        else if (current_object.tag != "text") {
           if (new_content.length == 1 && new_content[0].tag == "text") {
+//  console.log("arenow current_object is", current_object);
             current_object.content = new_content[0].content
           } else {
             current_object.content = new_content
@@ -361,7 +365,7 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
           current_object = new_content
        }
 
-// console.log("then current_object is", current_object);
+//  console.log("then current_object is", current_object);
        return current_object
 
     }
@@ -468,7 +472,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string" ) {
+                      && typeof this_content.content == "string" && !["smen","smdn"].includes(this_content.tag)) {
 
             const this_text = this_content.content.split(/\n\s*\n{1,}/);
 
