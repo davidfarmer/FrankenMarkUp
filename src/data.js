@@ -11,7 +11,7 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-export const list_like = ["ol", "ul", "dl", "code"];   // should be pure_containers ?
+export const list_like = ["ol", "ul", "dl", "code","mrow"];   // should be pure_containers ?
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
@@ -136,6 +136,7 @@ level.push([...list_elements]);
 level.push(["blockquote"]);
 level.push(["p"]);
 level.push("displaymath");
+level.push(["mrow"]);
 
 export const attribute_like = [
     ["extraneous math", display_math_tags],

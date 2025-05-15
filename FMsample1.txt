@@ -312,6 +312,14 @@ f(x) = cases:
     0 if x != 1
 $$
 
+$$
+align:
+   a&b 
+
+   b&c
+t5
+$$
+
 <figure>
 
   This is to check that the contents of a `figure` are *not*

@@ -1,4 +1,4 @@
-const _e = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Ee = ["ol", "ul", "dl", "code"], et = ["li"], Te = ["aside", "historical", "biographical"], me = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], ge = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Se = ["convention", "insight", "note", "observation", "remark", "warning"], Ne = ["example", "problem", "question"], Pe = ["definition"], te = ["exercise"], Re = ["proof"], Oe = ["activity", "exploration", "investigation", "project"], re = ["md", "mdn", "me", "men", "smen"], ne = ["hint", "answer", "solution"], je = ["case", "task"], Xe = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
+const _e = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Ee = ["ol", "ul", "dl", "code", "mrow"], et = ["li"], Te = ["aside", "historical", "biographical"], me = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], ge = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Se = ["convention", "insight", "note", "observation", "remark", "warning"], Ne = ["example", "problem", "question"], Pe = ["definition"], te = ["exercise"], Re = ["proof"], Oe = ["activity", "exploration", "investigation", "project"], re = ["md", "mdn", "me", "men", "smen"], ne = ["hint", "answer", "solution"], je = ["case", "task"], Xe = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
 [...re];
 let ze = ["section", "subsection", "worksheet", "paragraphs"], Ie = [
   // peer of p cildren of (sub)sections
@@ -95,6 +95,7 @@ $.push([...et]);
 $.push(["blockquote"]);
 $.push(["p"]);
 $.push("displaymath");
+$.push(["mrow"]);
 const we = [
   ["extraneous math", re],
   ["workspace", [...te]],
