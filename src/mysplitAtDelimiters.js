@@ -370,7 +370,7 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
 
     }
 
-    alert("should be unreachable: unrecognized category for ", parse_me)
+    alert("should be unreachable: unrecognized category for: ", parse_me)
 }
 
 export const extract_lists = function(this_content, action, thisdepth=0, maxdepth=0, tags_to_process="all", parent_tag="", parent_parent_tag="", root_tag="section") {
