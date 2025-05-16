@@ -204,6 +204,11 @@ outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
 outputtags["enumerate"] = outputtags["ol"];
 outputtags["itemize"] = outputtags["ul"];
 
+outputtags["tikzpicture"] = {begin_tag: "<image>\n<latex-image>\n\\begin{tikzpicture}",
+         end_tag: "\\end{tikzpicture}\n</latex-image>\n</image>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+
 
 display_math_tags.forEach( (el) => {
     outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
@@ -274,7 +279,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       let new1 = {...tmp1together};
 
-      const firstdepth = 15;
+      const firstdepth =  15;
       for (let depth = 0; depth < firstdepth; ++depth) {
           let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {
@@ -356,7 +361,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
       let tmp5s = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
-      let tmp5 = extract_lists(tmp5s, "prefigure",0,0, ["prefigure"]);  // statemetns now part of level
+      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
+      let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]); 
  //     let tmp5 = tmp5u;
 
 // console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));

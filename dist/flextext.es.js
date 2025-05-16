@@ -1,31 +1,31 @@
-const te = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], re = ["ol", "ul", "dl", "code", "mrow"], Ee = ["li"], oe = ["aside", "historical", "biographical"], G = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], H = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], ne = ["convention", "insight", "note", "observation", "remark", "warning"], ie = ["example", "problem", "question"], ae = ["definition"], P = ["exercise"], le = ["proof"], me = ["activity", "exploration", "investigation", "project"], F = ["md", "mdn", "me", "men", "smen", "smdn"], I = ["hint", "answer", "solution"], pe = ["case", "task"], se = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
-[...F];
+const te = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], re = ["ol", "ul", "dl", "code", "mrow"], Te = ["li"], oe = ["aside", "historical", "biographical"], G = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], H = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], ie = ["convention", "insight", "note", "observation", "remark", "warning"], ne = ["example", "problem", "question"], ae = ["definition"], B = ["exercise"], le = ["proof"], me = ["activity", "exploration", "investigation", "project"], P = ["md", "mdn", "me", "men", "smen", "smdn"], F = ["hint", "answer", "solution"], pe = ["case", "task"], se = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
+[...P];
 let ue = ["section", "subsection", "worksheet", "paragraphs"], ce = [
   // peer of p cildren of (sub)sections
   ...oe,
   ...G,
   ...H,
   // ...list_like,  (this caused an infinite recursion)
-  ...ne,
   ...ie,
+  ...ne,
   ...ae,
-  ...P,
+  ...B,
   ...le,
   ...me,
-  ...I,
+  ...F,
   "blockquote",
   "sidebyside",
   "li"
 ];
-const k = [
+const A = [
   ...ue,
   ...ce,
-  ...I,
+  ...F,
   ...pe,
   ...te,
   // "enumerate", "itemize",
   "placeholder"
-], fe = ["figure", "table", "listing", "enumerate", "itemize"], ge = ["image", "tabular", "program"], ye = ["latex-image", "prefigure", "description", "caption"], de = ["figure", "table", "tabular", "enumerate", "ol", "ul", "dl"], je = [...G, ...H, ...P, "task"], x = [
+], fe = ["figure", "table", "listing", "enumerate", "itemize"], ge = ["image", "tabular", "program"], ye = ["latex-image", "prefigure", "description", "caption", "tikzpicture"], de = ["figure", "table", "tabular", "enumerate", "ol", "ul", "dl"], Oe = [...G, ...H, ...B, "task"], x = [
   "text",
   "p",
   "fn",
@@ -36,7 +36,7 @@ const k = [
   "title",
   "li",
   "caption"
-], Te = [
+], Re = [
   // [latex_name, ptx_tag]
   // could these be handled by a alias, like we did with quote -> blockquote?
   ["equation", "men"],
@@ -56,7 +56,14 @@ const k = [
   // check
   diagram: ["predefinition", "coordinates", "annotations"]
   // check
-}, Oe = ["exercisegroup", "exercises", "prefigure", "diagram", ...T.diagram], Re = Object.keys(T), R = [
+}, be = [
+  "exercisegroup",
+  "exercises",
+  "prefigure",
+  "tikzpicture",
+  "diagram",
+  ...T.diagram
+], Xe = Object.keys(T), R = [
   "source",
   "ref",
   "width",
@@ -78,12 +85,12 @@ g.push(["page"]);
 g.push(["paragraphs", "objectives"]);
 g.push(["sidebyside"]);
 g.push([...me]);
-g.push([...ie, ...P]);
+g.push([...ne, ...B]);
 g.push(["introduction", "conclusion"]);
-g.push([...G, ...H, ...ne, ...ae]);
+g.push([...G, ...H, ...ie, ...ae]);
 g.push(["task"]);
 g.push(["statement"]);
-g.push([...le, ...I]);
+g.push([...le, ...F]);
 g.push([...pe]);
 g.push([...oe]);
 g.push([...fe]);
@@ -93,21 +100,21 @@ g.push(["prefigure"]);
 g.push(["diagram"]);
 g.push(T.diagram);
 g.push([...re]);
-g.push([...Ee]);
+g.push([...Te]);
 g.push(["blockquote"]);
 g.push(["p"]);
 g.push("displaymath");
 g.push(["mrow"]);
 const K = [
-  ["extraneous math", F],
-  ["workspace", [...P]],
+  ["extraneous math", P],
+  ["workspace", [...B]],
   ["margins", ["worksheet", "sidebyside"]],
   ["margin", ["worksheet", "sidebyside"]],
   ["xmlattributes", "all"],
   ["title", "all"],
   ["label", "all"]
 ];
-let Xe = {
+let ze = {
   // in the format "officialname": [list of synonyms].  Taken from SL3X
   abstract: ["abs", "abstr"],
   acknowledgement: ["ack"],
@@ -2786,7 +2793,7 @@ var X = {
   "floor",
   "ceil",
   "ceiling"
-], be = [
+], he = [
   ["sin", "sine"],
   ["cos", "cosine"],
   ["tan", "tangent"],
@@ -2802,11 +2809,11 @@ var X = {
   ["sinh", "sinch"],
   ["cosh", "cosh"],
   ["tanh", "tanch"]
-], he = Fe.slice();
-for (const e of be)
-  he.push(e[0]);
+], we = Fe.slice();
+for (const e of he)
+  we.push(e[0]);
 console.debug("Do I see this?");
-console.debug("greedyfunctions", he);
+console.debug("greedyfunctions", we);
 var Ie = [
   ["α", "alpha"],
   ["β", "beta"],
@@ -2859,7 +2866,7 @@ var Ie = [
   ["Ψ", "Psi"],
   ["Ω", "Omega"]
 ];
-for (const e of be)
+for (const e of he)
   X[e[0]] = {
     alternative: [],
     type: "function",
@@ -2934,34 +2941,34 @@ const D = function(e) {
   if (typeof e == "string")
     return e;
   if (!Array.isArray(e)) {
-    let i = "";
+    let n = "";
     const s = e.tag;
-    let o = b[s];
-    return o || (o = $(s)), i += o.before_begin + o.begin_tag + C, "xmlattributes" in e && e.xmlattributes && (i += " " + e.xmlattributes.trim()), "id" in e && e.id && (i += ' xml:id="' + E(e.id) + '"'), Object.keys(e).forEach((d) => {
-      ["tag", "content", "title", "xmlattributes", "id"].includes(d) || (i += " " + d + '="' + e.el + '"');
-    }), i += o.after_begin, "title" in e && e.title && (i += "<title>" + e.title + `</title>
-`), i + D(e.content) + o.before_end + o.end_tag + o.after_end;
+    let o = d[s];
+    return o || (o = $(s)), n += o.before_begin + o.begin_tag + C, "xmlattributes" in e && e.xmlattributes && (n += " " + e.xmlattributes.trim()), "id" in e && e.id && (n += ' xml:id="' + E(e.id) + '"'), Object.keys(e).forEach((b) => {
+      ["tag", "content", "title", "xmlattributes", "id"].includes(b) || (n += " " + b + '="' + e.el + '"');
+    }), n += o.after_begin, "title" in e && e.title && (n += "<title>" + e.title + `</title>
+`), n + D(e.content) + o.before_end + o.end_tag + o.after_end;
   }
   const t = e;
   let l = "";
-  return t.forEach((i, s) => {
-    if (typeof i == "string") {
-      i.match(/^\s*$/) || (l += "<TEXT>" + i + "</TEXT>", console.log("just added error of", i));
+  return t.forEach((n, s) => {
+    if (typeof n == "string") {
+      n.match(/^\s*$/) || (l += "<TEXT>" + n + "</TEXT>", console.log("just added error of", n));
       return;
     }
     let o = "";
-    const u = i.tag;
-    let f = b[u];
-    typeof f > "u" && (f = Se), o = o + f.before_begin + f.begin_tag + C, "xmlattributes" in i && i.xmlattributes && (o += " " + i.xmlattributes.trim()), "id" in i && i.id && (o += ' xml:id="' + E(i.id) + '"'), Object.keys(i).forEach((r) => {
-      !["tag", "content", "title", "xmlattributes", "id"].includes(r) && !r.startsWith("_") && (o += " " + r + '="' + i[r] + '"');
-    }), o += f.after_begin, "title" in i && i.title && (o += "<title>" + i.title + `</title>
+    const u = n.tag;
+    let f = d[u];
+    typeof f > "u" && (f = Ue), o = o + f.before_begin + f.begin_tag + C, "xmlattributes" in n && n.xmlattributes && (o += " " + n.xmlattributes.trim()), "id" in n && n.id && (o += ' xml:id="' + E(n.id) + '"'), Object.keys(n).forEach((r) => {
+      !["tag", "content", "title", "xmlattributes", "id"].includes(r) && !r.startsWith("_") && (o += " " + r + '="' + n[r] + '"');
+    }), o += f.after_begin, "title" in n && n.title && (o += "<title>" + n.title + `</title>
 `);
-    let p = D(i.content);
+    let p = D(n.content);
     ["c", "code"].includes(u) && (p = Ze(p));
     let a = "";
-    ["m", "md", "me", "mdn", "men", "sm", "smen"].includes(u) && (p.match(/^.*(\.|,|;)\s*$/s) && (p = p.replace(/\s*$/, ""), a = p.slice(-1), p = p.slice(0, -1)), p = ze(p)), o = o + p;
-    let n = f.before_end + f.end_tag + a + f.after_end;
-    o = o + n, o.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), o = ""), l = l + o;
+    ["m", "md", "me", "mdn", "men", "sm", "smen"].includes(u) && (p.match(/^.*(\.|,|;)\s*$/s) && (p = p.replace(/\s*$/, ""), a = p.slice(-1), p = p.slice(0, -1)), p = Ne(p)), o = o + p;
+    let i = f.before_end + f.end_tag + a + f.after_end;
+    o = o + i, o.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), o = ""), l = l + o;
   }), l = l.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3"), l;
 }, E = function(e) {
   let t = e;
@@ -2969,54 +2976,54 @@ const D = function(e) {
 }, Ze = function(e) {
   let t = e;
   return t = t.replace(/&/g, "&amp;"), t = t.replace(/</g, "&lt;"), t = t.replace(/>/g, "&gt;"), t;
-}, ze = function(e) {
+}, Ne = function(e) {
   let t = e;
   return t = t.replace(/&/g, "\\amp "), t = t.replace(/</g, "\\lt "), t = t.replace(/>/g, "\\gt "), t;
-}, Ne = function(e, t, l) {
-  let i = l, s = 0;
+}, Ce = function(e, t, l) {
+  let n = l, s = 0;
   const o = e.length;
-  for (; i < t.length; ) {
-    const u = t[i];
-    if (s <= 0 && t.slice(i, i + o) === e)
-      return i;
-    u === "\\" ? i++ : u === "{" ? s++ : u === "}" && s--, i++;
+  for (; n < t.length; ) {
+    const u = t[n];
+    if (s <= 0 && t.slice(n, n + o) === e)
+      return n;
+    u === "\\" ? n++ : u === "{" ? s++ : u === "}" && s--, n++;
   }
   return -1;
-}, Ce = function(e) {
+}, De = function(e) {
   return e.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
-}, De = /^\\AAAAAAAbegin{/, j = function(e, t, l) {
+}, Ge = /^\\AAAAAAAbegin{/, j = function(e, t, l) {
   if (typeof e == "string")
-    return we(e);
+    return ve(e);
   if (!Array.isArray(e)) {
     let o = { ...e };
     return o.content = j(o.content, t, l), o;
   }
-  let i = [], s = "";
+  let n = [], s = "";
   return e.forEach((o, u) => {
     if (l.includes(o.tag))
-      s && (i.push({ tag: "p", content: s }), s = ""), k.includes(o.tag) && typeof o.content == "string" ? (o.content = Q(o.content, M), o.content = j(o.content, t, l)) : k.includes(o.tag) && (o.content = j(o.content, t, l)), i.push(o);
+      s && (n.push({ tag: "p", content: s }), s = ""), A.includes(o.tag) && typeof o.content == "string" ? (o.content = Q(o.content, M), o.content = j(o.content, t, l)) : A.includes(o.tag) && (o.content = j(o.content, t, l)), n.push(o);
     else if (o.tag == "text")
-      o.content.split(/\n\s*\n{1,}/).forEach((d) => {
-        const p = s + d;
+      o.content.split(/\n\s*\n{1,}/).forEach((b) => {
+        const p = s + b;
         if (p) {
           const a = { tag: "p", content: p };
-          i.push(a);
+          n.push(a);
         }
         s = "";
       });
-    else if (typeof o.content == "string" && k.includes(o.tag)) {
+    else if (typeof o.content == "string" && A.includes(o.tag)) {
       let f = [];
       o.content.split(/\n\s*\n{1,}/).forEach((p) => {
         const a = p.trim();
         a && f.push({ tag: "p", content: a });
-      }), o.content = f, i.push(o);
+      }), o.content = f, n.push(o);
     } else
-      i.push(o);
-  }), i;
-}, we = function(e) {
+      n.push(o);
+  }), n;
+}, ve = function(e) {
   let t = [], l = "";
-  const i = e.split(/\n\s*\n{1,}/);
-  return console.log("found ", i.length, " pieces, which are:", i), i.forEach((s) => {
+  const n = e.split(/\n\s*\n{1,}/);
+  return console.log("found ", n.length, " pieces, which are:", n), n.forEach((s) => {
     const o = l + s;
     if (o) {
       console.log("made this_new_text", o);
@@ -3028,84 +3035,84 @@ const D = function(e) {
 }, Q = function(e, t) {
   typeof e != "string" && alert("expected string in splitTextAtDelimiters", e);
   var l = e;
-  let i;
+  let n;
   const s = [], o = new RegExp(
-    "(" + t.map((u) => Ce(u.left)).join("|") + ")"
+    "(" + t.map((u) => De(u.left)).join("|") + ")"
   );
-  for (; i = l.search(o), i !== -1; ) {
-    i > 0 && (s.push({
+  for (; n = l.search(o), n !== -1; ) {
+    n > 0 && (s.push({
       tag: "text",
-      content: l.slice(0, i)
-    }), l = l.slice(i));
+      content: l.slice(0, n)
+    }), l = l.slice(n));
     const u = t.findIndex((p) => l.startsWith(p.left));
-    if (i = Ne(t[u].right, l, t[u].left.length), i === -1)
+    if (n = Ce(t[u].right, l, t[u].left.length), n === -1)
       break;
-    const f = l.slice(0, i + t[u].right.length), d = De.test(f) ? f : l.slice(t[u].left.length, i);
+    const f = l.slice(0, n + t[u].right.length), b = Ge.test(f) ? f : l.slice(t[u].left.length, n);
     s.push({
       //        type: "math",
       tag: t[u].tag,
-      content: d
+      content: b
       //       rawData,
-    }), l = l.slice(i + t[u].right.length);
+    }), l = l.slice(n + t[u].right.length);
   }
   return l.match(/^\s*$/) || s.push({
     tag: "text",
     content: l
   }), s;
-}, Ge = function(e) {
+}, He = function(e) {
   typeof e != "string" && alert("expected a string, but got:", e);
   let t = e;
   return t = t.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<sm>$2</sm>$3"), t = t.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3"), t = t.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3"), t = t.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3"), t = t.replace(/(^|\s)``([^'"`\n]+)''(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3"), t = t.replace(/(^|\s)``([^'"`\n]+)"(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3"), t = t.replace(/(^|\s)`([^'"`\n]+)'(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3"), t = t.replace(/(^|\s)"([^"\n]+)"(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3"), t = t.replace(/(^|\s)'([^'\n]+)'(\s|$|[.,!?;:])/mg, "$1<q>$2</q>$3"), t = t.replace(/(^|[^`a-zA-Z0-9])`([^`\n]+)`($|[^`a-zA-A0-9])/mg, "$1<c>$2</c>$3"), t;
 }, J = function(e, t, l) {
   return Be[t + l];
-}, He = function(e) {
+}, Qe = function(e) {
   typeof e != "string" && alert("expected a string, but got:", e);
   let t = e;
   t = t.replace(/<!--.*?-->/g, "");
-  for (let [l, i] of Object.entries(Xe)) {
+  for (let [l, n] of Object.entries(ze)) {
     let s = l;
-    i.forEach((o) => {
+    n.forEach((o) => {
       let u = o;
       t = t.replace("<" + u + ">", "<" + s + ">"), t = t.replace("<" + u + " ", "<" + s + " "), t = t.replace("</" + u + ">", "</" + s + ">"), t = t.replace("\\begin{" + u + "}", "\\begin{" + s + "}"), t = t.replace("\\end{" + u + "}", "\\end{" + s + "}"), t = t.replace("\\" + u + "{", "\\" + s + "{");
     });
   }
   return t;
-}, v = function(e, t, l, i, s = "all", o = "all", u = "") {
+}, v = function(e, t, l, n, s = "all", o = "all", u = "") {
   let f = [];
-  typeof t == "string" ? t == "displaymath" ? f = _ : t == "spacelike" ? f = "spacelike" : alert("unknown taglist " + t) : typeof t[0] == "string" ? f = ve(t) : f = t;
-  let d = [];
+  typeof t == "string" ? t == "displaymath" ? f = _ : t == "spacelike" ? f = "spacelike" : alert("unknown taglist " + t) : typeof t[0] == "string" ? f = xe(t) : f = t;
+  let b = [];
   if (Array.isArray(e))
     return e.forEach((p, a) => {
-      if (l > i && p.tag != "text")
-        d.push(p);
+      if (l > n && p.tag != "text")
+        b.push(p);
       else {
-        let n;
-        s == "all" || s.includes(p.tag) ? n = v(p, t, l + 1, i, s, o, p.tag) : n = p, Array.isArray(n) ? n.forEach((r) => {
-          d.push(r);
-        }) : d.push(n);
+        let i;
+        s == "all" || s.includes(p.tag) ? i = v(p, t, l + 1, n, s, o, p.tag) : i = p, Array.isArray(i) ? i.forEach((r) => {
+          b.push(r);
+        }) : b.push(i);
       }
-    }), d;
+    }), b;
   if (typeof e == "string") {
-    if (l > i + 2)
+    if (l > n + 2)
       return e;
     if (f === "spacelike")
-      return o == "all" || o.includes(u) ? Ge(e) : e;
+      return o == "all" || o.includes(u) ? He(e) : e;
     let p = e;
-    return f === "makeparagraphs" ? (o == "all" || o.includes(u)) && (p = we(p)) : (o == "all" || o.includes(u)) && (p = Q(p, f)), p;
+    return f === "makeparagraphs" ? (o == "all" || o.includes(u)) && (p = ve(p)) : (o == "all" || o.includes(u)) && (p = Q(p, f)), p;
   } else {
     typeof e != "object" && alert("wrong category for ", e);
     let p = { ...e };
-    if (l > i && p.tag != "text")
+    if (l > n && p.tag != "text")
       return p;
     let a = p.content;
-    return (s == "all" || o.includes(p.tag)) && (a = v(a, t, l + 1, i, s, o, p.tag)), p.tag == "text" && typeof a == "string" ? p.content = a : p.tag != "text" ? a.length == 1 && a[0].tag == "text" ? p.content = a[0].content : p.content = a : p = a, p;
+    return (s == "all" || o.includes(p.tag)) && (a = v(a, t, l + 1, n, s, o, p.tag)), p.tag == "text" && typeof a == "string" ? p.content = a : p.tag != "text" ? a.length == 1 && a[0].tag == "text" ? p.content = a[0].content : p.content = a : p = a, p;
   }
-}, h = function(e, t, l = 0, i = 0, s = "all", o = "", u = "", f = "section") {
-  let d = [];
+}, h = function(e, t, l = 0, n = 0, s = "all", o = "", u = "", f = "section") {
+  let b = [];
   if (Array.isArray(e))
-    e.forEach((a, n) => {
+    e.forEach((a, i) => {
       let r;
-      typeof a == "object" ? r = h({ ...a }, t, l + 1, i, s, a.tag, o) : r = h(a, t, l + 1, i, s, o, u), d.push(r);
+      typeof a == "object" ? r = h({ ...a }, t, l + 1, n, s, a.tag, o) : r = h(a, t, l + 1, n, s, o, u), b.push(r);
     });
   else if (typeof e == "object") {
     if (t == "oneline environments" && e.tag == "p" && typeof e.content == "string") {
@@ -3117,17 +3124,17 @@ const D = function(e) {
       }
     } else if (t == "extract li" && e.tag == "p" && typeof e.content == "string") {
       if (e.content.match(/^\s*\\item\s/)) {
-        const n = "li", r = e.content.replace(/^\s*\\item\s*/, "");
-        e.tag = n, e.content = r;
+        const i = "li", r = e.content.replace(/^\s*\\item\s*/, "");
+        e.tag = i, e.content = r;
       } else if (e.content.match(/^\s*\-+\s/)) {
-        const n = "li", r = e.content.replace(/^\s*\-+\s*/, "");
-        e.tag = n, e.content = r, e._parenttag = "ul";
+        const i = "li", r = e.content.replace(/^\s*\-+\s*/, "");
+        e.tag = i, e.content = r, e._parenttag = "ul";
       } else if (e.content.match(/^\s*\++\s/)) {
-        const n = "li", r = e.content.replace(/^\s*\++\s*/, "");
-        e.tag = n, e.content = r, e._parenttag = "ol";
+        const i = "li", r = e.content.replace(/^\s*\++\s*/, "");
+        e.tag = i, e.content = r, e._parenttag = "ol";
       } else if (e.content.match(/^\s*\(*[0-9]+\.*\)*\s/)) {
-        const n = "li", r = e.content.replace(/^\s*\(*[0-9]+\.*\)*\s*/, "");
-        e.tag = n, e.content = r, e._parenttag = "ol";
+        const i = "li", r = e.content.replace(/^\s*\(*[0-9]+\.*\)*\s*/, "");
+        e.tag = i, e.content = r, e._parenttag = "ol";
       }
     } else if (t == "xmlattributes" && typeof e.content == "string") {
       var p = new RegExp("^\\s*(" + R.join("|") + ")[^<>+]*>", "s");
@@ -3135,60 +3142,68 @@ const D = function(e) {
         if (e.content.match(/^\s*>/))
           e.content = e.content.replace(/^\s*>/, "");
         else {
-          let n = e.content.split(">", 1)[0];
-          e.content = e.content.replace(/^\s*[^<>]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += n : e.xmlattributes = n;
+          let i = e.content.split(">", 1)[0];
+          e.content = e.content.replace(/^\s*[^<>]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += i : e.xmlattributes = i;
         }
     } else if (t == "attributes" && typeof e.content == "string") {
-      const n = e.content.split(/\n\s*\n{1,}/);
-      if (n.length > 1) {
+      const i = e.content.split(/\n\s*\n{1,}/);
+      if (i.length > 1) {
         let r = "";
         var p = new RegExp("^(" + R.join("|") + ")");
-        n.forEach((c) => {
+        i.forEach((c) => {
           let y = c.trim();
           if (p.test(y)) {
-            let w = y.split(":", 1)[0], z = y.split(":", 2)[1].trim();
-            e[w] = z;
+            let w = y.split(":", 1)[0], Z = y.split(":", 2)[1].trim();
+            e[w] = Z;
           } else
             r += c;
         }), e.content = r;
       }
-    } else if (t == "title" && typeof e.content == "string") {
+    } else if (t == "title" && !be.includes(e.tag) && typeof e.content == "string") {
       if (e.content.match(/^\s*\[/) || e.content.match(/^\s*<title>/))
         if (e.content.match(/^\s*\[/)) {
-          let n = e.content.split("]", 1)[0];
-          n = n.replace(/\s*\[/, ""), e.title = n, e.content = e.content.replace(/^\s*\[[^\[\]]*\]/, "");
+          let i = e.content.split("]", 1)[0];
+          i = i.replace(/\s*\[/, ""), e.title = i, e.content = e.content.replace(/^\s*\[[^\[\]]*\]/, "");
         } else {
-          let n = e.content.split("</title>", 1)[0];
-          n = n.replace(/\s*<title>/, ""), e.title = n, e.content = e.content.replace(/^\s*<title>.*?<\/title>/, "");
+          let i = e.content.split("</title>", 1)[0];
+          i = i.replace(/\s*<title>/, ""), e.title = i, e.content = e.content.replace(/^\s*<title>.*?<\/title>/, "");
         }
     } else if (t == "label" && typeof e.content == "string") {
       if (e.content.match(/^\s*(\\*)label{[^{}]*}/)) {
-        let n = e.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
-        n = E(n), e.id = n, e.content = e.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "");
+        let i = e.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
+        i = E(i), e.id = i, e.content = e.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "");
       }
-    } else if (t == "statements" && s.includes(o)) {
-      let n = [], r = {};
+    } else if (t == "images" && typeof e.content == "string")
+      e.content.match(/\\includegraphics/) && (console.log("images", e), e.content = e.content.replace(
+        /\\includegraphics\[[^\[\]]*\]\s*{\s*([^{}]*)\s*}/,
+        '<image source="$1" width="50%"/>'
+      ), e.content = e.content.replace(
+        /\\includegraphics\s*{\s*([^{}]*)\s*}/,
+        '<image source="$1" width="50%"/>'
+      ));
+    else if (t == "statements" && s.includes(o)) {
+      let i = [], r = {};
       if (typeof e.content == "string")
-        n = [{ tag: "text", content: e.content }], r = { tag: "statement", content: n }, e.content = [r];
+        i = [{ tag: "text", content: e.content }], r = { tag: "statement", content: i }, e.content = [r];
       else {
         let m = !1;
         if (e.content.forEach((c) => {
           c.tag == "statement" && (m = !0);
         }), !m) {
           let c = "", y = 0;
-          for (y = 0; y < e.content.length && (c = e.content[y], !I.includes(c.tag)); ++y)
-            n.push(c);
-          r = { tag: "statement", content: n };
+          for (y = 0; y < e.content.length && (c = e.content[y], !F.includes(c.tag)); ++y)
+            i.push(c);
+          r = { tag: "statement", content: i };
           let w = e.content.slice(y);
           w.unshift(r), e.content = w;
         }
       }
     } else if (t == "prefigure" && s.includes(e.tag)) {
       !("xmlns" in e) && !("xmlattributes" in e && e.xmlattributes.includes("xmlns")) && (e.xmlns = "https://prefigure.org");
-      let n = [], r = {};
+      let i = [], r = {};
       if (typeof e.content == "string") {
         const m = e.content;
-        if (n = m, r = { tag: "diagram", content: n }, "dimensions" in e && (r.dimensions = e.dimensions, delete e.dimensions), "margins" in e && (r.margins = e.margins, delete e.margins), e.content = [r], "bbox" in e) {
+        if (i = m, r = { tag: "diagram", content: i }, "dimensions" in e && (r.dimensions = e.dimensions, delete e.dimensions), "margins" in e && (r.margins = e.margins, delete e.margins), e.content = [r], "bbox" in e) {
           let c = { tag: "coordinates", bbox: e.bbox, content: m };
           delete e.bbox, r.content = [c];
         }
@@ -3199,43 +3214,43 @@ const D = function(e) {
       }
     } else if (t == "blockquotes" && s.includes(e.tag) && typeof e.content == "string") {
       if (e.content.match(/^\s*\+\+\+sTaRTbQ>/)) {
-        let n = e.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
-        n = n.replace(/\n\s*>/g, `
+        let i = e.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
+        i = i.replace(/\n\s*>/g, `
 `);
-        let r = n.split(/\n\s*\n{1,}/), m = [];
+        let r = i.split(/\n\s*\n{1,}/), m = [];
         r.forEach((c, y) => {
           m.push({ tag: "p", content: c });
         }), e.content = m, e.tag = "blockquote";
       }
     } else if (t == "substructure" && s.includes(e.tag) && typeof e.content == "string") {
-      const n = T[e.tag], r = ve(n), m = Q(e.content, r);
+      const i = T[e.tag], r = xe(i), m = Q(e.content, r);
       e.content = [...m];
     } else if (t == "clean up substructure" && s.includes(e.tag) && Array.isArray(e.content)) {
-      const n = e.tag;
+      const i = e.tag;
       let r = [];
       e.content.forEach((m) => {
-        T[n].includes(m.tag) ? r.push(m) : R.includes(m.tag) ? e[m.tag] = m.content : m.tag == "text" && m.content.match(/^\s*$/) && "attributes" in m ? "attributes" in e ? e.attributes += m.attributes : e.attributes = m.attributes : m.tag == "text" && m.content.match(/^\s*$/) || (console.log("problem content", m), alert("problem content: see console.log"));
+        T[i].includes(m.tag) ? r.push(m) : R.includes(m.tag) ? e[m.tag] = m.content : m.tag == "text" && m.content.match(/^\s*$/) && "attributes" in m ? "attributes" in e ? e.attributes += m.attributes : e.attributes = m.attributes : m.tag == "text" && m.content.match(/^\s*$/) || (console.log("problem content", m), alert("problem content: see console.log"));
       }), e.content = [...r];
     } else if (t == "extraneous math" && s.includes(e.tag) && typeof e.content == "string")
       e.content = e.content.replace(/^\s*\+\+\+saMePaR/, "");
     else if (t == "gather li" && s.includes(e.tag) && typeof e.content == "object") {
-      let n = [], r = "", m = 0, c = !1, y = [], w = {};
+      let i = [], r = "", m = 0, c = !1, y = [], w = {};
       for (m = 0; m < e.content.length; ++m)
-        r = e.content[m], !c && r.tag != "li" ? n.push(r) : !c && r.tag == "li" ? (c = !0, y = [r], w.tag = r._parenttag) : c && r.tag == "li" ? y.push(r) : c && r.tag != "li" && (w.content = [...y], n.push({ ...w }), c = !1, w = {}, y = [], n.push(r));
-      c && (w.content = y, n.push({ ...w })), c = !1, y = [], w = {}, e.content = n;
+        r = e.content[m], !c && r.tag != "li" ? i.push(r) : !c && r.tag == "li" ? (c = !0, y = [r], w.tag = r._parenttag) : c && r.tag == "li" ? y.push(r) : c && r.tag != "li" && (w.content = [...y], i.push({ ...w }), c = !1, w = {}, y = [], i.push(r));
+      c && (w.content = y, i.push({ ...w })), c = !1, y = [], w = {}, e.content = i;
     } else if (t == "absorb math" && (s.includes(e.tag) || e.tag == f) && typeof e.content == "object") {
-      let n = [], r = "", m = 0;
+      let i = [], r = "", m = 0;
       for (m = 0; m < e.content.length; ++m) {
         r = e.content[m];
-        const c = n.length;
-        F.includes(r.tag) ? c == 0 ? n.push({ ...r }) : n[c - 1].tag != "p" ? n.push({ ...r }) : typeof n[c - 1].content == "string" ? (n[c - 1].content = [{ tag: "text", content: n[c - 1].content }], n[c - 1].content.push({ ...r })) : n[c - 1].content.push({ ...r }) : r.tag == "p" ? typeof r.content == "string" && r.content.match(/\s*\+\+\+saMePaR/) ? (r.content = r.content.replace(/\s*\+\+\+saMePaR\s*/, ""), n[c - 1].content.push({ tag: "text", content: r.content })) : typeof r.content == "string" ? n.push({ ...r }) : r.content.length > 0 && r.content[0].tag == "text" && typeof r.content[0].content == "string" && r.content[0].content.match(/\s*\+\+\+saMePaR/) ? (r.content[0].content = r.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), r.content.forEach((y) => {
-          n[c - 1].content.push(y);
-        })) : r.content.length > 0 && n.push({ ...r }) : n.push({ ...r });
+        const c = i.length;
+        P.includes(r.tag) ? c == 0 ? i.push({ ...r }) : i[c - 1].tag != "p" ? i.push({ ...r }) : typeof i[c - 1].content == "string" ? (i[c - 1].content = [{ tag: "text", content: i[c - 1].content }], i[c - 1].content.push({ ...r })) : i[c - 1].content.push({ ...r }) : r.tag == "p" ? typeof r.content == "string" && r.content.match(/\s*\+\+\+saMePaR/) ? (r.content = r.content.replace(/\s*\+\+\+saMePaR\s*/, ""), i[c - 1].content.push({ tag: "text", content: r.content })) : typeof r.content == "string" ? i.push({ ...r }) : r.content.length > 0 && r.content[0].tag == "text" && typeof r.content[0].content == "string" && r.content[0].content.match(/\s*\+\+\+saMePaR/) ? (r.content[0].content = r.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), r.content.forEach((y) => {
+          i[c - 1].content.push(y);
+        })) : r.content.length > 0 && i.push({ ...r }) : i.push({ ...r });
       }
-      e.content = [...n];
+      e.content = [...i];
     }
     let a = { ...e };
-    return a.content = h(a.content, t, l + 1, i, s, a.tag, o), a;
+    return a.content = h(a.content, t, l + 1, n, s, a.tag, o), a;
   } else {
     if (typeof e != "string" && (console.log("what is it", e), alert("non-object non-string: ", e)), t == "do_nothing")
       return e + "X";
@@ -3244,31 +3259,31 @@ const D = function(e) {
       return a = e.replace(/\\('|"|\^|`|~|-|c|H|u|v) ?([a-zA-Z])/mg, J), a = a.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, J), a;
     } else if (t == "texlike" && s.includes(o)) {
       let a = "";
-      return a = e.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2"), a = a.replace(/\bLaTeX\b/mg, "<latex/>"), a = a.replace(/\bTeX\b/mg, "<tex/>"), a = a.replace(/\bPreTeXt\b/mg, "<pretext/>"), a = a.replace(/([^\\])~/mg, "$1<nbsp/>"), a = a.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(n, r, m) {
+      return a = e.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2"), a = a.replace(/\bLaTeX\b/mg, "<latex/>"), a = a.replace(/\bTeX\b/mg, "<tex/>"), a = a.replace(/\bPreTeXt\b/mg, "<pretext/>"), a = a.replace(/([^\\])~/mg, "$1<nbsp/>"), a = a.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(i, r, m) {
         return '<xref ref="' + E(m) + '"/>';
-      }), a = a.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(n, r, m) {
+      }), a = a.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(i, r, m) {
         return '<xref ref="' + E(m) + '"/>';
-      }), a = a.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>"), a = a.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(n, r, m, c, y) {
+      }), a = a.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>"), a = a.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(i, r, m, c, y) {
         return '<url href="' + m + '">' + y + "</url>";
-      }), a = a.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(n, r, m) {
+      }), a = a.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(i, r, m) {
         return '<url href="' + m + '"/>';
       }), a;
     } else
       return e;
   }
-  return d;
-}, Z = function(e) {
+  return b;
+}, I = function(e) {
   return { left: "<" + e + ">", right: "</" + e + ">", tag: e };
 }, S = function(e) {
   return { left: "<" + e + " ", right: "</" + e + ">", tag: e };
 }, U = function(e) {
   return { left: "\\begin{" + e + "}", right: "\\end{" + e + "}", tag: e };
-}, ve = function(e) {
+}, xe = function(e) {
   if (!Array.isArray(e))
     return e;
   let t = [];
   return e.forEach((l) => {
-    t.push(S(l)), t.push(Z(l)), t.push(U(l));
+    t.push(S(l)), t.push(I(l)), t.push(U(l));
   }), t;
 }, $ = function(e) {
   return {
@@ -3283,7 +3298,7 @@ const D = function(e) {
     after_end: `
 `
   };
-}, Qe = function(e) {
+}, Se = function(e) {
   return {
     begin_tag: "<" + e,
     end_tag: "</" + e + ">",
@@ -3298,7 +3313,7 @@ const D = function(e) {
   { left: "\\[", right: "\\]", tag: "smen" }
   // these don;t work: not sure why
 ];
-Te.forEach((e) => {
+Re.forEach((e) => {
   _.push(
     { left: "\\begin{" + e[0] + "}", right: "\\end{" + e[0] + "}", tag: e[1] }
   );
@@ -3308,23 +3323,23 @@ _.push({ left: "<me>", right: "</me>", tag: "me" });
 _.push({ left: "<mdn", right: "</mdn>", tag: "mdn" });
 _.push({ left: "<men", right: "</men>", tag: "men" });
 const M = [];
-let xe = [...ue, ...ce], V = [...xe, ...re];
+let Le = [...ue, ...ce], V = [...Le, ...re];
 V.push("p");
 V.push("statement");
-xe.forEach((e) => {
-  M.push(S(e)), M.push(Z(e)), M.push(U(e));
+Le.forEach((e) => {
+  M.push(S(e)), M.push(I(e)), M.push(U(e));
 });
 de.forEach((e) => {
-  M.push(S(e)), M.push(Z(e)), M.push(U(e));
+  M.push(S(e)), M.push(I(e)), M.push(U(e));
 });
-let B = Array.from(M, ({ tag: e }) => e);
-B = [...new Set(B)];
+let z = Array.from(M, ({ tag: e }) => e);
+z = [...new Set(z)];
 let q = [
   { left: "\\(", right: "\\)", tag: "sm" }
   //          {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 se.forEach((e) => {
-  q.push(Z(e));
+  q.push(I(e));
 });
 const ee = {
   begin_tag: "",
@@ -3333,14 +3348,14 @@ const ee = {
   after_begin: "",
   before_end: "",
   after_end: ""
-}, Se = {
+}, Ue = {
   begin_tag: "BEGINTAG",
   end_tag: "ENDTAG",
   before_begin: "BB",
   after_begin: "AB",
   before_end: "BE",
   after_end: "AE"
-}, b = {
+}, d = {
   // start with the quirky ones
   text: ee,
   placeholder: ee,
@@ -3356,7 +3371,7 @@ const ee = {
   }
 };
 se.forEach((e) => {
-  b[e] = {
+  d[e] = {
     begin_tag: "<" + e + ">",
     end_tag: "</" + e + ">",
     before_begin: "",
@@ -3366,21 +3381,21 @@ se.forEach((e) => {
   };
 });
 V.forEach((e) => {
-  b[e] = $(e);
+  d[e] = $(e);
 });
 de.forEach((e) => {
-  b[e] = $(e);
+  d[e] = $(e);
 });
 te.forEach((e) => {
-  b[e] = $(e);
+  d[e] = $(e);
 });
-Oe.forEach((e) => {
-  b[e] = $(e);
+be.forEach((e) => {
+  d[e] = $(e);
 });
 [...fe, ...ge, ...ye].forEach((e) => {
-  b[e] = $(e);
+  d[e] = $(e);
 });
-b.ol = {
+d.ol = {
   begin_tag: `<p>
 <ol>`,
   end_tag: `</ol>
@@ -3394,7 +3409,7 @@ b.ol = {
   after_end: `
 `
 };
-b.ul = {
+d.ul = {
   begin_tag: `<p>
 <ul>`,
   end_tag: `</ul>
@@ -3408,10 +3423,26 @@ b.ul = {
   after_end: `
 `
 };
-b.enumerate = b.ol;
-b.itemize = b.ul;
-F.forEach((e) => {
-  b[e] = {
+d.enumerate = d.ol;
+d.itemize = d.ul;
+d.tikzpicture = {
+  begin_tag: `<image>
+<latex-image>
+\\begin{tikzpicture}`,
+  end_tag: `\\end{tikzpicture}
+</latex-image>
+</image>`,
+  before_begin: `
+`,
+  after_begin: `
+`,
+  before_end: `
+`,
+  after_end: `
+`
+};
+P.forEach((e) => {
+  d[e] = {
     begin_tag: `
 <` + e,
     end_tag: "</" + e + ">",
@@ -3425,9 +3456,9 @@ F.forEach((e) => {
 `
   };
 });
-b.sm = Qe("m");
-b.smen = $("men");
-b.image = {
+d.sm = Se("m");
+d.smen = $("men");
+d.image = {
   begin_tag: "<image",
   end_tag: "</image>",
   // should not be a special case?
@@ -3439,7 +3470,7 @@ b.image = {
   after_end: `
 `
 };
-b.description = {
+d.description = {
   begin_tag: "<description>",
   end_tag: "</description>",
   // img or image?  should not be a special case?
@@ -3450,9 +3481,9 @@ b.description = {
   after_end: `
 `
 };
-function Ye(e, t = "placeholder") {
-  let l = He(e), i = "";
-  l.match(/^\s*<title>/) ? (i = l.replace(/^\s*<title>(.*?)<\/title>.*/s, "$1"), l = l.replace(/^\s*<title>(.*?)<\/title>/, "")) : l.match(/^\s*\[/) && (i = l.replace(/^\s*\[([^\[\]]*)\].*/s, "$1"), l = l.replace(/^\s*\[([^\[\]]*)\]/, ""));
+function We(e, t = "placeholder") {
+  let l = Qe(e), n = "";
+  l.match(/^\s*<title>/) ? (n = l.replace(/^\s*<title>(.*?)<\/title>.*/s, "$1"), l = l.replace(/^\s*<title>(.*?)<\/title>/, "")) : l.match(/^\s*\[/) && (n = l.replace(/^\s*\[([^\[\]]*)\].*/s, "$1"), l = l.replace(/^\s*\[([^\[\]]*)\]/, ""));
   let o = l.replace(/([^\s])\\label({|\[|\()/g, `$1
 \\label$2`).replace(/\n\s*\n\s*>/g, `
 
@@ -3463,14 +3494,14 @@ function Ye(e, t = "placeholder") {
 
 \\item `);
   let u = o.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(L, W, N, O) {
-    const ke = N.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
-    return W + ke + O;
+    const je = N.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+    return W + je + O;
   }), f = new RegExp("([^\\n])(\\n *(" + R.join("|") + ") *:)", "g");
   u = u.replace(f, `$1
 $2`);
-  let d = { tag: t, content: u };
-  i && (d.title = i);
-  let p = { ...d };
+  let b = { tag: t, content: u };
+  n && (b.title = n);
+  let p = { ...b };
   const a = 15;
   for (let L = 0; L < a; ++L)
     g.forEach((N) => {
@@ -3478,21 +3509,21 @@ $2`);
         p = h(p, O[0], 0, L, O[1]);
       });
     });
-  let n = { ...p };
-  n = j(n, "all", B);
-  let r = { ...n };
+  let i = { ...p };
+  i = j(i, "all", z);
+  let r = { ...i };
   r = h(r, "oneline environments", 0, 0, "all"), r = h(r, "attributes", 0, 0, "all"), K.forEach((L) => {
     r = h(r, L[0], 0, 0, L[1]);
-  }), r = j(r, "all", B), r = h(r, "blockquotes", 0, 0, ["p"]);
+  }), r = j(r, "all", z), r = h(r, "blockquotes", 0, 0, ["p"]);
   let m = { ...r };
-  m = h(m, "extract li", 0, 0, "all"), m = h(m, "clean up substructure", 0, 0, Re);
-  const c = v(m, q, 0, a + 1, "all", x), y = v(c, "spacelike", 0, a + 1, "all", x), w = v(y, q, 0, a + 1, "all", x), z = v(w, q, 0, a + 1, "all", x), Le = h(z, "fonts", 0, 0, x), Me = h(Le, "texlike", 0, 0, x);
-  let A = v(Me, "spacelike", 0, a + 1, "all", x);
-  A = v(A, q, 0, a + 1, "all", x), A = v(A, q, 0, a + 1, "all", x);
-  const $e = h(A, "extract li", 0, 0, ["p"]), qe = h($e, "gather li", 0, 0, k), _e = h(qe, "absorb math", 0, 0, k, "", "", t);
-  let Ae = h(_e, "statements", 0, 0, je), Y = h(Ae, "prefigure", 0, 0, ["prefigure"]);
+  m = h(m, "extract li", 0, 0, "all"), m = h(m, "clean up substructure", 0, 0, Xe);
+  const c = v(m, q, 0, a + 1, "all", x), y = v(c, "spacelike", 0, a + 1, "all", x), w = v(y, q, 0, a + 1, "all", x), Z = v(w, q, 0, a + 1, "all", x), Me = h(Z, "fonts", 0, 0, x), $e = h(Me, "texlike", 0, 0, x);
+  let k = v($e, "spacelike", 0, a + 1, "all", x);
+  k = v(k, q, 0, a + 1, "all", x), k = v(k, q, 0, a + 1, "all", x);
+  const qe = h(k, "extract li", 0, 0, ["p"]), _e = h(qe, "gather li", 0, 0, A), ke = h(_e, "absorb math", 0, 0, A, "", "", t);
+  let Ae = h(ke, "statements", 0, 0, Oe), Ee = h(Ae, "images", 0, 0, "all"), Y = h(Ee, "prefigure", 0, 0, ["prefigure"]);
   return console.log("tmp5", Y), D(Y);
 }
 export {
-  Ye as FlexTeXtConvert
+  We as FlexTeXtConvert
 };

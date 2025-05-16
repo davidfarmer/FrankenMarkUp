@@ -1,7 +1,7 @@
 /* eslint no-constant-condition:0 */
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
-import { toUnicode, subenvironments} from "./data";
+import { toUnicode, subenvironments, containers} from "./data";
 import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
 import { display_math_delimiters } from "./parse";
 import { sanitizeXMLattributes } from "./reassemble";
@@ -504,8 +504,9 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
               this_content.content = new_content
             }
 
-          } else if (action == "title" // &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "title"  && !containers.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
+// console.log("title of", this_content);
 
             if (this_content.content.match(/^\s*\[/) ||
                  this_content.content.match(/^\s*<title>/)) {
@@ -534,6 +535,18 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                   this_label = sanitizeXMLattributes(this_label);
                   this_content.id = this_label;
                   this_content.content = this_content.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "")
+            }
+
+          } else if (action == "images" // &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "string" ) {
+
+            if (this_content.content.match(/\\includegraphics/)) {
+
+console.log("images", this_content);
+                  this_content.content = this_content.content.replace(/\\includegraphics\[[^\[\]]*\]\s*{\s*([^{}]*)\s*}/,
+                               '<image source="$1" width="50%"/>');
+                  this_content.content = this_content.content.replace(/\\includegraphics\s*{\s*([^{}]*)\s*}/,
+                               '<image source="$1" width="50%"/>');
             }
 
           } else if (action == "statements"  // &&  tags_to_process.includes(this_content.tag)

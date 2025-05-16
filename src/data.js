@@ -66,7 +66,7 @@ export const tags_containing_paragraphs = [...structural_components, ...level_1_
 
 export const display_environments = ["figure", "table", "listing", "enumerate", "itemize"];
 export const display_subenvironments = ["image", "tabular", "program"];
-export const display_subsubenvironments = ["latex-image", "prefigure", "description", "caption"];
+export const display_subsubenvironments = ["latex-image", "prefigure", "description", "caption", "tikzpicture"];
 
 export const other_level_1_p_peers = ["figure", "table", "tabular", "enumerate", "ol", "ul", "dl"];
 
@@ -97,7 +97,8 @@ export const subenvironments = {  // the tags which occun inside specific enviro
    "diagram": ["predefinition", "coordinates", "annotations"], // check
 };
 
-export const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];
+export const containers = ["exercisegroup", "exercises", "prefigure", "tikzpicture",
+                           "diagram", ...subenvironments["diagram"] ];
 
 export const objects_with_substructure = Object.keys(subenvironments);
 
