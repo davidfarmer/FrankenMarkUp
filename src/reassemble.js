@@ -2,8 +2,8 @@
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
 import { debugging_output_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
 import { verbatim_tags } from "./data";
-import { convertMathSnippet } from 'space_math';
-// import { convertMathSnippet } from '../../Space_Math/src/main';
+// import { convertMathSnippet } from 'space_math';
+ import { convertMathSnippet } from '../../Space_Math/src/main';
 
 let debugtags = "STart";
 debugtags = "";
@@ -121,7 +121,7 @@ if (Array.isArray(content)) {
             mathpunctuation = this_new_text.slice(-1);
             this_new_text = this_new_text.slice(0,-1)
          }
-         if (["sm", "smen"].includes(this_tag)) {
+         if (false && ["sm", "smen"].includes(this_tag)) {
 //console.log("about to convert:", this_new_text);
              this_new_text = convertMathSnippet(this_new_text, "LaTeX");
              this_new_text = this_new_text.replace(/&/g, " \\amp ");

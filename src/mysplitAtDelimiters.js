@@ -425,7 +425,14 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
           } else if (action == "extract li"  && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {
 
-            if (this_content.content.match(/^\s*\-+\s/)) {
+            if (this_content.content.match(/^\s*\\item\s/)) {
+                const new_tag = "li";
+                const new_content = this_content.content.replace(/^\s*\\item\s*/,"");
+
+                this_content.tag = new_tag;
+                this_content.content = new_content;
+     //           this_content._parenttag = "ol"
+            } else if (this_content.content.match(/^\s*\-+\s/)) {
                 const new_tag = "li";
                 const new_content = this_content.content.replace(/^\s*\-+\s*/,"");
 
@@ -472,7 +479,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string" && !["smen","smdn"].includes(this_content.tag)) {
+                      && typeof this_content.content == "string") { // && !["smen","smdn"].includes(this_content.tag)) {
 
             const this_text = this_content.content.split(/\n\s*\n{1,}/);
 
@@ -828,7 +835,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                                   return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
                               });
    //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
-        new_text = new_text.replace(/\\(q|term|em|emph|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
+        new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
                                   return '<url href="' + z + '">' + w + '</url>'
                               });

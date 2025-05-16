@@ -61,13 +61,14 @@ export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)section
 ];
 
 export const tags_containing_paragraphs = [...structural_components, ...level_1_p_peers_containing_p, ...hint_like,
-            ...subpart_like, ...randomtags_containing_p];
+            ...subpart_like, ...randomtags_containing_p, // "enumerate", "itemize",
+            "placeholder"];
 
-export const display_environments = ["figure", "table", "listing"];
+export const display_environments = ["figure", "table", "listing", "enumerate", "itemize"];
 export const display_subenvironments = ["image", "tabular", "program"];
 export const display_subsubenvironments = ["latex-image", "prefigure", "description", "caption"];
 
-export const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
+export const other_level_1_p_peers = ["figure", "table", "tabular", "enumerate", "ol", "ul", "dl"];
 
 
 export const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
@@ -167,6 +168,7 @@ export let aliases = { // in the format "officialname": [list of synonyms].  Tak
     "ol" : ["enum","enuma","enumerit"],
     "example" : ["exam","exa","eg","exmp","expl","exm"],
     "exercise" : ["exer", "exers"],
+    "em" : ["emph"],
     "fn" : ["footnote"],
     "hypothesis" : ["hyp"],
     "lemma" : ["lem","lma","lemm"],

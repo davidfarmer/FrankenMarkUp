@@ -201,6 +201,9 @@ outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
 outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
          before_begin: "\n", after_begin: "\n",
          before_end: "\n", after_end: "\n"};
+outputtags["enumerate"] = outputtags["ol"];
+outputtags["itemize"] = outputtags["ul"];
+
 
 display_math_tags.forEach( (el) => {
     outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
@@ -211,11 +214,11 @@ display_math_tags.forEach( (el) => {
 // spacemath
  outputtags["sm"] = PTXinlineoutput("m");
 // outputtags["sm"] = do_nothing_markup;
-//outputtags["smen"] = PTXdisplayoutput("men");
- outputtags["smen"] = do_nothing_markup;
+outputtags["smen"] = PTXdisplayoutput("men");
+// outputtags["smen"] = do_nothing_markup;
 
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
-         before_begin: "", after_begin: ">\n", 
+         before_begin: "", after_begin: ">\n",
          before_end: "\n", after_end: "\n"};
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
@@ -248,8 +251,9 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
       originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
-      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");  
-      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");  
+      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
+      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
+      originaltextB = originaltextB.replace(/\s*\n+\s*\\item\s+/g, "\n\n\\item ");
 
       let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
                                   const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
@@ -312,6 +316,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 // alert("new9")
       // why do we extract lists before oneline environments?
       new9 = extract_lists(new9, "extract li", 0,0, "all");   // "all" is wrong, but later code assumes "p"
+// console.log("new9b", new9);
+// alert("new9b")
 
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 //
@@ -341,6 +347,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       const tmp5t = tmp5z;
       const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
+//  console.log("tmp5w", tmp5w);
+//  alert("tmp5w");
       const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
 //  console.log("tmp5v", tmp5v);
 //  alert("tmp5v");
