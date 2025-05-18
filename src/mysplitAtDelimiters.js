@@ -2,8 +2,8 @@
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
 import { toUnicode, subenvironments, containers} from "./data";
-import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
-import { display_math_delimiters } from "./data";
+import { paragraph_peer_delimiters  } from "./data";
+import { display_math_delimiters, delimitersFromList } from "./data";
 import { sanitizeXMLattributes } from "./reassemble";
 
 const findEndOfMath = function(delimiter, text, startIndex) {

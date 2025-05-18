@@ -1,12 +1,4 @@
-/*
-The js file for the test interface.
 
-2022.09.27 created
-
-2022.10.17 add global call
-2022.10.25 add MathJax support
-*/
-//import '../spacemath.css'
 import {
     outputtags,
     structural_components,
@@ -23,7 +15,9 @@ import {
     objects_with_substructure,
     display_math_tags,
     level,
+    paragraph_peers,
     attribute_like,
+    asymmetric_inline_delimiters,
     tags_containing_text,
     tags_containing_paragraphs,
     tags_needing_statements,
@@ -43,6 +37,7 @@ import {reassemblePreTeXt} from './reassemble.js'
 //    c3. How to search for each tag in each category.  (call these "delimiters")
 //    c4. How to output the parsed PreTeXt content.
 
+/*
 // First we have tools for c3.
 const PreTeXtDelimiterOf = function(delim) {
     return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
@@ -63,7 +58,9 @@ export const delimitersFromList = function(lis) {
     });
     return delim_lis
 }
+*/
 
+/*
 // Second we have tools for c4.
 export const PTXdisplayoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
@@ -77,6 +74,7 @@ export const PTXinlineoutput = function(tag) {
         before_begin: "", after_begin: ">",
         before_end: "", after_end: ""}
 }
+*/
 
 /*
 // Third we start on c3. 
@@ -97,6 +95,7 @@ display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
 
 */
 
+/*
 export const paragraph_peer_delimiters = [];
 
 // remapped_tags.forEach( (el) => {
@@ -135,6 +134,9 @@ paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 
 // console.log("paragraph_peers", paragraph_peers);
 
+*/
+
+/*
 let asymmetric_inline_delimiters = [
           {left:"\\(", right:"\\)", tag:"sm"},
 //          {left:"|", right:"|", tag:"placeholder"}  // just for testing
@@ -146,6 +148,7 @@ let asymmetric_inline_delimiters = [
 inlinetags.forEach( (el) => {
     asymmetric_inline_delimiters.push(  PreTeXtDelimiterOf(el) )
 });
+*/
 
 /* current;y not used.  See recastSpacedDelimiters
 const spacelike_inline_delimiters = [
@@ -179,12 +182,15 @@ export const outputtags = {  // start with the quirky ones
     };
 */
 
+/*
 inlinetags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
     before_begin: "", after_begin: "",
     before_end: "", after_end: ""}
     });
+*/
 
+/*
 paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
     outputtags[el] = PTXdisplayoutput(el)
     });
@@ -200,6 +206,7 @@ containers.forEach( (el) => {
 [...display_environments, ...display_subenvironments, ...display_subsubenvironments].forEach( (el) => {
     outputtags[el] = PTXdisplayoutput(el)
     });
+*/
 
 // some special cases
 outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
