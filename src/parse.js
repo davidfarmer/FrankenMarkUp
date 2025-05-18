@@ -156,7 +156,7 @@ const spacelike_inline_delimiters = [
       ];
 */
 
-const do_nothing_markup = {begin_tag: "", end_tag: "",
+export const do_nothing_markup = {begin_tag: "", end_tag: "",  // not sure we need the 'export'
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
 
@@ -231,7 +231,7 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
 
 // console.log("in parse.js");
 
-export function fmToPTX(originaltext, wrapper="placeholder"){
+export function fmToPTX(originaltext, wrapper="placeholder"){  // called by index.js
 
 //    console.log("fmToPTX", originaltext);
     let originaltextX = preprocessAliases(originaltext);
@@ -258,7 +258,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
       originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
       originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
-      originaltextB = originaltextB.replace(/\s*\n+\s*\\item\s+/g, "\n\n\\item ");
+      originaltextB = originaltextB.replace(/\s*?\n+\s*?\\item\s+/g, "\n\n\\item ");
 
       let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
                                   const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
@@ -271,7 +271,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){
 
 
 
- // console.log("originaltextC", originaltextC);
+  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
       if (document_title) { tmp1together["title"] = document_title }

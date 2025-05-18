@@ -479,7 +479,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string") { // && !["smen","smdn"].includes(this_content.tag)) {
+                      && typeof this_content.content == "string") { // && !["smen","smdn"].includes(this_content.tag)) { // }
 
             const this_text = this_content.content.split(/\n\s*\n{1,}/);
 
@@ -852,7 +852,7 @@ console.log("images", this_content);
         new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
                                   return '<url href="' + z + '">' + w + '</url>'
                               });
-        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {
+        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {  // }
                                   return '<url href="' + z + '"/>'
                               });
 // console.log("found genuine text:", this_content, "which is now",new_text);
@@ -865,3 +865,7 @@ console.log("images", this_content);
 
 }
 
+export const proprocess = function(just_text) {
+
+
+} 

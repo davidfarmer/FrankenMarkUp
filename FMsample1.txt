@@ -320,6 +320,15 @@ align:
 t5
 $$
 
+
+- apple
+
+- banana
+
+- lemon
+
+
+
 <figure>
 
   This is to check that the contents of a `figure` are *not*

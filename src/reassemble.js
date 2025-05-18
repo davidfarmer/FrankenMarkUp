@@ -1,6 +1,6 @@
 
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
-import { debugging_output_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
+import { debugging_output_markup, do_nothing_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
 import { verbatim_tags } from "./data";
 // import { convertMathSnippet } from 'space_math';
  import { convertMathSnippet } from '../../Space_Math/src/main';
@@ -79,7 +79,10 @@ if (Array.isArray(content)) {
       const this_tag = element.tag;
 //    console.log("assembling a ", this_tag, "from", element);
       let these_tags = outputtags[this_tag];
-      if (typeof these_tags == "undefined") { these_tags = debugging_output_markup }
+      if (typeof these_tags == "undefined") {
+          these_tags = do_nothing_markup
+     //     these_tags = debugging_output_markup
+      }
 
 //  console.log("these_tags ", these_tags);
 
