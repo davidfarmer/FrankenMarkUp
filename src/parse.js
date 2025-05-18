@@ -28,7 +28,7 @@ import {
     tags_containing_paragraphs,
     tags_needing_statements,
 } from './data.js'
-import {splitIntoParagraphs, preprocessAliases, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
+import {preprocess, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
 
 
@@ -233,39 +233,41 @@ outputtags["description"] = {begin_tag: "<description>", end_tag: "</description
 
 export function fmToPTX(originaltext, wrapper="placeholder"){  // called by index.js
 
+    let originaltextC = preprocess(originaltext);
+
 //    console.log("fmToPTX", originaltext);
-    let originaltextX = preprocessAliases(originaltext);
+//    let originaltextX = preprocessAliases(originaltext);
 
 // console.log("originaltextX", originaltextX);
 
      // extract title, label, attributes of parent section (currently only title implemented)
 
-      let document_title = "";
-      if (originaltextX.match(/^\s*<title>/)) {
-          document_title = originaltextX.replace(/^\s*<title>(.*?)<\/title>.*/s,"$1");
-          originaltextX = originaltextX.replace(/^\s*<title>(.*?)<\/title>/,"");
-      } else if (originaltextX.match(/^\s*\[/)) {
-          document_title = originaltextX.replace(/^\s*\[([^\[\]]*)\].*/s,"$1");
-          originaltextX = originaltextX.replace(/^\s*\[([^\[\]]*)\]/,"");
-      }
+//      let document_title = "";
+//      if (originaltextX.match(/^\s*<title>/)) {
+//          document_title = originaltextX.replace(/^\s*<title>(.*?)<\/title>.*/s,"$1");
+//          originaltextX = originaltextX.replace(/^\s*<title>(.*?)<\/title>/,"");
+//      } else if (originaltextX.match(/^\s*\[/)) {
+//          document_title = originaltextX.replace(/^\s*\[([^\[\]]*)\].*/s,"$1");
+//          originaltextX = originaltextX.replace(/^\s*\[([^\[\]]*)\]/,"");
+//      }
    // put latex-style labels on a new line
-      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
+//      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
    // have to preprovess blockquote because (of how we handle attributes) the starting > looks
    // like the end of an opening tag.
-      let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
-      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
-      originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+//      let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+//      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+//      originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 
-      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
-      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
-      originaltextB = originaltextB.replace(/\s*?\n+\s*?\\item\s+/g, "\n\n\\item ");
-
-      let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
-                                  const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
-                                  return y + hiddenz + w
-                              });
-      let findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
-      originaltextC = originaltextC.replace(findattributes, "$1\n$2");
+//      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
+//      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
+//      originaltextB = originaltextB.replace(/\s*?\n+\s*?\\item\s+/g, "\n\n\\item ");
+//
+//      let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
+//                                  const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+//                                  return y + hiddenz + w
+//                              });
+//      let findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
+//      originaltextC = originaltextC.replace(findattributes, "$1\n$2");
 
 // end of preprocessor
 
@@ -274,7 +276,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
   console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
-      if (document_title) { tmp1together["title"] = document_title }
+//      if (document_title) { tmp1together["title"] = document_title }
 
 
       let new1 = {...tmp1together};

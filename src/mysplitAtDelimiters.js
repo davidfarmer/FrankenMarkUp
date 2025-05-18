@@ -226,7 +226,7 @@ const accentedASCII = function(fullstring, accent, letter) {
     return toUnicode[accent + letter]
 }
 
-export const preprocessAliases = function(this_content) {
+const preprocessAliases = function(this_content) {
 
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
@@ -865,7 +865,44 @@ console.log("images", this_content);
 
 }
 
-export const proprocess = function(just_text) {
+export const preprocess = function(just_text) {
 
+    let originaltextX = preprocessAliases(just_text);
+
+// console.log("originaltextX", originaltextX);
+
+   // put latex-style labels on a new line
+      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
+
+   // have to preprocess blockquote because (of how we handle attributes) the starting > looks
+   // like the end of an opening tag.
+      let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+
+   // the questionable way we recognize paragraphs 
+   // to do: use a list of math modes
+   //        make sure \[...\] works
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\\]) *\n([^\n])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+      originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+
+   // PTX makes the questionable choice of wrapping liss in a p.
+   // Note that this will make a syntax error if handed:
+   //      <p><ol>...</ol>words</p>
+      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
+      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
+
+   // LaTeX does not require blank lines between \\item s, so add those blanks
+      originaltextB = originaltextB.replace(/\s*?\n+\s*?\\item\s+/g, "\n\n\\item ");
+
+   // `definition` in prefigure means something different, to hide it as `predefinition`
+      let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
+                                  const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+                                  return y + hiddenz + w
+                              });
+
+   // put attributes on the next line
+      const findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
+      originaltextC = originaltextC.replace(findattributes, "$1\n$2");
+
+    return originaltextC
 
 } 
