@@ -3,7 +3,7 @@
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
 import { toUnicode, subenvironments, containers} from "./data";
 import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
-import { display_math_delimiters } from "./parse";
+import { display_math_delimiters } from "./data";
 import { sanitizeXMLattributes } from "./reassemble";
 
 const findEndOfMath = function(delimiter, text, startIndex) {
@@ -869,7 +869,8 @@ export const preprocess = function(just_text) {
 
     let originaltextX = preprocessAliases(just_text);
 
-// console.log("originaltextX", originaltextX);
+   // things like {equation*} -> {equation*} 
+    originaltextX = originaltextX.replace(/{([a-z]{2,})\*/d,"$1star");
 
    // put latex-style labels on a new line
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }

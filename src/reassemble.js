@@ -1,7 +1,7 @@
 
 // import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
-import { debugging_output_markup, do_nothing_markup, PTXdisplayoutput, PTXinlineoutput, outputtags } from "./parse";
-import { verbatim_tags } from "./data";
+import { PTXdisplayoutput, PTXinlineoutput} from "./parse";
+import { do_nothing_markup, debugging_output_markup, verbatim_tags, outputtags } from "./data";
 // import { convertMathSnippet } from 'space_math';
  import { convertMathSnippet } from '../../Space_Math/src/main';
 

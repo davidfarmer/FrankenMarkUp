@@ -1,8 +1,74 @@
 
+// The main input to the conversion is:
+//    c1. List of tags in categories, for both LaTeX and PreTeXt.
+//    c2. Mappings from LaTeX to PreTeXt tags.
+//    c3. How to search for each tag in each category.
+//    c4. How to output the parsed PreTeXt content.
+
+// First some output tags, because we will repeatedly add to it
+
+export const do_nothing_markup = {begin_tag: "", end_tag: "",  // not sure we need the 'export'
+         before_begin: "", after_begin: "",
+         before_end: "", after_end: ""}; 
+
+export const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
+         before_begin: "BB", after_begin: "AB",
+         before_end: "BE", after_end: "AE"};
+
+export const outputtags = {  // start with the quirky ones
+    "text" : do_nothing_markup,
+    "placeholder" : do_nothing_markup,
+    "title": {begin_tag: "<title>", end_tag: "</title>",
+         before_begin: "\n", after_begin: "",
+         before_end: "", after_end: "\n"},
+    };
+
+
+//////////////////
+//
+//  math
+//
+//////////////////
+
+const remapped_math_tags = [  // [latex_name, ptx_tag]
+                         // could these be handled by an alias, like we did with quote -> blockquote?
+    ["equation", "men"],
+    ["equationstar", "me"],  // preprocesssor does {abcd*} -> {abcdstar}
+    ["align", "mdn"],
+    ["alignstar", "md"],
+];
+
+export const display_math_delimiters = [
+//          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
+          {left:"$$", right:"$$", tag:"me"},
+          {left:"\\[", right:"\\]", tag:"me"},   // these don;t work: not sure why
+];
+remapped_math_tags.forEach( (el) => {
+    display_math_delimiters.push(
+        {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
+    );
+});
+display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
+display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
+display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
+display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
+
+export const display_math_tags = ["md", "mdn", "me", "men"];  // some day, let's get rid of me and men
+
+display_math_tags.forEach( (el) => { 
+    outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
+         before_begin: "", after_begin: ">\n", // because probably source has the \n
+         before_end: "\n", after_end: "\n"};
+});
+
+export const math_tags = ["m", ...display_math_tags];
+
+
+
 // this list is not used, it serves to help keep track of tags requiring special attention
-export const randomtags = ["fn", "title",
+export const randomtags = ["fn", 
               "output",
-              "mrow"];
+              ];
 
 export const randomtags_containing_p = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet","page"];
                       // exercisegroup should be in a different category
@@ -33,8 +99,6 @@ export const proof_like = ["proof"];
 
 export const project_like = ["activity", "exploration", "investigation", "project"];
 
-export const display_math_tags = ["md", "mdn", "me", "men","smen", "smdn"];  // let's get rid of me and men
-
 export const hint_like = ["hint", "answer", "solution"];
 
 export const subpart_like = ["case", "task"];
@@ -44,8 +108,6 @@ export const inlinetags = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
 
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
-
-export const math_tags = ["m", "sm", ...display_math_tags];
 
 export const verbatim_tags = [...math_tags, "c", "code", "mrow"];
 
@@ -80,12 +142,6 @@ export const tags_containing_text = ["text", "p",
 
                    // sit alone on a line with their content
 export const title_like_tags = ["title", "idx"];
-
-export const remapped_math_tags = [  // [latex_name, ptx_tag]
-                         // could these be handled by a alias, like we did with quote -> blockquote?
-    ["equation", "men"],
-    ["align", "mdn"],
-];
 
 export const subenvironments = {  // the tags which occun inside specific environments
    "listing": ["caption", "program"], // check

@@ -8,7 +8,7 @@ The js file for the test interface.
 */
 //import '../spacemath.css'
 import {
-    remapped_math_tags,
+    outputtags,
     structural_components,
     level_1_p_peers_containing_p,
     other_level_1_p_peers,
@@ -31,21 +31,19 @@ import {
 import {preprocess, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
 
+////////////
+//
+// The next few things will be moved to data.js
+//
+////////////
 
+// The main input to the conversion is:
+//    c1. List of tags in categories, for both LaTeX and PreTeXt.
+//    c2. Mappings from LaTeX to PreTeXt tags.
+//    c3. How to search for each tag in each category.  (call these "delimiters")
+//    c4. How to output the parsed PreTeXt content.
 
-// let translateTable = new TranslateTable();
-
-/*
-var dictionary;
-fetch("dictionary.json").then(
-        function(u){ return u.json();}
-      ).then(
-        function(json){
-          dictionary = json;
-        }
-      )
-      */
-
+// First we have tools for c3.
 const PreTeXtDelimiterOf = function(delim) {
     return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
 }
@@ -66,6 +64,7 @@ export const delimitersFromList = function(lis) {
     return delim_lis
 }
 
+// Second we have tools for c4.
 export const PTXdisplayoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
                        end_tag: "</" + tag + ">",
@@ -79,6 +78,8 @@ export const PTXinlineoutput = function(tag) {
         before_end: "", after_end: ""}
 }
 
+/*
+// Third we start on c3. 
 export const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"smen"},
@@ -93,6 +94,8 @@ display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
 display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
 display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
 display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
+
+*/
 
 export const paragraph_peer_delimiters = [];
 
@@ -156,6 +159,7 @@ const spacelike_inline_delimiters = [
       ];
 */
 
+/*
 export const do_nothing_markup = {begin_tag: "", end_tag: "",  // not sure we need the 'export'
          before_begin: "", after_begin: "",
          before_end: "", after_end: ""};
@@ -163,7 +167,9 @@ export const do_nothing_markup = {begin_tag: "", end_tag: "",  // not sure we ne
 export const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
          before_begin: "BB", after_begin: "AB",
          before_end: "BE", after_end: "AE"};
+*/
 
+/*
 export const outputtags = {  // start with the quirky ones
     "text" : do_nothing_markup,
     "placeholder" : do_nothing_markup,
@@ -171,6 +177,7 @@ export const outputtags = {  // start with the quirky ones
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"},
     };
+*/
 
 inlinetags.forEach( (el) => {
     outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
@@ -210,17 +217,21 @@ outputtags["tikzpicture"] = {begin_tag: "<image>\n<latex-image>\n\\begin{tikzpic
          before_end: "\n", after_end: "\n"};
 
 
+/*
 display_math_tags.forEach( (el) => {
     outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
          before_begin: "", after_begin: ">\n", // because probably source has the \n
          before_end: "\n", after_end: "\n"};
 });
+*/
 
+/*
 // spacemath
  outputtags["sm"] = PTXinlineoutput("m");
 // outputtags["sm"] = do_nothing_markup;
 outputtags["smen"] = PTXdisplayoutput("men");
 // outputtags["smen"] = do_nothing_markup;
+*/
 
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
          before_begin: "", after_begin: ">\n",

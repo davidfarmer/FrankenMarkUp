@@ -312,13 +312,13 @@ f(x) = cases:
     0 if x != 1
 $$
 
-$$
+\[
 align:
    a&b 
 
    b&c
 t5
-$$
+\]
 
 
 - apple
