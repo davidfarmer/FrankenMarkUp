@@ -117,17 +117,19 @@ if (Array.isArray(content)) {
           this_new_text = sanitizeXMLstring(this_new_text)
       }
       let mathpunctuation = "";
-      if (["m","md","me","mdn","men", "sm", "smen"].includes(this_tag)) {
+      if (["m","md","me","mdn","men"].includes(this_tag)) {
     //     this_new_text = sanitizeXMLstring(this_new_text);
          if (this_new_text.match(/^.*(\.|,|;)\s*$/s)) {
             this_new_text = this_new_text.replace(/\s*$/,"");
             mathpunctuation = this_new_text.slice(-1);
             this_new_text = this_new_text.slice(0,-1)
          }
-         if (false && ["sm", "smen"].includes(this_tag)) {
-//console.log("about to convert:", this_new_text);
+         if ( !this_new_text.match(/\\/)) {
+console.log("about to convert:", this_new_text);
+          //   this_new_text = convertMathSnippet(this_new_text.replace(/\n/g, "REtuRn"), "LaTeX");
              this_new_text = convertMathSnippet(this_new_text, "LaTeX");
              this_new_text = this_new_text.replace(/&/g, " \\amp ");
+console.log("after converting:", this_new_text);
          } else {
                this_new_text = sanitizeXMLmathstring(this_new_text)
          }

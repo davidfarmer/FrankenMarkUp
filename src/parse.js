@@ -208,6 +208,7 @@ containers.forEach( (el) => {
     });
 */
 
+/*
 // some special cases
 outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
          before_begin: "\n", after_begin: "\n",
@@ -222,7 +223,7 @@ outputtags["tikzpicture"] = {begin_tag: "<image>\n<latex-image>\n\\begin{tikzpic
          end_tag: "\\end{tikzpicture}\n</latex-image>\n</image>",
          before_begin: "\n", after_begin: "\n",
          before_end: "\n", after_end: "\n"};
-
+*/
 
 /*
 display_math_tags.forEach( (el) => {
@@ -240,12 +241,14 @@ outputtags["smen"] = PTXdisplayoutput("men");
 // outputtags["smen"] = do_nothing_markup;
 */
 
+/*
 outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
          before_begin: "", after_begin: ">\n",
          before_end: "\n", after_end: "\n"};
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
+*/
 
 // console.log("in parse.js");
 
@@ -308,22 +311,22 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
           } );
       }
-//  console.log("preprocessed text 2", new1);
-// alert("preprocessed text 2");
+//   console.log("preprocessed text 2", new1);
+//  alert("preprocessed text 2");
 
       let new7 = {...new1}
 // console.log("about to process new7", new7);
 // alert("7");
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
-//   console.log("processed text 7", new7);
-//        alert("pause 2");
+    console.log("processed text 7", new7);
+         alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
-// console.log("new8", new8);
-// alert("new8")
+  console.log("new8", new8);
+  alert("new8")
       new8 = extract_lists(new8, "attributes", 0,0, "all");
-// console.log("new8a", new8);
-// alert("new8a")
+//  console.log("new8a", new8);
+//  alert("new8a")
 //  console.log("processed text 8", new8);
 //       alert("pause 3");
 
@@ -372,11 +375,11 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       const tmp5t = tmp5z;
       const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
-//  console.log("tmp5w", tmp5w);
-//  alert("tmp5w");
+  console.log("tmp5w", tmp5w);
+  alert("tmp5w");
       const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
 //  console.log("tmp5v", tmp5v);
-//  alert("tmp5v");
+  alert("tmp5v");
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");

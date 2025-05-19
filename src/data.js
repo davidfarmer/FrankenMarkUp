@@ -78,7 +78,7 @@ const remapped_math_tags = [  // [latex_name, ptx_tag]
 export const display_math_delimiters = [
 //          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"me"},
-          {left:"\\[", right:"\\]", tag:"me"},   // these don;t work: not sure why
+//          {left:"\\[", right:"\\]", tag:"me"},   // preprocessor handles these; don't work: not sure why
 ];
 remapped_math_tags.forEach( (el) => {
     display_math_delimiters.push(
@@ -258,8 +258,30 @@ inlinetags.forEach( (el) => {
     });
 
 
+// some special cases
+outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["enumerate"] = outputtags["ol"];
+outputtags["itemize"] = outputtags["ul"];
+
+outputtags["tikzpicture"] = {begin_tag: "<image>\n<latex-image>\n\\begin{tikzpicture}",
+         end_tag: "\\end{tikzpicture}\n</latex-image>\n</image>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+
+outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
+         before_begin: "", after_begin: ">\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
+         before_begin: "\n", after_begin: "",
+         before_end: "", after_end: "\n"};
 
 
+export const spacemath_environments = ["cases", "align", "system", "derivation", "linearsystem"];
 
 
 //not used yet
