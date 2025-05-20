@@ -1,9 +1,9 @@
 /* eslint no-constant-condition:0 */
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
-import { toUnicode, subenvironments, containers} from "./data";
-import { delimitersFromList, paragraph_peer_delimiters  } from "./parse";
-import { display_math_delimiters } from "./parse";
+import { toUnicode, subenvironments, containers, spacemath_environments} from "./data";
+import { paragraph_peer_delimiters  } from "./data";
+import { display_math_delimiters, delimitersFromList } from "./data";
 import { sanitizeXMLattributes } from "./reassemble";
 
 const findEndOfMath = function(delimiter, text, startIndex) {
@@ -85,7 +85,7 @@ export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
       } else if (element.tag == "text") {
 
           const this_text = element.content.split(/\n\s*\n{1,}/);
- // console.log("found ", this_text.length, " pieces, which are:", this_text);
+//  console.log("found ", this_text.length, " pieces, which are:", this_text);
           this_text.forEach( (element) => {
               const this_new_text = current_new_text + element;
               if (this_new_text) {  // skip empty paragraphs
@@ -206,7 +206,7 @@ const recastSpacedDelimiters = function(this_content) {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
-    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<sm>$2</sm>$3");
+    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
@@ -226,7 +226,7 @@ const accentedASCII = function(fullstring, accent, letter) {
     return toUnicode[accent + letter]
 }
 
-export const preprocessAliases = function(this_content) {
+const preprocessAliases = function(this_content) {
 
     if (typeof this_content != "string") { alert("expected a string, but got:", this_content) }
     let the_text = this_content;
@@ -396,7 +396,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
           newnodelist.push(this_node)
 
-        })
+        });
 
     } else if (typeof this_content == "object") {
 
@@ -405,21 +405,17 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s
+// console.log("spacemath_environments", spacemath_environments, "this_content", this_content);
                 let split_content = this_content.content.split(":", 1);
                 let new_tag = split_content[0].toLowerCase();
                 new_tag = new_tag.trim();
-                const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
-                  // it might be a oneline environment, or it might be an attribute
-                  // clean that up later with substructure
-// console.log("found oneline: X" + new_tag + "Y");
-// console.log("this_content.content was",this_content.content);
-// console.log("and new_content is",new_content);
-//                if (possibleattributes.includes(new_tag)) {  // it is an attribute, of the *parent*
-//                } else {
+// console.log("new_tag", new_tag);
+                if ( !spacemath_environments.includes(new_tag) ) {
+                    const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
 
-                this_content.tag = new_tag;
-                this_content.content = new_content;
-//                }
+                    this_content.tag = new_tag;
+                    this_content.content = new_content;
+                }
             }
 
           } else if (action == "extract li"  && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
@@ -479,9 +475,10 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string") { // && !["smen","smdn"].includes(this_content.tag)) { // }
+                      && typeof this_content.content == "string") { 
 
-            const this_text = this_content.content.split(/\n\s*\n{1,}/);
+      //      const this_text = this_content.content.split(/\n\s*\n{1,}/);
+            const this_text = this_content.content.split(/(\n\s*\n{1,})/);
 
             if (this_text.length > 1) {
               let new_content = "";
@@ -780,7 +777,7 @@ console.log("images", this_content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
-// console.log("               about to push", element.content);
+// console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
@@ -865,7 +862,46 @@ console.log("images", this_content);
 
 }
 
-export const proprocess = function(just_text) {
+export const preprocess = function(just_text) {
 
+    let originaltextX = preprocessAliases(just_text);
+
+   // things like {equation*} -> {equation*} 
+    originaltextX = originaltextX.replace(/{([a-z]{2,})\*/d,"$1star");
+
+   // put latex-style labels on a new line
+      let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
+
+   // have to preprocess blockquote because (of how we handle attributes) the starting > looks
+   // like the end of an opening tag.
+      let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
+
+   // the questionable way we recognize paragraphs 
+   // to do: use a list of math modes
+   //        make sure \[...\] works
+      originaltextB = originaltextB.replace(/\n\\\[([^\[\]]+)\\\]\n/sg, "\n\\begin{equationstar}$1\\end{equationstar}\n");  // old LaTeX
+      originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\end{equationstar}|\\end{alignstar}) *\n([^\s])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+      originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
+
+   // PTX makes the questionable choice of wrapping liss in a p.
+   // Note that this will make a syntax error if handed:
+   //      <p><ol>...</ol>words</p>
+      originaltextB = originaltextB.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1");
+      originaltextB = originaltextB.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1");
+
+   // LaTeX does not require blank lines between \\item s, so add those blanks
+      originaltextB = originaltextB.replace(/\s*?\n+\s*?\\item\s+/g, "\n\n\\item ");
+
+   // `definition` in prefigure means something different, to hide it as `predefinition`
+      let originaltextC = originaltextB.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(x,y,z,w) {
+                                  const hiddenz = z.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+                                  return y + hiddenz + w
+                              });
+
+   // put attributes on the next line
+      const findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
+      originaltextC = originaltextC.replace(findattributes, "$1\n$2");
+
+    return originaltextC
 
 } 

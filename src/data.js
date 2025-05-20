@@ -1,8 +1,111 @@
 
+// The main input to the conversion is:
+//    c1. List of tags in categories, for both LaTeX and PreTeXt.
+//    c2. Mappings from LaTeX to PreTeXt tags.
+//    c3. How to search for each tag in each category.
+//    c4. How to output the parsed PreTeXt content.
+
+// Output tags. Will repeatedly add to these
+
+export const do_nothing_markup = {begin_tag: "", end_tag: "",  // not sure we need the 'export'
+         before_begin: "", after_begin: "",
+         before_end: "", after_end: ""}; 
+
+export const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG",
+         before_begin: "BB", after_begin: "AB",
+         before_end: "BE", after_end: "AE"};
+
+export const outputtags = {  // start with the quirky ones
+    "text" : do_nothing_markup,
+    "placeholder" : do_nothing_markup,
+    "title": {begin_tag: "<title>", end_tag: "</title>",
+         before_begin: "\n", after_begin: "",
+         before_end: "", after_end: "\n"},
+    };
+
+export const PTXdisplayoutput = function(tag) {
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "\n", after_begin: ">\n",
+        before_end: "\n", after_end: "\n"}
+}
+export const PTXinlineoutput = function(tag) {
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "", after_begin: ">",
+        before_end: "", after_end: ""}
+}
+
+
+// Parsing (called "delimiters")
+
+const PreTeXtDelimiterOf = function(delim) {
+    return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
+}        
+const PreTeXtDelimiterOfAttributes = function(delim) {
+    return {left:"<" + delim + " ", right:"</" + delim + ">", tag:delim}
+}
+const LaTeXDelimiterOf = function(delim) {
+    return {left:"\\begin{" + delim + "}", right:"\\end{" + delim + "}", tag:delim}
+}
+export const delimitersFromList = function(lis) {
+    if (!Array.isArray(lis)) { return lis }
+    let delim_lis = [];
+    lis.forEach( (el) => {
+        delim_lis.push( PreTeXtDelimiterOfAttributes(el) );
+        delim_lis.push( PreTeXtDelimiterOf(el) );
+        delim_lis.push( LaTeXDelimiterOf(el) );
+    });
+    return delim_lis
+}   
+
+
+
+//////////////////
+//
+//  math
+//
+//////////////////
+
+const remapped_math_tags = [  // [latex_name, ptx_tag]
+                         // could these be handled by an alias, like we did with quote -> blockquote?
+    ["equation", "men"],
+    ["equationstar", "me"],  // preprocesssor does {abcd*} -> {abcdstar}
+    ["align", "mdn"],
+    ["alignstar", "md"],
+];
+
+export const display_math_delimiters = [
+//          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
+          {left:"$$", right:"$$", tag:"me"},
+//          {left:"\\[", right:"\\]", tag:"me"},   // preprocessor handles these; don't work: not sure why
+];
+remapped_math_tags.forEach( (el) => {
+    display_math_delimiters.push(
+        {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
+    );
+});
+display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
+display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
+display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
+display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
+
+export const display_math_tags = ["md", "mdn", "me", "men"];  // some day, let's get rid of me and men
+
+display_math_tags.forEach( (el) => { 
+    outputtags[el] = {begin_tag: "\n<" + el, end_tag: "</" + el + ">",
+         before_begin: "", after_begin: ">\n", // because probably source has the \n
+         before_end: "\n", after_end: "\n"};
+});
+
+export const math_tags = ["m", ...display_math_tags];
+
+
+
 // this list is not used, it serves to help keep track of tags requiring special attention
-export const randomtags = ["fn", "title",
+export const randomtags = ["fn", 
               "output",
-              "mrow"];
+              ];
 
 export const randomtags_containing_p = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet","page"];
                       // exercisegroup should be in a different category
@@ -11,7 +114,8 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-export const list_like = ["ol", "ul", "dl", "code","mrow"];   // should be pure_containers ?
+export const list_like = ["ol", "ul", "dl"]; 
+const other_pure_containers = ["code","mrow"];  // currently unused
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
@@ -33,19 +137,15 @@ export const proof_like = ["proof"];
 
 export const project_like = ["activity", "exploration", "investigation", "project"];
 
-export const display_math_tags = ["md", "mdn", "me", "men","smen", "smdn"];  // let's get rid of me and men
-
 export const hint_like = ["hint", "answer", "solution"];
 
 export const subpart_like = ["case", "task"];
 
-export const inlinetags = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
+export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 // also need to handle self-closing tags
 
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
-
-export const math_tags = ["m", "sm", ...display_math_tags];
 
 export const verbatim_tags = [...math_tags, "c", "code", "mrow"];
 
@@ -81,12 +181,6 @@ export const tags_containing_text = ["text", "p",
                    // sit alone on a line with their content
 export const title_like_tags = ["title", "idx"];
 
-export const remapped_math_tags = [  // [latex_name, ptx_tag]
-                         // could these be handled by a alias, like we did with quote -> blockquote?
-    ["equation", "men"],
-    ["align", "mdn"],
-];
-
 export const subenvironments = {  // the tags which occun inside specific environments
    "listing": ["caption", "program"], // check
    "figure": ["caption","image"], // check
@@ -101,6 +195,95 @@ export const containers = ["exercisegroup", "exercises", "prefigure", "tikzpictu
                            "diagram", ...subenvironments["diagram"] ];
 
 export const objects_with_substructure = Object.keys(subenvironments);
+
+export const paragraph_peer_delimiters = [];
+
+let paragraph_peer_ptx_and_latex_text = [...structural_components, ...level_1_p_peers_containing_p];
+let paragraph_peer_ptx_and_latex_text_output = [...paragraph_peer_ptx_and_latex_text, ...list_like];
+// plus some tags we don't expect people to type (go back and rethink this)
+paragraph_peer_ptx_and_latex_text_output.push("p");
+paragraph_peer_ptx_and_latex_text_output.push("statement");
+
+
+// Note: no ">" in opening, because could have attributes,
+// which are parsed later
+paragraph_peer_ptx_and_latex_text.forEach( (el) => {
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
+});
+other_level_1_p_peers.forEach( (el) => {
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
+    paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
+    paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
+});
+
+export let paragraph_peers = Array.from(paragraph_peer_delimiters, ({ tag }) => tag);
+paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
+
+
+paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+other_level_1_p_peers.forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+randomtags_containing_p.forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+containers.forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+[...display_environments, ...display_subenvironments, ...display_subsubenvironments].forEach( (el) => {
+    outputtags[el] = PTXdisplayoutput(el)
+    });
+
+
+
+export let asymmetric_inline_delimiters = [
+          {left:"\\(", right:"\\)", tag:"m"},
+//          {left:"|", right:"|", tag:"placeholder"}  // just for testing
+];
+
+// need to handle self-closing tags
+// also -- for emdash, and abbreviations, i.e., e.g.
+
+inlinetags.forEach( (el) => {
+    asymmetric_inline_delimiters.push(  PreTeXtDelimiterOf(el) )
+});
+
+inlinetags.forEach( (el) => {
+    outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
+    before_begin: "", after_begin: "",
+    before_end: "", after_end: ""}
+    });
+
+
+// some special cases
+outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["enumerate"] = outputtags["ol"];
+outputtags["itemize"] = outputtags["ul"];
+
+outputtags["tikzpicture"] = {begin_tag: "<image>\n<latex-image>\n\\begin{tikzpicture}",
+         end_tag: "\\end{tikzpicture}\n</latex-image>\n</image>",
+         before_begin: "\n", after_begin: "\n",
+         before_end: "\n", after_end: "\n"};
+
+outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not be a special case?
+         before_begin: "", after_begin: ">\n",
+         before_end: "\n", after_end: "\n"};
+outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
+         before_begin: "\n", after_begin: "",
+         before_end: "", after_end: "\n"};
+
+
+export const spacemath_environments = ["cases", "align", "system", "derivation", "linearsystem"];
+
 
 //not used yet
 export const possibleattributes = ["source", "ref", "width", "margins", "label", "xmlattributes",
