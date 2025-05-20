@@ -85,7 +85,7 @@ export const splitIntoParagraphs = function(nodelist, nodestoparse, peernodes) {
       } else if (element.tag == "text") {
 
           const this_text = element.content.split(/\n\s*\n{1,}/);
-  console.log("found ", this_text.length, " pieces, which are:", this_text);
+//  console.log("found ", this_text.length, " pieces, which are:", this_text);
           this_text.forEach( (element) => {
               const this_new_text = current_new_text + element;
               if (this_new_text) {  // skip empty paragraphs
@@ -405,11 +405,11 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*([A-Za-z]+):/)) {    // originally required :\s
-console.log("spacemath_environments", spacemath_environments, "this_content", this_content);
+// console.log("spacemath_environments", spacemath_environments, "this_content", this_content);
                 let split_content = this_content.content.split(":", 1);
                 let new_tag = split_content[0].toLowerCase();
                 new_tag = new_tag.trim();
-console.log("new_tag", new_tag);
+// console.log("new_tag", new_tag);
                 if ( !spacemath_environments.includes(new_tag) ) {
                     const new_content = this_content.content.replace(/^\s*[^:]*:\s*/,"");
 
@@ -773,11 +773,11 @@ console.log("images", this_content);
                   }
                 } else if (element.tag == "p") {
          // either connect to previous element, or not
- console.log("element", element.tag, "with", element.content);
+// console.log("element", element.tag, "with", element.content);
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
- console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
+// console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {

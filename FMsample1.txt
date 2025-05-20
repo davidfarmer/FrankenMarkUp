@@ -8,7 +8,7 @@ Just mix together LaTeX, Markdown, and PreTeXt, and hope for the best!
 No need for `p` tags, just leave a blank line.  Within a paragraph you
 can define _terminology_, use *emphasis*, or make an **alert**.
 You have a choice of math tags:  $x^10 < 1/2$ or \(sqrt 5x\) or even the
-official PreTeXt <m>\sin x \le  |x|</m>.  Inside the math tags you can type
+official PreTeXt <m>sin x < abs x "if" x != 0</m>.  Inside the math tags you can type
 either LaTeX or, as in this demo, Space Math.  (Currently the output is LaTeX, which is unfortunate
 because information is lost and multiline is not working properly.  It will be better when PreTeXt
 allows Space Math or MathML in the source.)
