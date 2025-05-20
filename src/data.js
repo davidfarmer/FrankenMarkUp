@@ -114,7 +114,8 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
-export const list_like = ["ol", "ul", "dl", "code","mrow"];   // should be pure_containers ?
+export const list_like = ["ol", "ul", "dl"]; 
+const other_pure_containers = ["code","mrow"];  // currently unused
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
@@ -140,7 +141,7 @@ export const hint_like = ["hint", "answer", "solution"];
 
 export const subpart_like = ["case", "task"];
 
-export const inlinetags = ["em", "term", "alert", "m", "sm", "q", "c", "tag"];
+export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 // also need to handle self-closing tags
 
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
@@ -240,7 +241,7 @@ containers.forEach( (el) => {
 
 
 export let asymmetric_inline_delimiters = [
-          {left:"\\(", right:"\\)", tag:"sm"},
+          {left:"\\(", right:"\\)", tag:"m"},
 //          {left:"|", right:"|", tag:"placeholder"}  // just for testing
 ];
 

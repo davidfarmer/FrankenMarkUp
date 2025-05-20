@@ -206,7 +206,7 @@ const recastSpacedDelimiters = function(this_content) {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
-    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<sm>$2</sm>$3");
+    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
@@ -475,7 +475,7 @@ console.log("new_tag", new_tag);
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string") { // && !["smen","smdn"].includes(this_content.tag)) { // }
+                      && typeof this_content.content == "string") { 
 
       //      const this_text = this_content.content.split(/\n\s*\n{1,}/);
             const this_text = this_content.content.split(/(\n\s*\n{1,})/);
