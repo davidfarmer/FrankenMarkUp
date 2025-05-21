@@ -1,6 +1,5 @@
 
-// import { outputtags, debugging_output_markup, PTXdisplayoutput } from "./parse-exports";
-import { PTXdisplayoutput, PTXinlineoutput} from "./data";
+import { PTXblockoutput, PTXinlineoutput} from "./data";
 import { do_nothing_markup, debugging_output_markup, verbatim_tags, outputtags } from "./data";
 // import { convertMathSnippet } from 'space_math';
  import { convertMathSnippet } from '../../Space_Math/src/main';
@@ -28,7 +27,7 @@ if (Array.isArray(content)) {
 //       if (this_tag == "sm") { these_tags = PTXinlineoutput("m") }
 //       else if (this_tag == "smen") { these_tags = PTXinlineoutput("men") }
 
-       if (!these_tags) { these_tags = PTXdisplayoutput(this_tag) }
+       if (!these_tags) { these_tags = PTXblockoutput(this_tag) }
        this_element_text +=  these_tags.before_begin + these_tags.begin_tag + debugtags;
 
        if ("xmlattributes" in content && content.xmlattributes) { this_element_text += " " + content.xmlattributes.trim() }
@@ -44,7 +43,7 @@ if (Array.isArray(content)) {
 
        this_element_text += these_tags.after_begin;
 
-       if ("title" in content && content.title) { this_element_text += "<title>" + content.title + "</title>" + "\n" }
+       if ("title" in content && content.title) { this_element_text += "\n<title>" + content.title + "</title>" + "\n" }
 
 //console.log("reprocessing", content.content);
        const this_assembled_text = this_element_text + reassemblePreTeXt(content.content) +  these_tags.before_end + these_tags.end_tag + these_tags.after_end;
@@ -105,17 +104,26 @@ if (Array.isArray(content)) {
 
       this_element_opening_tag += these_tags.after_begin;
 
-      if ("title" in element && element.title) { this_element_text += "<title>" + element.title + "</title>" + "\n" }
+      if ("title" in element && element.title) { this_element_text += "\n<title>" + element.title + "</title>" + "\n" }
 
-// console.log("reassem element.content", element.content);
-      let this_new_text = reassemblePreTeXt(element.content);
+      let this_content = element.content;
+ console.log("this_content element.content", "|"+this_content+"|", typeof this_content );
+
+      if (typeof this_content == "string" ) // && !verbatim_tags.includes(this_tag) )
+        {
+          this_content = this_content.replace(/^\n+/, "");  // leading spaces are okay
+          this_content = this_content.replace(/\s+$/, "");  // trailing spaces and \n are not
+        }
+      let this_new_text = reassemblePreTeXt(this_content);
+ console.log("this_new_text", "|"+this_new_text+"|");
   //    if (this_tag != "text") {   // }
-// console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
-      if ( false && !verbatim_tags.includes(this_tag)) {
+ console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
+      if (false && !verbatim_tags.includes(this_tag) ) {
                 // what about a code block?  do we mean verbatim?
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
+ console.log("this_new_text again", "|"+this_new_text+"|");
       if (["c","code"].includes(this_tag)) {
           this_new_text = sanitizeXMLstring(this_new_text)
       }

@@ -31,6 +31,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
     let originaltextC = preprocess(originaltext);
 
+console.log("outputtags", outputtags);
 //  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}

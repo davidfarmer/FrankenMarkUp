@@ -18,16 +18,25 @@ export const debugging_output_markup = {begin_tag: "BEGINTAG", end_tag: "ENDTAG"
 export const outputtags = {  // start with the quirky ones
     "text" : do_nothing_markup,
     "placeholder" : do_nothing_markup,
-    "title": {begin_tag: "<title>", end_tag: "</title>",
-         before_begin: "\n", after_begin: "",
-         before_end: "", after_end: "\n"},
     };
 
-export const PTXdisplayoutput = function(tag) {
+export const PTXblockoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
                        end_tag: "</" + tag + ">",
         before_begin: "\n", after_begin: ">\n",
         before_end: "\n", after_end: "\n"}
+}
+export const PTXcontaineroutput = function(tag) {  // eg, "theorem"
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "\n", after_begin: ">",
+        before_end: "", after_end: "\n"}
+}
+export const PTXtitleoutput = function(tag) {
+    return  { begin_tag: "<" + tag + "",
+                       end_tag: "</" + tag + ">",
+        before_begin: "\n", after_begin: "",
+        before_end: "", after_end: "\n"}
 }
 export const PTXinlineoutput = function(tag) {
     return  { begin_tag: "<" + tag + "",
@@ -76,7 +85,6 @@ const remapped_math_tags = [  // [latex_name, ptx_tag]
 ];
 
 export const display_math_delimiters = [
-//          {left:"<p>", right:"</p>", tag:"p"},  // for compatibility with PreTeXt!
           {left:"$$", right:"$$", tag:"me"},
 //          {left:"\\[", right:"\\]", tag:"me"},   // preprocessor handles these; don't work: not sure why
 ];
@@ -86,7 +94,9 @@ remapped_math_tags.forEach( (el) => {
     );
 });
 display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
+display_math_delimiters.push({left: "<md ", right: "</md>", tag: "md"});
 display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
+display_math_delimiters.push({left: "<me ", right: "</me>", tag: "me"});
 display_math_delimiters.push({left: "<mdn", right: "</mdn>", tag: "mdn"});
 display_math_delimiters.push({left: "<men", right: "</men>", tag: "men"});
 
@@ -179,7 +189,7 @@ export const tags_containing_text = ["text", "p",
     "title", "li", "caption"];  // li can optionally contain a p or another list
 
                    // sit alone on a line with their content
-export const title_like_tags = ["title", "idx"];
+export const title_like_tags = ["title", "idx", "caption"];
 
 export const subenvironments = {  // the tags which occun inside specific environments
    "listing": ["caption", "program"], // check
@@ -223,19 +233,20 @@ paragraph_peers = [...new Set(paragraph_peers)];   //remove duplicates
 
 
 paragraph_peer_ptx_and_latex_text_output.forEach( (el) => {
-    outputtags[el] = PTXdisplayoutput(el)
+    outputtags[el] = PTXcontaineroutput(el)
     });
 other_level_1_p_peers.forEach( (el) => {
-    outputtags[el] = PTXdisplayoutput(el)
+    outputtags[el] = PTXblockoutput(el)
     });
 randomtags_containing_p.forEach( (el) => {
-    outputtags[el] = PTXdisplayoutput(el)
+    outputtags[el] = PTXblockoutput(el)
     });
+
 containers.forEach( (el) => {
-    outputtags[el] = PTXdisplayoutput(el)
+    outputtags[el] = PTXblockoutput(el)
     });
 [...display_environments, ...display_subenvironments, ...display_subsubenvironments].forEach( (el) => {
-    outputtags[el] = PTXdisplayoutput(el)
+    outputtags[el] = PTXblockoutput(el)
     });
 
 
@@ -253,10 +264,14 @@ inlinetags.forEach( (el) => {
 });
 
 inlinetags.forEach( (el) => {
-    outputtags[el] = { begin_tag: "<" + el + ">", end_tag: "</" + el + ">",
-    before_begin: "", after_begin: "",
-    before_end: "", after_end: ""}
+    outputtags[el] = PTXinlineoutput(el)
     });
+
+title_like_tags.forEach( (el) => {    // note:  `title` is handled in a special way
+                                      // see reassemble.js (b/c title is an attribute
+    outputtags[el] = PTXtitleoutput(el)
+    });
+
 
 
 // some special cases
@@ -280,6 +295,9 @@ outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not 
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
+
+outputtags["p"] = PTXblockoutput("p")
+outputtags["li"] = PTXblockoutput("li")
 
 
 export const spacemath_environments = ["cases", "align", "system", "derivation", "linearsystem"];

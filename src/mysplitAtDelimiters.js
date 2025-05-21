@@ -864,7 +864,11 @@ console.log("images", this_content);
 
 export const preprocess = function(just_text) {
 
-    let originaltextX = preprocessAliases(just_text);
+  // Is there any case where trailing spaces (before the \n) are meaningful?
+
+    let originaltextX = just_text.replace(/ +(\n|$)/g, "\n");
+
+    originaltextX = preprocessAliases(originaltextX);
 
    // things like {equation*} -> {equation*} 
     originaltextX = originaltextX.replace(/{([a-z]{2,})\*/d,"$1star");
