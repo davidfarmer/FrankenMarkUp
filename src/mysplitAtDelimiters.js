@@ -4,6 +4,7 @@ import { aliases, display_math_tags, possibleattributes, tags_containing_paragra
 import { toUnicode, subenvironments, containers, spacemath_environments} from "./data";
 import { paragraph_peer_delimiters  } from "./data";
 import { display_math_delimiters, delimitersFromList } from "./data";
+import { document_metadata } from "./parse";
 import { sanitizeXMLattributes } from "./reassemble";
 
 const findEndOfMath = function(delimiter, text, startIndex) {
@@ -865,13 +866,12 @@ console.log("images", this_content);
 export const preprocess = function(just_text) {
 
   // Is there any case where trailing spaces (before the \n) are meaningful?
-
     let originaltextX = just_text.replace(/ +(\n|$)/g, "\n");
 
     originaltextX = preprocessAliases(originaltextX);
 
    // things like {equation*} -> {equation*} 
-    originaltextX = originaltextX.replace(/{([a-z]{2,})\*/d,"$1star");
+    originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
 
    // put latex-style labels on a new line
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
@@ -909,3 +909,72 @@ export const preprocess = function(just_text) {
     return originaltextC
 
 } 
+
+export const extractStructure = function(doc) {
+
+    let this_text = doc;
+
+ console.log("documentstyle?", this_text.match(/document(style|class)/));
+
+    if (this_text.match(/document(style|class)/)) {
+  console.log("found full LaTeX document")
+        // need to extract som emetadata
+
+        let preamble = this_text.replace(/\\begin{document}.*$/s, "");
+        document_metadata["preamble"] = preamble;
+
+        let the_doc = this_text.replace(/^.*\\begin{document}(.*)\\end{document}.*/s, "$1");
+
+        let the_metadata = the_doc.replace(/\\maketitle.*$/s, "");
+        let the_body = the_doc.replace(/^.*\\maketitle/s, "");
+
+        document_metadata["metadata"] = the_metadata;
+
+  console.log("the_body", the_body);
+  alert("extracted structure");
+        return the_body
+    }
+
+  console.log("this_text", this_text);
+  alert("did not extract structure");
+    return doc
+
+}
+
+export const setCoarseStructure = function(doc) {
+
+    let this_text = doc;
+
+    this_text = this_text.replace(/(^|\n)# +([A-Z].*)\n/,"$1\\section{$2}");
+    this_text = this_text.replace(/(^|\n)## +([A-Z].*)\n/,"$1\\subsection{$2}");
+    this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/,"$1\\paragraphs{$2}");
+
+    let this_text_sections = this_text.split(/\\(section)/);
+    console.log(this_text_sections.length, "this_text_sections", this_text_sections);
+
+    let text_reassembled = [];
+    let current_section = {};
+    let looking_for_section = true;
+    let looking_for_title = false;
+
+    this_text_sections.forEach(  (element) => {
+      let element_trimmed = elememt.trim();
+
+      if (looking_for_section) {
+        if (!element_trimmed) { return } // ie, next iteration
+
+        if (element != "section") { alert("did not find section " + element + "X") }
+        else {
+          current_section["tag"] = "section";
+          looking_for_section = false;
+          looking_for_title = true;
+        }
+
+      } else if (looking_for_title) {
+ //up to here
+      }
+
+alert("this_text_sections");
+    return this_text
+
+}

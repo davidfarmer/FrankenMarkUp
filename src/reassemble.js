@@ -107,23 +107,25 @@ if (Array.isArray(content)) {
       if ("title" in element && element.title) { this_element_text += "\n<title>" + element.title + "</title>" + "\n" }
 
       let this_content = element.content;
- console.log("this_content element.content", "|"+this_content+"|", typeof this_content );
+// console.log("this_content element.content", "|"+this_content+"|", typeof this_content );
 
       if (typeof this_content == "string" ) // && !verbatim_tags.includes(this_tag) )
         {
-          this_content = this_content.replace(/^\n+/, "");  // leading spaces are okay
-          this_content = this_content.replace(/\s+$/, "");  // trailing spaces and \n are not
+       // next lines not quite right:  need to detect start or end of a of a `p`
+       // mixed content is the problem
+   //       this_content = this_content.replace(/^\s*\n+([^\s])/, " $1");  // leading spaces are okay
+   //       this_content = this_content.replace(/\s+$/, " ");  // trailing spaces and \n are not
         }
       let this_new_text = reassemblePreTeXt(this_content);
- console.log("this_new_text", "|"+this_new_text+"|");
+//  console.log("this_new_text", "|"+this_new_text+"|");
   //    if (this_tag != "text") {   // }
- console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
+//  console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
       if (false && !verbatim_tags.includes(this_tag) ) {
                 // what about a code block?  do we mean verbatim?
           this_new_text = this_new_text.replace(/^[\r\n]+/, "");
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
- console.log("this_new_text again", "|"+this_new_text+"|");
+// console.log("this_new_text again", "|"+this_new_text+"|");
       if (["c","code"].includes(this_tag)) {
           this_new_text = sanitizeXMLstring(this_new_text)
       }

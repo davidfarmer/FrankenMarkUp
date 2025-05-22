@@ -22,16 +22,23 @@ import {
     tags_containing_paragraphs,
     tags_needing_statements,
 } from './data.js'
-import {preprocess, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
+import {preprocess, setCoarseStructure, extractStructure, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
 
 // console.log("in parse.js");
 
+export let document_metadata = {};
+
 export function fmToPTX(originaltext, wrapper="placeholder"){  // called by index.js
 
-    let originaltextC = preprocess(originaltext);
+// names of these functions are confusing
+    let originaltextA = extractStructure(originaltext);
 
-console.log("outputtags", outputtags);
+    let originaltextB = setCoarseStructure(originaltextA);
+
+    let originaltextC = preprocess(originaltextB);
+
+//console.log("outputtags", outputtags);
 //  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
