@@ -31,12 +31,12 @@ export let document_metadata = {};
 
 export function fmToPTX(originaltext, wrapper="placeholder"){  // called by index.js
 
+    let originaltextA = preprocess(originaltext);
+
 // names of these functions are confusing
-    let originaltextA = extractStructure(originaltext);
+    let originaltextB = extractStructure(originaltextA);
 
-    let originaltextB = setCoarseStructure(originaltextA);
-
-    let originaltextC = preprocess(originaltextB);
+    let originaltextC = setCoarseStructure(originaltextB);
 
 //console.log("outputtags", outputtags);
 //  console.log("originaltextC", originaltextC);
@@ -47,7 +47,9 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       let new1 = {...tmp1together};
 
-      const firstdepth =  15;
+console.log("starting iteration on new1", new1);
+alert("new1");
+      const firstdepth =  17;
       for (let depth = 0; depth < firstdepth; ++depth) {
           let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {
@@ -60,8 +62,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  alert("preprocessed text 2");
 
       let new7 = {...new1}
-// console.log("about to process new7", new7);
-// alert("7");
+ console.log("about to process new7", new7);
+ alert("7");
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
 //    console.log("processed text 7", new7);
 //         alert("pause 2");
@@ -107,7 +109,11 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,firstdepth+1, "all", tags_containing_text);
       const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,firstdepth+1,"all", tags_containing_text);
 
+  console.log("tmp4", tmp4);
+	  alert("tmp4");
       const tmp5x = extract_lists(tmp4, "fonts", 0,0,tags_containing_text);
+  console.log("tmp5x", tmp5x);
+  alert("tmp5x");
       const tmp5y = extract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
 
       let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,firstdepth+1, "all", tags_containing_text);
@@ -132,11 +138,12 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]); 
  //     let tmp5 = tmp5u;
 
-// console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
+ console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
 
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
+alert("the end");
       const tmp5p = reassemblePreTeXt(tmp5);
 
       return tmp5p

@@ -51,7 +51,7 @@ export const PTXinlineoutput = function(tag) {
 const PreTeXtDelimiterOf = function(delim) {
     return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
 }        
-const PreTeXtDelimiterOfAttributes = function(delim) {
+export const PreTeXtDelimiterOfAttributes = function(delim) {
     return {left:"<" + delim + " ", right:"</" + delim + ">", tag:delim}
 }
 const LaTeXDelimiterOf = function(delim) {
@@ -182,6 +182,8 @@ export const other_level_1_p_peers = ["figure", "table", "tabular", "enumerate",
 
 
 export const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
+
+export const tags_without_titles = ["p", "figure", "ol", "ul", "dl"];
 
       // more precisely: can possibly contain just text
 export const tags_containing_text = ["text", "p",

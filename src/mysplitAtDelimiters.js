@@ -2,8 +2,8 @@
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
 import { toUnicode, subenvironments, containers, spacemath_environments} from "./data";
-import { paragraph_peer_delimiters  } from "./data";
-import { display_math_delimiters, delimitersFromList } from "./data";
+import { paragraph_peer_delimiters, inlinetags } from "./data";
+import { display_math_delimiters, delimitersFromList, PreTeXtDelimiterOfAttributes } from "./data";
 import { document_metadata } from "./parse";
 import { sanitizeXMLattributes } from "./reassemble";
 
@@ -39,7 +39,7 @@ const escapeRegex = function(string) {
     return string.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 };
 
-const amsRegex = /^\\AAAAAAAbegin{/;
+const amsRegex = /^\\AAAAAAAbegin{/;    // }
 
 var parsecount = 0;
 
@@ -207,7 +207,7 @@ const recastSpacedDelimiters = function(this_content) {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
-    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-])/mg, "$1<m>$2</m>$3");
+    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-<]|th\b|st\b|nd\b)/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
@@ -247,6 +247,12 @@ const preprocessAliases = function(this_content) {
           the_text = the_text.replace("\\" + unofficialName + "{", "\\" + trueName + "{");
       });
     }
+
+ // should this be in a separate funciton?
+    inlinetags.forEach( (element) => {
+      var regex = new RegExp("\\\\" + element + "{([^{}]+)}", "g");
+      the_text = the_text.replace(regex, "<" + element + ">$1</" + element + ">")
+    });
 
     return the_text
 }
@@ -826,12 +832,14 @@ console.log("images", this_content);
       else if (action == "fonts" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
         let new_text = "";
-        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ?([a-zA-Z])/mg, accentedASCII);
+        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, accentedASCII);
+        new_text = this_content.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, accentedASCII);
         new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
 // console.log("found genuine text:", this_content, "which is now",new_text);
         return new_text
       } else if (action == "texlike" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
+console.log("texlike", this_content);
         let new_text = "";
         new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
         new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
@@ -840,12 +848,16 @@ console.log("images", this_content);
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
             // for those who write (\ref{...}) instead of \eqref{...}
         new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
-                                  return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
+                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
                               });
         new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
-                                  return '<xref ref="' + sanitizeXMLattributes(z) + '"/>'
+                       //           return 'PPPPPPP';
+                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
                               });
    //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
+
+         // not good enough:  need to match {}  // also, did not work
+        new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
                                   return '<url href="' + z + '">' + w + '</url>'
@@ -920,6 +932,9 @@ export const extractStructure = function(doc) {
   console.log("found full LaTeX document")
         // need to extract som emetadata
 
+        // delete % comments
+        this_text = this_text.replace(/%.*/g, "");
+
         let preamble = this_text.replace(/\\begin{document}.*$/s, "");
         document_metadata["preamble"] = preamble;
 
@@ -927,8 +942,14 @@ export const extractStructure = function(doc) {
 
         let the_metadata = the_doc.replace(/\\maketitle.*$/s, "");
         let the_body = the_doc.replace(/^.*\\maketitle/s, "");
-
         document_metadata["metadata"] = the_metadata;
+
+        const body_and_biblio = the_body.split("\\begin{thebibliography}");
+
+        if (body_and_biblio.length == 2) {
+            the_body = body_and_biblio[0];
+            document_metadata["biblio"] = body_and_biblio[1];
+        }
 
   console.log("the_body", the_body);
   alert("extracted structure");
@@ -949,6 +970,15 @@ export const setCoarseStructure = function(doc) {
     this_text = this_text.replace(/(^|\n)## +([A-Z].*)\n/,"$1\\subsection{$2}");
     this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/,"$1\\paragraphs{$2}");
 
+    this_text = splitOnStructure(this_text, "section");
+
+console.log("this_text",this_text);
+alert("this_text");
+
+    return this_text;
+
+//   old
+
     let this_text_sections = this_text.split(/\\(section)/);
     console.log(this_text_sections.length, "this_text_sections", this_text_sections);
 
@@ -956,9 +986,10 @@ export const setCoarseStructure = function(doc) {
     let current_section = {};
     let looking_for_section = true;
     let looking_for_title = false;
+    let looking_for_content = false;  // wrong, because title and content are in one entry.
 
     this_text_sections.forEach(  (element) => {
-      let element_trimmed = elememt.trim();
+      let element_trimmed = element.trim();
 
       if (looking_for_section) {
         if (!element_trimmed) { return } // ie, next iteration
@@ -971,10 +1002,113 @@ export const setCoarseStructure = function(doc) {
         }
 
       } else if (looking_for_title) {
+          element_trimmed = element.trim();
+          if (element_trimmed.startsWith("{")) {   // }
+            const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
+            let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
+            current_section["title"] = this_title;
+
+            if (this_content.match(/^\s*\\label/)) {
+                const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
+                this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
+                current_section["label"] = this_label;
+            }
+            current_section["content"] = this_content.trim();
+            looking_for_title = false;
+            looking_for_section = true;
+         }
  //up to here
       }
 
-alert("this_text_sections");
-    return this_text
+      text_reassembled.push({...current_section});
+      current_section = {}
+    });
 
+console.log(text_reassembled);
+alert("this_text_sections");
+    return text_reassembled
+
+}
+
+const splitOnStructure = function(doc, marker, depth=0, maxdepth=1) {
+
+console.log("document_metadata", document_metadata);
+    if (depth > maxdepth) { return doc }
+
+    if (Array.isArray(doc)) {
+        let newdoc = [...doc];
+        newdoc.forEach( (element) => {
+            const new_content = splitOnStructure(element.content, marker, depth+1, maxdepth);
+            if (typeof new_content == "string") {
+                // do nothing, because was no substructure, right?
+            } else {
+                element.content = [...splitOnStructure(new_content, marker, depth+1, maxdepth)]
+            }
+
+        });
+        return newdoc
+    } else {
+        let newdoc = doc;
+// for now, assume pure LaTeX
+//         const thesedelimiters = [PreTeXtDelimiterOfAttributes(marker)];
+
+    //    newdoc = splitTextAtDelimiters(newdoc, thesedelimiters, depth+1, maxdepth);
+
+  console.log("marker", marker);
+        const re = new RegExp("\\\\(" + marker + ")", "g");
+console.log("re", re);
+        let this_doc_sections = newdoc.split(re);
+
+        console.log(this_doc_sections.length, "this_doc_sections", this_doc_sections);
+
+        let text_reassembled = [];
+        let current_section = {};
+        let looking_for_section = true;
+        let looking_for_title = false;
+        let looking_for_content = false;  // wrong, because title and content are in one entry.
+
+        this_doc_sections.forEach(  (element) => {
+          let element_trimmed = element.trim();
+
+          if (looking_for_section) {
+            if (!element_trimmed) { return } // ie, next iteration
+
+            if (element != "section") { alert("did not find section " + element + "X") }
+            else {
+              current_section["tag"] = "section";
+              looking_for_section = false;
+              looking_for_title = true;
+            }
+
+          } else if (looking_for_title) {
+              element_trimmed = element.trim();
+              if (element_trimmed.startsWith("{")) {   // }
+                const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
+                let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
+                current_section["title"] = this_title;
+        
+                if (this_content.match(/^\s*\\label/)) {
+                    const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
+                    this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
+                    current_section["label"] = this_label;
+                }
+                current_section["content"] = this_content.trim();
+                looking_for_title = false;
+                looking_for_section = true;
+console.log("current_section", current_section);
+                text_reassembled.push({...current_section});
+                current_section = {}
+              }  
+ //up to here
+          }     
+                
+        });     
+
+        if (Object.keys(current_section).length) { alert("some content was not saved") }
+
+console.log(text_reassembled);
+alert("this_text_sections");
+        return text_reassembled
+        
+    }
 }

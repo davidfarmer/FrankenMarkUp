@@ -1,8 +1,8 @@
 
 import { PTXblockoutput, PTXinlineoutput} from "./data";
-import { do_nothing_markup, debugging_output_markup, verbatim_tags, outputtags } from "./data";
-// import { convertMathSnippet } from 'space_math';
- import { convertMathSnippet } from '../../Space_Math/src/main';
+import { do_nothing_markup, debugging_output_markup, verbatim_tags, outputtags, tags_without_titles } from "./data";
+import { convertMathSnippet } from 'space_math';
+// import { convertMathSnippet } from '../../Space_Math/src/main';
 
 let debugtags = "STart";
 debugtags = "";
@@ -104,7 +104,9 @@ if (Array.isArray(content)) {
 
       this_element_opening_tag += these_tags.after_begin;
 
-      if ("title" in element && element.title) { this_element_text += "\n<title>" + element.title + "</title>" + "\n" }
+      if ("title" in element && element.title && !tags_without_titles.includes(this_tag)) {
+          this_element_text += "\n<title>" + element.title + "</title>" + "\n" 
+      }
 
       let this_content = element.content;
 // console.log("this_content element.content", "|"+this_content+"|", typeof this_content );
@@ -182,7 +184,7 @@ export const sanitizeXMLattributes = function(text) {
     let new_text = text;
 
     new_text = new_text.replace(/ /g, "-");
-    new_text = new_text.replace(/[^a-zA-Z0-9\-]/g, "_");
+    new_text = new_text.replace(/[^a-zA-Z0-9\-_]/g, "_");
 
     return new_text
 }
