@@ -930,7 +930,7 @@ export const extractStructure = function(doc) {
 
     if (this_text.match(/document(style|class)/)) {
   console.log("found full LaTeX document")
-        // need to extract som emetadata
+        // need to extract some metadata
 
         // delete % comments
         this_text = this_text.replace(/%.*/g, "");
@@ -938,11 +938,31 @@ export const extractStructure = function(doc) {
         let preamble = this_text.replace(/\\begin{document}.*$/s, "");
         document_metadata["preamble"] = preamble;
 
+        document_metadata["documentclass"] = "article";  // to fix:  detect, not assume
+
         let the_doc = this_text.replace(/^.*\\begin{document}(.*)\\end{document}.*/s, "$1");
 
         let the_metadata = the_doc.replace(/\\maketitle.*$/s, "");
-        let the_body = the_doc.replace(/^.*\\maketitle/s, "");
         document_metadata["metadata"] = the_metadata;
+
+        if (the_metadata.match(/\\title\s*/)) {
+          let titlepart = the_metadata.replace(/^.*\\title\s*/s, "");
+          if (titlepart.startsWith("[")) {  // \]
+              let shorttitle = titlepart.replace(/^\[(.*?)\]\s*{(.*?)}.*$/s, "$1");
+              document_metadata["shorttitle"] = shorttitle;
+              let title = titlepart.replace(/^\[(.*?)\]\s*{(.*?)}.*$/s, "$2");
+              document_metadata["title"] =  title;
+          } else if (titlepart.startsWith("{")) {   // }
+              let title = titlepart.replace(/^{(.*?)}.*$/s, "$1");
+              document_metadata["title"] =  title
+          } else {
+              alert("had trouble extracting title")
+          }
+        } else {
+          alert("Did not find title")
+        }
+
+        let the_body = the_doc.replace(/^.*\\maketitle/s, "");
 
         const body_and_biblio = the_body.split("\\begin{thebibliography}");
 
@@ -951,8 +971,8 @@ export const extractStructure = function(doc) {
             document_metadata["biblio"] = body_and_biblio[1];
         }
 
-  console.log("the_body", the_body);
-  alert("extracted structure");
+//  console.log("the_body", the_body);
+//  alert("extracted structure");
         return the_body
     }
 
@@ -971,62 +991,12 @@ export const setCoarseStructure = function(doc) {
     this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/,"$1\\paragraphs{$2}");
 
     this_text = splitOnStructure(this_text, "section");
+    this_text = splitOnStructure(this_text, "subsection");
 
 console.log("this_text",this_text);
 alert("this_text");
 
     return this_text;
-
-//   old
-
-    let this_text_sections = this_text.split(/\\(section)/);
-    console.log(this_text_sections.length, "this_text_sections", this_text_sections);
-
-    let text_reassembled = [];
-    let current_section = {};
-    let looking_for_section = true;
-    let looking_for_title = false;
-    let looking_for_content = false;  // wrong, because title and content are in one entry.
-
-    this_text_sections.forEach(  (element) => {
-      let element_trimmed = element.trim();
-
-      if (looking_for_section) {
-        if (!element_trimmed) { return } // ie, next iteration
-
-        if (element != "section") { alert("did not find section " + element + "X") }
-        else {
-          current_section["tag"] = "section";
-          looking_for_section = false;
-          looking_for_title = true;
-        }
-
-      } else if (looking_for_title) {
-          element_trimmed = element.trim();
-          if (element_trimmed.startsWith("{")) {   // }
-            const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
-            let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
-            current_section["title"] = this_title;
-
-            if (this_content.match(/^\s*\\label/)) {
-                const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
-                this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
-                current_section["label"] = this_label;
-            }
-            current_section["content"] = this_content.trim();
-            looking_for_title = false;
-            looking_for_section = true;
-         }
- //up to here
-      }
-
-      text_reassembled.push({...current_section});
-      current_section = {}
-    });
-
-console.log(text_reassembled);
-alert("this_text_sections");
-    return text_reassembled
 
 }
 
@@ -1060,6 +1030,10 @@ console.log("re", re);
         let this_doc_sections = newdoc.split(re);
 
         console.log(this_doc_sections.length, "this_doc_sections", this_doc_sections);
+        if (this_doc_sections.length == 1) {
+            console.log("did not find any ", marker);
+            return this_doc_sections[0] 
+        }
 
         let text_reassembled = [];
         let current_section = {};
@@ -1067,15 +1041,25 @@ console.log("re", re);
         let looking_for_title = false;
         let looking_for_content = false;  // wrong, because title and content are in one entry.
 
-        this_doc_sections.forEach(  (element) => {
+        this_doc_sections.forEach(  (element, index) => {
           let element_trimmed = element.trim();
 
           if (looking_for_section) {
             if (!element_trimmed) { return } // ie, next iteration
 
-            if (element != "section") { alert("did not find section " + element + "X") }
+            if (element != marker) { 
+                if (index == 0) { // should be an introduction
+                    current_section["tag"] = "introduction";
+                    current_section["content"] = element;
+                    //  still looking for marker, which should be next element
+                    text_reassembled.push({...current_section});
+                    current_section = {}
+                } else {
+                    alert("did not find " + marker + ":" + element + "X") 
+                }
+            }
             else {
-              current_section["tag"] = "section";
+              current_section["tag"] = marker;
               looking_for_section = false;
               looking_for_title = true;
             }

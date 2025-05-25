@@ -42,7 +42,15 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
-//      if (document_title) { tmp1together["title"] = document_title }
+
+      if ("documentclass" in document_metadata && document_metadata["documentclass"]) {
+          tmp1together["tag"] = document_metadata["documentclass"]
+      }
+      if ("title" in document_metadata && document_metadata["title"]) {
+          tmp1together["title"] = document_metadata["title"]
+      } else if ("shorttitle" in document_metadata && document_metadata["shorttitle"]) {
+          tmp1together["title"] = document_metadata["shorttitle"]
+      }
 
 
       let new1 = {...tmp1together};
@@ -94,6 +102,7 @@ alert("new1");
 // console.log("new9b", new9);
 // alert("new9b")
 
+      attribute_like.forEach( (attr) => { new9 = extract_lists(new9, attr[0], 0, 0, attr[1]) } );
 ////////////////////      var tmp1secondsplitPfig = extract_lists(tmp1secondsplitP, "substructure", objects_with_substructure);
 
 //  console.log("about to clean up substructure", new9);

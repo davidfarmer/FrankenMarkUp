@@ -172,6 +172,7 @@ export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)section
 
 export const tags_containing_paragraphs = [...structural_components, ...level_1_p_peers_containing_p, ...hint_like,
             ...subpart_like, ...randomtags_containing_p, "enumerate", "itemize",
+            "introduction",
             "placeholder"];
 
 export const display_environments = ["figure", "table", "listing", "enumerate", "itemize"];
