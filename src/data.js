@@ -364,7 +364,7 @@ export let aliases = { // in the format "officialname": [list of synonyms].  Tak
     "acknowledgement" : ["ack"],
     "assumption" : ["assu","ass"],
     "axiom" : ["axm"],
-    "blockquote" : ["quote"],
+    "blockquote" : ["quote", "center"],
     "claim" : ["cla"],
     "conjecture" : ["con","conj","conjec"],
     "convention" : ["conv"],

@@ -35,6 +35,59 @@ const findEndOfMath = function(delimiter, text, startIndex) {
     return -1;
 };
 
+const firstBracketedString = function(text, depth=0, lbrack="{", rbrack="}") {
+      // given {A}B, return [{A},B] if possible.  Otherwise return ["",{A}B]
+
+    let thetext = text.trimStart();
+
+    if (!thetext) {
+        console.log("empty string sent to first_bracketed_string()");
+        return ["",""]
+    }
+
+    let previouschar = "";
+    let currentchar = "";
+    let firstpart = "";
+       // we need to keep track of the previous character becaause \{ does not
+       // count as a bracket
+
+    if (depth == 0 && thetext[0] != lbrack) {
+        return ["",thetext]
+    } else if (depth == 0) {
+        firstpart = lbrack;
+        depth = 1;
+        thetext = thetext.substring(1)
+    } else {
+        firstpart = ""   // should be some number of brackets?
+    }
+
+    while (depth > 0 && thetext) {
+        currentchar = thetext.substring(0,1);
+        if (currentchar == lbrack && previouschar != "\\") {
+            depth += 1
+        } else if (currentchar == rbrack && previouschar != "\\") {
+            depth -= 1
+        }
+
+        firstpart += currentchar;
+        if (previouschar == "\\" && currentchar == "\\") {
+            previouschar = "\n"
+        } else {
+            previouschar = currentchar
+        }
+
+        thetext = thetext.substring(1)
+    }
+
+    if (depth == 0) {
+        return [firstpart, thetext]
+    } else {
+        console.log("no matching bracket %s in %s XX", lbrack, thetext)
+        return ["",firstpart.substring(1)]   // firstpart should be everything
+                                  // but take away the bracket that doesn't match
+    }
+}
+
 const escapeRegex = function(string) {
     return string.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 };
@@ -482,7 +535,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
               }
             } else if (action == "attributes" // &&  tags_to_process.includes(this_content.tag)
-                      && typeof this_content.content == "string") { 
+                      && typeof this_content.content == "string") {
 
       //      const this_text = this_content.content.split(/\n\s*\n{1,}/);
             const this_text = this_content.content.split(/(\n\s*\n{1,})/);
@@ -882,7 +935,7 @@ export const preprocess = function(just_text) {
 
     originaltextX = preprocessAliases(originaltextX);
 
-   // things like {equation*} -> {equation*} 
+   // things like {equation*} -> {equation*}
     originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
 
    // put latex-style labels on a new line
@@ -892,7 +945,7 @@ export const preprocess = function(just_text) {
    // like the end of an opening tag.
       let originaltextB = originaltextA.replace(/\n\s*\n\s*>/g, "\n\n+++sTaRTbQ>");  // preprocess blockquote
 
-   // the questionable way we recognize paragraphs 
+   // the questionable way we recognize paragraphs
    // to do: use a list of math modes
    //        make sure \[...\] works
       originaltextB = originaltextB.replace(/\n\\\[([^\[\]]+)\\\]\n/sg, "\n\\begin{equationstar}$1\\end{equationstar}\n");  // old LaTeX
@@ -920,7 +973,7 @@ export const preprocess = function(just_text) {
 
     return originaltextC
 
-} 
+}
 
 export const extractStructure = function(doc) {
 
@@ -1002,7 +1055,7 @@ alert("this_text");
 
 const splitOnStructure = function(doc, marker, depth=0, maxdepth=1) {
 
-console.log("document_metadata", document_metadata);
+// console.log("document_metadata", document_metadata);
     if (depth > maxdepth) { return doc }
 
     if (Array.isArray(doc)) {
@@ -1032,7 +1085,7 @@ console.log("re", re);
         console.log(this_doc_sections.length, "this_doc_sections", this_doc_sections);
         if (this_doc_sections.length == 1) {
             console.log("did not find any ", marker);
-            return this_doc_sections[0] 
+            return this_doc_sections[0]
         }
 
         let text_reassembled = [];
@@ -1040,6 +1093,7 @@ console.log("re", re);
         let looking_for_section = true;
         let looking_for_title = false;
         let looking_for_content = false;  // wrong, because title and content are in one entry.
+        let this_label = "";
 
         this_doc_sections.forEach(  (element, index) => {
           let element_trimmed = element.trim();
@@ -1047,7 +1101,7 @@ console.log("re", re);
           if (looking_for_section) {
             if (!element_trimmed) { return } // ie, next iteration
 
-            if (element != marker) { 
+            if (element != marker) {
                 if (index == 0) { // should be an introduction
                     current_section["tag"] = "introduction";
                     current_section["content"] = element;
@@ -1055,7 +1109,7 @@ console.log("re", re);
                     text_reassembled.push({...current_section});
                     current_section = {}
                 } else {
-                    alert("did not find " + marker + ":" + element + "X") 
+                    alert("did not find " + marker + ":" + element + "X")
                 }
             }
             else {
@@ -1067,14 +1121,21 @@ console.log("re", re);
           } else if (looking_for_title) {
               element_trimmed = element.trim();
               if (element_trimmed.startsWith("{")) {   // }
-                const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
-                let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
-                current_section["title"] = this_title;
-        
+console.log("looking for title in", element_trimmed.substring(0,40) + "UU");
+                let [this_title, this_content] = firstBracketedString(element_trimmed);
+
+//                const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
+//                let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
+                current_section["title"] = this_title.slice(1,-1);
+console.log("found title",this_title, "in", this_content.substring(0,40) + "XX");
+
                 if (this_content.match(/^\s*\\label/)) {
-                    const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
-                    this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
-                    current_section["label"] = this_label;
+                    this_content = this_content.replace(/^\s*\\label\s*/, "");
+                    [this_label, this_content] = firstBracketedString(this_content);
+                    this_label = this_label.slice(1,-1);
+     //               const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
+     //               this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
+                    if (this_label) {current_section["label"] = sanitizeXMLattributes(this_label)}
                 }
                 current_section["content"] = this_content.trim();
                 looking_for_title = false;
@@ -1082,17 +1143,17 @@ console.log("re", re);
 console.log("current_section", current_section);
                 text_reassembled.push({...current_section});
                 current_section = {}
-              }  
+              }
  //up to here
-          }     
-                
-        });     
+          }
+
+        });
 
         if (Object.keys(current_section).length) { alert("some content was not saved") }
 
 console.log(text_reassembled);
 alert("this_text_sections");
         return text_reassembled
-        
+
     }
 }
