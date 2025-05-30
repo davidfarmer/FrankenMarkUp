@@ -128,7 +128,7 @@ if (Array.isArray(content)) {
           this_new_text = this_new_text.replace(/[\r\n]+$/, "")
       }
 // console.log("this_new_text again", "|"+this_new_text+"|");
-      if (["c","code"].includes(this_tag)) {
+      if (["c","code", "tabular"].includes(this_tag)) {
           this_new_text = sanitizeXMLstring(this_new_text)
       }
       let mathpunctuation = "";
@@ -139,7 +139,7 @@ if (Array.isArray(content)) {
             mathpunctuation = this_new_text.slice(-1);
             this_new_text = this_new_text.slice(0,-1)
          }
-         if ( !this_new_text.match(/\\/)) {
+         if ( !this_new_text.match(/(\\|{)/)) {    // }
 // console.log("about to convert:", this_new_text);
           //   this_new_text = convertMathSnippet(this_new_text.replace(/\n/g, "REtuRn"), "LaTeX");
              this_new_text = convertMathSnippet(this_new_text, "LaTeX");
@@ -183,8 +183,8 @@ export const sanitizeXMLattributes = function(text) {
 
     let new_text = text;
 
-    new_text = new_text.replace(/ /g, "-");
-    new_text = new_text.replace(/[^a-zA-Z0-9\-_]/g, "_");
+//    new_text = new_text.replace(/ /g, "-");
+    new_text = new_text.replace(/[^a-zA-Z0-9\-_ ]/g, "_");
 
     return new_text
 }

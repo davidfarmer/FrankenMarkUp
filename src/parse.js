@@ -32,6 +32,8 @@ export let document_metadata = {};
 export function fmToPTX(originaltext, wrapper="placeholder"){  // called by index.js
 
     let originaltextA = preprocess(originaltext);
+// console.log("originaltextA", originaltextA);
+// alert("originaltextA");
 
 // names of these functions are confusing
     let originaltextB = extractStructure(originaltextA);
@@ -55,8 +57,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       let new1 = {...tmp1together};
 
-console.log("starting iteration on new1", new1);
-alert("new1");
+//console.log("starting iteration on new1", new1);
+//alert("new1");
       const firstdepth =  17;
       for (let depth = 0; depth < firstdepth; ++depth) {
           let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
@@ -70,8 +72,8 @@ alert("new1");
 //  alert("preprocessed text 2");
 
       let new7 = {...new1}
- console.log("about to process new7", new7);
- alert("7");
+// console.log("about to process new7", new7);
+// alert("7");
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
 //    console.log("processed text 7", new7);
 //         alert("pause 2");
@@ -92,6 +94,8 @@ alert("new1");
       new8 = splitIntoParagraphs(new8, "all", paragraph_peers);
 
       new8 = extract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
+
+      new8 = extract_lists(new8, "images",0,0, "all"); 
 
       let new9 = {...new8};
 
@@ -118,11 +122,11 @@ alert("new1");
       const tmp4x = splitAtDelimiters(tmp3, asymmetric_inline_delimiters,0,firstdepth+1, "all", tags_containing_text);
       const tmp4 = splitAtDelimiters(tmp4x, asymmetric_inline_delimiters, 0,firstdepth+1,"all", tags_containing_text);
 
-  console.log("tmp4", tmp4);
-	  alert("tmp4");
+//  console.log("tmp4", tmp4);
+//  alert("tmp4");
       const tmp5x = extract_lists(tmp4, "fonts", 0,0,tags_containing_text);
-  console.log("tmp5x", tmp5x);
-  alert("tmp5x");
+//  console.log("tmp5x", tmp5x);
+//  alert("tmp5x");
       const tmp5y = extract_lists(tmp5x, "texlike", 0,0,tags_containing_text);
 
       let tmp5z = splitAtDelimiters(tmp5y, "spacelike", 0,firstdepth+1, "all", tags_containing_text);
@@ -143,19 +147,60 @@ alert("new1");
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
       let tmp5s = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
-      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
+//  console.log("tmp5s", tmp5s);
+//   alert("tmp5s");
+//      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
+      let tmp5r = tmp5s; 
       let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]); 
  //     let tmp5 = tmp5u;
 
- console.log("tmp5u == tmp5", JSON.stringify(tmp5u) == JSON.stringify(tmp5));
+      if ("biblio" in document_metadata) {
+          let the_biblio = {tag: "backmatter"};
+          the_biblio.content = '\n<references xml:id="bibliography">\n<title>Bibliography</title>\n';
+          the_biblio.content += processBiblio(document_metadata["biblio"]);
+          the_biblio.content += "\n</references>\n";
+          tmp5.content.push(the_biblio)
+      }
+
 
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
-alert("the end");
+// alert("the end");
       const tmp5p = reassemblePreTeXt(tmp5);
 
       return tmp5p
 };
+
+////////////// 
+
+function processBiblio(latexbib) {
+
+   let thetext = latexbib.trim();
+
+   thetext = thetext.replace(/{[^{}]+}/, "");
+   thetext = thetext.replace(/\s*\\(begin|end){thebibliography}\s*/, "");
+
+  // quick and dirty: go back and split it up and reprocess separately
+   thetext = thetext.replace(/\s*\\bibitem\s*{([^{}]+)}\s*/g, '</biblio>\n\n<biblio type="raw" xml:id="$1">');
+   thetext = thetext.replace(/(.*?)<\/biblio>/, "");
+   thetext += "</biblio>\n";
+
+   return thetext
+
+}
+
+////////////// 
+
+// not used yet
+function processTable(tab) {
+
+   let thetext = tab;
+
+   thetext = thetext.replace(/&([^a-zA-Z])/, "&amp;");
+
+   return thetext
+
+}
 
 

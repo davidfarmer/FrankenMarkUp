@@ -159,7 +159,7 @@ export const possibly_self_closing_inline_tags = ["url"];
 
 export const verbatim_tags = [...math_tags, "c", "code", "mrow"];
 
-export let structural_components = ["section", "subsection", "worksheet", "paragraphs"];
+export let structural_components = ["section", "subsection", "worksheet", "paragraphs", "backmatter"];
 
 export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)
@@ -193,6 +193,8 @@ export const tags_containing_text = ["text", "p",
 
                    // sit alone on a line with their content
 export const title_like_tags = ["title", "idx", "caption"];
+
+export const tags_with_weird_labels = ["figure", "table"];  // in LaTeX, these tend to go with the caption
 
 export const subenvironments = {  // the tags which occun inside specific environments
    "listing": ["caption", "program"], // check

@@ -1,7 +1,7 @@
 /* eslint no-constant-condition:0 */
 
 import { aliases, display_math_tags, possibleattributes, tags_containing_paragraphs, hint_like } from "./data";
-import { toUnicode, subenvironments, containers, spacemath_environments} from "./data";
+import { toUnicode, subenvironments, containers, spacemath_environments, tags_with_weird_labels} from "./data";
 import { paragraph_peer_delimiters, inlinetags } from "./data";
 import { display_math_delimiters, delimitersFromList, PreTeXtDelimiterOfAttributes } from "./data";
 import { document_metadata } from "./parse";
@@ -599,11 +599,23 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
             if (this_content.content.match(/\\includegraphics/)) {
 
-console.log("images", this_content);
+// console.log("images", this_content);
                   this_content.content = this_content.content.replace(/\\includegraphics\[[^\[\]]*\]\s*{\s*([^{}]*)\s*}/,
                                '<image source="$1" width="50%"/>');
                   this_content.content = this_content.content.replace(/\\includegraphics\s*{\s*([^{}]*)\s*}/,
                                '<image source="$1" width="50%"/>');
+            }
+            if (this_content.content.match(/\\caption/)) {
+         
+// console.log("caption", this_content);
+  //            this_content.content = this_content.content.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
+              this_content.content = this_content.content.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {  // }
+                  let caption_plus = firstBracketedString(z);
+// console.log("caption_plus[0]", caption_plus[0]);
+                  let this_caption = caption_plus[0].slice(1,-1).trim();
+                  this_caption = this_caption.replace(/\\(text)*(rm|sf|it|bf|sl)*\s*/, "");
+                  return "<" + y + ">" + this_caption + "</" + y + ">" + "\n" + caption_plus[1]
+              });
             }
 
           } else if (action == "statements"  // &&  tags_to_process.includes(this_content.tag)
@@ -686,10 +698,6 @@ console.log("images", this_content);
                 let this_content_copy = {...this_content};
                 this_content_copy["content"] = [...this_content["content"]];
                 this_content = {tag: "image", content: [this_content_copy]};
- //               if ("label" in this_content_copy && !("label" in this_content)) {
- //                   this_content["label"] = this_content_copy["label"];
- //                   delete this_content_copy["label"]
- //               }
                 if ("width" in this_content_copy) {
                     this_content["width"] = this_content_copy["width"];
                     delete this_content_copy["width"]
@@ -892,7 +900,7 @@ console.log("images", this_content);
         return new_text
       } else if (action == "texlike" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
-console.log("texlike", this_content);
+// console.log("texlike", this_content);
         let new_text = "";
         new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
         new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
@@ -905,12 +913,19 @@ console.log("texlike", this_content);
                               });
         new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
                        //           return 'PPPPPPP';
-                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
+                                  z = z.replace(/, */g, " ");
+                                  z = sanitizeXMLattributes(z);
+                                  return '<xref ref="' + z + '"/>'
                               });
    //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
 
          // not good enough:  need to match {}  // also, did not work
         new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
+        new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {
+            let caption_plus = firstBracketedString(z);
+console.log("caption_plus[0]", caption_plus[0]);
+            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
+        });
         new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
                                   return '<url href="' + z + '">' + w + '</url>'
@@ -937,6 +952,21 @@ export const preprocess = function(just_text) {
 
    // things like {equation*} -> {equation*}
     originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
+
+      tags_with_weird_labels.forEach( (tag) => {
+          const regex = new RegExp(
+              "(\\\\begin{" + tag + "})(.*?)(\\\\end{" + tag + "})", "sg"
+          );
+          originaltextX = originaltextX.replace(regex, function(x,y,z,w) {
+// console.log("found a ", tag);
+              if (z.match(/\\label\s*{/)) {   // }
+                  const the_full_label = z.replace(/^(.*?)(\s*\\label{[^{}]*}\s*)(.*)$/s, "$2");
+                  const all_but_the_label = z.replace(/^(.*?)(\\label{[^{}]*}\s*)(.*)$/s, "$1$3");
+                  return y + the_full_label + all_but_the_label + w
+              } else { return y + z + w }
+          });
+
+      });
 
    // put latex-style labels on a new line
       let originaltextA = originaltextX.replace(/([^\s])\\label({|\[|\()/g,"$1\n\\label$2");   // }
@@ -979,10 +1009,10 @@ export const extractStructure = function(doc) {
 
     let this_text = doc;
 
- console.log("documentstyle?", this_text.match(/document(style|class)/));
+// console.log("documentstyle?", this_text.match(/document(style|class)/));
 
     if (this_text.match(/document(style|class)/)) {
-  console.log("found full LaTeX document")
+//  console.log("found full LaTeX document")
         // need to extract some metadata
 
         // delete % comments
@@ -1046,8 +1076,8 @@ export const setCoarseStructure = function(doc) {
     this_text = splitOnStructure(this_text, "section");
     this_text = splitOnStructure(this_text, "subsection");
 
-console.log("this_text",this_text);
-alert("this_text");
+// console.log("this_text",this_text);
+// alert("this_text");
 
     return this_text;
 
@@ -1077,14 +1107,14 @@ const splitOnStructure = function(doc, marker, depth=0, maxdepth=1) {
 
     //    newdoc = splitTextAtDelimiters(newdoc, thesedelimiters, depth+1, maxdepth);
 
-  console.log("marker", marker);
+//  console.log("marker", marker);
         const re = new RegExp("\\\\(" + marker + ")", "g");
-console.log("re", re);
+//console.log("re", re);
         let this_doc_sections = newdoc.split(re);
 
-        console.log(this_doc_sections.length, "this_doc_sections", this_doc_sections);
+//        console.log(this_doc_sections.length, "this_doc_sections", this_doc_sections);
         if (this_doc_sections.length == 1) {
-            console.log("did not find any ", marker);
+//            console.log("did not find any ", marker);
             return this_doc_sections[0]
         }
 
@@ -1121,13 +1151,13 @@ console.log("re", re);
           } else if (looking_for_title) {
               element_trimmed = element.trim();
               if (element_trimmed.startsWith("{")) {   // }
-console.log("looking for title in", element_trimmed.substring(0,40) + "UU");
+// console.log("looking for title in", element_trimmed.substring(0,40) + "UU");
                 let [this_title, this_content] = firstBracketedString(element_trimmed);
 
 //                const this_title = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$1");
 //                let this_content = element_trimmed.replace(/^{(.*?)} *\n+(.*)$/s, "$2");
                 current_section["title"] = this_title.slice(1,-1);
-console.log("found title",this_title, "in", this_content.substring(0,40) + "XX");
+// console.log("found title",this_title, "in", this_content.substring(0,40) + "XX");
 
                 if (this_content.match(/^\s*\\label/)) {
                     this_content = this_content.replace(/^\s*\\label\s*/, "");
@@ -1135,12 +1165,12 @@ console.log("found title",this_title, "in", this_content.substring(0,40) + "XX")
                     this_label = this_label.slice(1,-1);
      //               const this_label = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$1");
      //               this_content = this_content.replace(/^\s*\\label\s*{(.*?)}(.*)$/s, "$2");
-                    if (this_label) {current_section["label"] = sanitizeXMLattributes(this_label)}
+                    if (this_label) {current_section["id"] = sanitizeXMLattributes(this_label)}
                 }
                 current_section["content"] = this_content.trim();
                 looking_for_title = false;
                 looking_for_section = true;
-console.log("current_section", current_section);
+// console.log("current_section", current_section);
                 text_reassembled.push({...current_section});
                 current_section = {}
               }
@@ -1151,8 +1181,8 @@ console.log("current_section", current_section);
 
         if (Object.keys(current_section).length) { alert("some content was not saved") }
 
-console.log(text_reassembled);
-alert("this_text_sections");
+// console.log(text_reassembled);
+// alert("this_text_sections");
         return text_reassembled
 
     }
