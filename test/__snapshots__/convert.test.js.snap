@@ -1,0 +1,678 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`demo 1`] = `
+"
+<section>
+<title>FrankenMarkup demo and sample section</title>
+
+<p>
+Welcome to a sample of FrankenMarkup: an easy way to write a subset of <pretext/>.
+Just mix together <latex/>, Markdown, and <pretext/>, and hope for the best!
+</p>
+
+<p>
+No need for <c>p</c> tags, just leave a blank line.  Within a paragraph you
+can define <term>terminology</term>, use <em>emphasis</em>, or make an <alert>alert</alert>.
+You have a choice of math tags:  <m>x^{10} \\lt \\frac{1}{2}</m> or <m>\\sqrt{5x}</m> or even the
+official <pretext/> <m>\\sin x \\lt |x| \\ \\ \\text{if}\\ \\ x \\not= 0</m>.  Inside the math tags you can type
+either <latex/> or, as in this demo, Space Math.  (Currently the output is <latex/>, which is unfortunate
+because information is lost and multiline is not working properly.  It will be better when <pretext/>
+allows Space Math or MathML in the source.)
+</p>
+
+<note>
+<p>
+If you start a paragraph with one word followed by a colon,
+the word becomes the name of the environment and the
+paragraph becomes the contents.
+</p>
+</note>
+
+<p>
+Most block-level components can be typed as <latex/>-style
+<c>\\begin{tag}...\\end{tag}</c> or <pretext/>-style \`<tag>...</tag>\`.
+If it is only one block of text, just put <c>tag:</c> or <c>Tag:</c> at the
+start of that text.
+That also works for attributes.
+And if it is within a paragraph and is really short and simple,
+usually meaning it fits on one line and contains no brackets,
+you can type it as \`<tag>...</tag>\`.<fn>Like this!</fn>
+</p>
+
+<note>
+<p>
+
+You need to mark the beginning and ending if the environment
+is more than just one paragraph of text.  Also supported is
+markdown lists (- for <c>ul</c> and + for <c>ol</c>) and block quotes, and
+(the most common)
+<latex/>-style font markup:
+</p>
+
+<blockquote>
+<p>
+ Have you heard the one that starts <q>Möbius and l'Hôpital walk into a bar...</q>?
+
+</p>
+</blockquote>
+</note>
+
+<p>
+These and more features are illustrated below.  To make it realistic,
+I started writing an introduction to group theory.
+</p>
+
+<note>
+<p>
+Currently there is no support for sections or other divisions, only the
+contents of just one (sub)section.
+</p>
+</note>
+
+<definition>
+<title>Group</title>
+
+<p>
+
+A <term>group</term> is a set <m>G</m> along with a binary operation <m> \\circ </m> such that:
+</p>
+
+<p>
+<ul>
+
+<li>
+The operation is associative: if <m>a,b,c \\in G</m> then <m>a \\circ (b \\circ c) = (a \\circ b) \\circ c</m>.
+</li>
+
+<li>
+There exists an <term>identity element</term><m>e \\in G</m> such that
+<m>e \\circ a = a</m> and <m>a \\circ e = a</m> for all <m>a \\in G</m>.
+</li>
+
+<li>
+For each <m>a \\in G</m> there exists an <term>inverse</term>
+     element <m>b \\in G</m> such that <m>a \\circ b = e</m> and <m>b \\circ a = e</m>.
+
+</li>
+
+</ul>
+</p>
+</definition>
+
+<p>
+To speak of a group one must refer to both the set and the operation.
+The sentence <q>The integers are a group.</q> is either incorrect or incomplete,
+depending on your perspective.
+A correct statement which is similar to that sentence is
+<q>The integers are a group under addition.</q>
+Any nonempty set can be made into a group by specifying an appropriate
+operation <mdash/> don't fall into the trap of assuming the <q>obvious</q>
+operation is intended.  Say what you mean, and only use what is (explicitly) said.
+</p>
+
+<exercise>
+<statement>
+
+<p>
+Explain why the condition <em>nonempty</em> was included in the previous paragraph.
+</p>
+
+</statement>
+</exercise>
+
+<p>
+We will now contradict what we wrote about needing to specify the operation!
+It is perfectly fine to say <q>Let <m>G</m> be a group.</q>  Because <m>G</m> is a group,
+by definition it has an operation, we just haven't
+specified a symbol for the operation. We could also write "Let <m>(H,!)</m> be a group."
+to indicate that <m>H</m> is the name of the group and <m>!</m> is the symbol for the operation.
+Note that in this situation the symbol <q><m>!</m></q> does not mean what it usually means in mathematics.
+ If we wish to combine two elements and we don't know the symbol for the operation,
+just write them next to each other.
+For example: if <m>x</m> and <m>y</m> are elements of <m>G</m>, then so are <m>x y</m> and<nbsp/><m>y x</m>.
+<xref ref="oneId"/> uses that notation.
+</p>
+
+<p>
+As you start your study of group theory,
+you may find it helpful to write a symbol for the group operation.
+When none has been given, we recommend the symbol <m> \\circ </m> used in our definition.
+If you decide to do that, leave a note for the reader,
+such as
+<q>We will use <m> \\circ </m> for the group operation.</q>
+You may have
+encountered that symbol when learning about composition of
+functions: <m>f \\circ g(x) = f(g(x))</m>.  In that situation, both sides of that equation are
+pronounced <q>f of g of x</q>.  That notation for the group operation is meant to be suggestive, for soon
+we will see that <em>every</em> group can be thought of as a set of functions,
+where the operation is function composition.
+</p>
+
+<historical>
+<title>Galois invents group theory</title>
+
+<p>
+
+The idea of a group was introduced by the French mathematician Évariste Galois,
+who used groups to answer the question:  when is there a nice formula for the
+roots of a polynomial?  Most people know the quadratic formula.  There are
+formulas for the roots of any cubic (degree<nbsp/>3) or degree<nbsp/>4 polynomial.
+It turns out that some higher degree polynomials have nice formulas for their
+roots, and some don't.  For example, there is an expression
+(complicated, but only using familiar operations)
+for the roots of <m>x^{5} - 5 x^{2} - 3</m>, but there is no such formula for the
+roots of <m>x^{5} - 5 x^{2} + 3</m>.  Why should those two polynomials
+behave so differently?
+</p>
+
+<p>
+Galois figured out the answer.
+He discovered that to each polynomial there can be associated a group,
+known today as the <q>Galois group</q> of the polynomial.  Properties of that group,
+which we will explore later,
+tell you whether there exists a nice formula for the roots.
+</p>
+
+<p>
+These days <q>Galois theory</q> is an entire branch of research mathematics.
+One of the (many) problems which has not been solved is:
+Is every finite group the Galois group of a polynomial with rational coefficients?
+This is known as <term>The Inverse Galois Problem</term>.
+As of this writing, the most recent advance on this problem
+was the discovery in November 2024 of a degree 17 polynomial with Galois group<nbsp/><m>\\ \\ \\text{17T7}\\ \\ </m>.
+The paper describing their results, which uses methods far beyond basic
+group theory, <url href="https://arxiv.org/abs/2411.07857">is available on arXiv</url>,
+or you can <url href="https://www.lmfdb.org/NumberField/?galois_group=17T7">see
+examples in the LMFDB</url>.
+
+</p>
+</historical>
+
+<p>
+<ul>
+
+<li>
+
+tags in <c>title</c>
+</li>
+
+<li>
+<c>figure</c> and bare <c>image</c>
+</li>
+
+<li>
+<c>foreign</c> and other missing inline tags (such as the new <c>pf</c>)
+
+</li>
+
+<li>
+
+investigate what is missing for a worksheet
+
+</li>
+
+<li>
+
+some Typst compatibility (some of Typst has an
+  irreconcilable conflict with other formats).
+
+</li>
+
+<li>
+<c>ol</c> and <c>ul</c> as source (not just markdown style)
+
+</li>
+
+</ul>
+</p>
+
+<p>
+Beyond questions about roots of polynomials,
+why are groups important?  In particular, why are those three
+axioms natural?
+We will answer that question by looking at the details of how to solve the
+simplest equations.
+</p>
+
+<exploration>
+<title>Why the group axioms are natural</title>
+
+<p>
+
+Suppose we want to solve the equation <m>a x = b</m>.  Thinking back to
+when you first learned about solving equations, the idea was:
+do the same operation on both sides of the equals sign,
+and use algebraic identities,
+</p>
+
+<p>
+First step, multiply on the left by <m>a^{-1}</m>:
+
+<me>
+a^{-1} (a x) = a^{-1} b
+</me>.
+We have just encountered one of the axioms of a group: the existence of
+an inverse.
+In the above equation we included the parentheses to emphasize that <m>a^{-1}</m> is
+multiplying the left side of the equation, which is the <em>quantity</em><m>a x</m>.
+Now we regroup (i.e., use associativity) to get
+
+<me>
+
+    (a^-1 a) x = a^{-1} b 
+</me>.
+What does <m>a^{-1} a</m> equal?  By definition, it equals the identity,
+which in the axioms for a group we have denoted<nbsp/><m>e</m>,
+so the above equation becomes:
+
+<me>
+
+   e x = a^{-1} b 
+</me>.
+
+</p>
+
+<p>
+By definition of the identity, <m>e x = x</m>, so we obtain the solution <m>x = a^{-1} b</m>.
+</p>
+
+<p>
+We see that identity, inverse, and associativity are the
+necessary ingredients to solve the simplest equations.
+All those properties are necessary,
+and
+no other properties are needed.
+</p>
+
+<p>
+The discussion above only used half of the identity axiom and
+half of the inverse axiom.
+The other halves are needed to solve the equation <m>x a = b</m>.
+
+</p>
+</exploration>
+
+<p>
+One of the group axioms said <q>there exists</q> an identity.  Does that
+mean there can be more than one?  Same question for <q>there exists</q> an inverse.
+In the exploration above we talked about <m>a x</m> and also about <m>x a</m>.
+Aren't those the same?  Try to keep those questions in mind as we
+start looking at some examples of groups.
+</p>
+
+<p>
+Another issue is the binary operation in the definition of a
+group.  In the exploration above there is no explicitly named
+operation:  we merely juxtaposed symbols, as in <m>a x</m>, to indicate
+that <m>a</m> and <m>x</m> are combined in some way.  What is the operation?
+Is it addition? subtraction? multiplication? exponentiation?
+The answer is that sometimes there is no answer.  The operation in a group
+is just that: an operation <mdash/> a way of combining two objects.
+It is not always necessary to give an
+explicit meaning to the operation:  just manipulate the
+symbols using the axioms.  You will become more
+comfortable with this perspective as you gain experience.
+</p>
+
+<aside>
+<p>
+The next material would occur later in the exposition,
+probably after some examples.
+But this is a demonstration of FrankenMarkup, not a real
+textbook on group theory.
+</p>
+</aside>
+
+<exercise xml:id="ex_hotel mattress">
+<title>Flipping a mattress</title>
+
+<statement>
+
+<p>
+The Hilbert Hotel has mattresses which are both symmetric and comfortable:
+both sides can be used, and you can sleep with your feet pointing either
+North or South.  (All the rooms have a window facing either East or West,
+and the beds are oriented so that you can easily look at the sunrise or
+sunset, if that is your preference.)
+</p>
+
+<p>
+The manager is concerned that the mattresses are wearing out because
+the housekeepers are not rotating them uniformly.  You have received
+the following memo:
+</p>
+
+<blockquote>
+<p>
+
+To help the mattresses last longer, every month we rotate the mattresses.
+I suspect that the staff are not keeping track of how they flip the mattresses,
+and so parts of the mattress are being used excessively, causing it to
+wear out too quickly.
+</p>
+
+<p>
+Please devise a way to flip the mattress so that the same
+operation can be done every time, and over the course of the year all
+parts of the mattress will be used equally.  That way it is not
+necessary for the staff to keep track of which way it was flipped previously.
+It is important that <em>the exact same operation</em> be done every time.
+
+</p>
+</blockquote>
+
+<p>
+Write two responses to the manager's memo:  a one-sentence
+reply which assumes the reader is familiar with the basic concepts of
+group theory, and a longer reply which you think the manager might understand.
+</p>
+
+</statement>
+
+<hint>
+<p>
+The fact that a mattress is <m>3</m>-dimensional is irrelevant:
+model it as a rectangle.
+</p>
+</hint>
+
+<hint>
+<p>
+The manager has assumed that the group of symmetries of a rectangle
+can be generated by a single element.  Is that assumption correct?
+How many elements are in that group, and what are their orders?
+</p>
+</hint>
+</exercise>
+
+<lemma xml:id="oneId">
+<title>The identity element is unique</title>
+
+<statement>
+
+<p>
+
+The identity element of a group is unique.
+
+</p>
+
+</statement>
+</lemma>
+
+<proof>
+<p>
+
+Suppose <m>e_{1}</m> and <m>e_{2}</m> are identity elements of a group <m>G</m>,
+and consider the expression <m>e_{1} e_{2}</m>.
+By the first part of the identity axiom we have
+
+<me xml:id="eqn_e_1 e_2 first part">
+e_{1} e_{2} = e_{2}
+</me>,
+because <m>e_{1}</m> is an identity.
+Using the second part of the identity axiom we have
+
+<men xml:id="eqn_e_1 e_2 second part">
+e_{1} e_{2} = e_{1}
+</men>,
+because <m>e_{2}</m> is an identity.
+Since the left sides of <xref ref="eqn_e_1 e_2 first part"/> and <xref ref="eqn:e_1 e_2 second part"/>
+are the same, we see that <m>e_{1} = e_{2}</m>.
+
+</p>
+</proof>
+
+<note>
+<p>
+Labeling and referencing those equations was a bit excessive,
+but this is a demo, not a real textbook.
+</p>
+</note>
+
+<paragraphs>
+<title>More samples, for testing</title>
+
+<sidebyside>
+<p>
+
+Some <c>inline code</c>. A reference to the hotel exercise: <xref ref="ex_hotel mattress"/>.
+<me>
+3x^{66} - 8 y = z
+
+</me>
+
+</p>
+
+<p>
+This <c>sidebyside</c> will have two parts:  on the left is a paragraph
+with text followed by display math, and on the right the paragraph
+you are reading now.  Think about why it happens that way.
+</p>
+</sidebyside>
+
+<blockquote>
+<p>
+ An egregious block quote in the markdown style.
+</p>
+
+<p>
+ Checking that multiple paragraph markdown blockquotes are working,
+     and that the required markup is not strict.
+</p>
+</blockquote>
+
+<me>
+f(x) = \\begin{cases}
+1  \\amp  \\text{ if } x = 1\\\\
+0  \\amp  \\text{ if } x \\not= 1\\\\
+\\end{cases}
+
+</me>
+
+<mdn>
+<mrow>a \\amp b</mrow>
+<mrow>b \\amp ct5</mrow>
+</mdn>
+
+<p>
+<ul>
+
+<li>
+apple
+</li>
+
+<li>
+banana
+</li>
+
+<li>
+lemon
+</li>
+
+</ul>
+</p>
+
+<figure>
+
+
+  This is to check that the contents of a \`figure\` are *not*
+  processed as text.  $x^3.14159$  D\\'ej\\\`a vu.
+
+</figure>
+
+<figure xml:id="jiggledX">
+
+<captionThe outcome of one run of <xref ref="p40perturbed"/>.
+            </caption>
+<image source="jiggledzeros2.png" width="70%">
+
+<description>The unit circle with 40 small randomly placed red squares.
+           Inside the circle are thousands of small blue dots.  In the first
+quadrant close to the circle the dots generally are in small isolated clusters.
+In the other quadrants there are many blue dots clustered near the circle
+and a thinner scattering further from the circle.</description>
+
+</image>
+
+</figure>
+<image source="FAKE.png" width="70%">
+
+<description>The unit circle with 40 small randomly placed red squares.
+           Inside the circle are thousands of small blue dots.  In the first
+quadrant close to the circle the dots generally are in small isolated clusters.
+In the other quadrants there are many blue dots clustered near the circle
+and a thinner scattering further from the circle.</description>
+
+</image>
+
+<p>
+Approximate order of next items to implement
+(suggestions for additions and rearrangement are welcome):
+</p>
+
+<p>
+<ul>
+
+<li>
+tags in <c>title</c>
+</li>
+
+<li>
+<c>figure</c> and bare <c>image</c>
+</li>
+
+<li>
+<c>foreign</c> and other missing inline tags (such as the new <c>pf</c>)
+</li>
+
+<li>
+investigate what is missing for a worksheet
+</li>
+
+<li>
+some Typst compatibility (some of Typst has an
+  irreconcilable conflict with other formats).
+</li>
+
+<li>
+<c>ol</c> and <c>ul</c> as source (not just markdown style)
+</li>
+
+<li>
+more generally: test on pure <pretext/> source (<c>p</c> tags for example)
+</li>
+
+<li>
+<c>dl</c>
+</li>
+
+<li>
+investigate what is reasonable for <c>program</c>, <c>listing</c>, and <c>console</c>
+</li>
+
+<li>
+multiline math
+</li>
+
+</ul>
+</p>
+</paragraphs>
+
+<p>
+More things for testing, such as the quadratic formula:
+<men>
+\\frac{-b \\pm \\sqrt{b^{2} - 4 a c}}{2 a}
+
+</men>
+
+</p>
+
+<p>
+And a list:
+</p>
+
+<p>
+<ol>
+
+<li>
+apple
+</li>
+
+<li>
+banana
+</li>
+
+<li>
+cherry
+</li>
+
+</ol>
+</p>
+
+<p>
+End of FrankenMarkup demo.
+</p>
+</section>
+"
+`;
+
+exports[`markdown markup 1`] = `
+"
+<p>
+A <term>term</term> is not to be confused with an <em>emphasized</em> word or <alert>alert</alert>.
+</p>
+"
+`;
+
+exports[`pure pretext 1`] = `
+"
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<chapter xml:id="pure-pretext" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <title>The chapter title</title>
+
+
+<introduction>
+
+<p>
+
+            This is a sample chapter of pure <pretext/>. It is intended to be used as a test case for the conversion process.
+
+            The content here is written in <pretext/> format, which is a subset of XML designed for educational documents.
+        
+</p>
+
+</introduction>
+
+<section xml:id="sec-the-first-section">
+<title>The first section</title>
+
+<p>
+
+            This is a paragraph that has <term>terms</term>, <em>emphasis</em>, <alert>alerts</alert>, and even some <c>code()</c> in it.
+        
+</p>
+
+<p>
+
+            In <pretext /> you write math with <tag>m</tag> tags, like this: <m>\\sin(x) = \\cos(x + \\frac{\\pi}{2})</m>.  You can also write an math equation like this:
+            
+<me>
+
+                f(x) = \\begin{cases}
+                    x^2 \\amp \\text{if } x \\geq 0 \\\\
+                    -x^2 \\amp \\text{if } x \\lt 0
+                \\end{cases}
+            
+</me>
+
+</p>
+</section>
+
+
+</chapter>
+"
+`;
