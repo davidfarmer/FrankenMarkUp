@@ -3,6 +3,7 @@ import { PTXblockoutput, PTXinlineoutput} from "./data";
 import { do_nothing_markup, debugging_output_markup, verbatim_tags, outputtags, tags_without_titles } from "./data";
 import { convertMathSnippet } from 'space_math';
 // import { convertMathSnippet } from '../../Space_Math/src/main';
+import { alert } from "./utils";
 
 let debugtags = "STart";
 debugtags = "";
