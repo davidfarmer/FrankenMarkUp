@@ -1071,15 +1071,15 @@ export const setCoarseStructure = function(doc) {
 
     let this_text = doc;
 
-    this_text = this_text.replace(/(^|\n)# +([A-Z].*)\n/,"$1\\section{$2}");
-    this_text = this_text.replace(/(^|\n)## +([A-Z].*)\n/,"$1\\subsection{$2}");
-    this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/,"$1\\paragraphs{$2}");
+    this_text = this_text.replace(/(^|\n)# +([A-Z][^\n]*)\n/g,"$1\\section{$2}");
+    this_text = this_text.replace(/(^|\n)## +([A-Z].*)\n/g,"$1\\subsection{$2}");
+    this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/g,"$1\\paragraphs{$2}");
+
+ console.log("this_text",this_text);
+ alert("this_text");
 
     this_text = splitOnStructure(this_text, "section");
     this_text = splitOnStructure(this_text, "subsection");
-
-// console.log("this_text",this_text);
-// alert("this_text");
 
     return this_text;
 

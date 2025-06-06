@@ -42,13 +42,14 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
     let originaltextC = setCoarseStructure(originaltextB);
 
 //console.log("outputtags", outputtags);
-//  console.log("originaltextC", originaltextC);
+  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
 
       if ("documentclass" in document_metadata && document_metadata["documentclass"]) {
           tmp1together["tag"] = document_metadata["documentclass"]
-      }
+      } else { tmp1together["tag"] = "article" }  // ? wrapper ?
+
       if ("title" in document_metadata && document_metadata["title"]) {
           tmp1together["title"] = document_metadata["title"]
       } else if ("shorttitle" in document_metadata && document_metadata["shorttitle"]) {
