@@ -24,6 +24,7 @@ import {
 } from './data.js'
 import {preprocess, setCoarseStructure, extractStructure, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
+import { alert } from './utils.js';
 
 // console.log("in parse.js");
 

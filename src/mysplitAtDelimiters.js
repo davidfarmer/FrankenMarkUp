@@ -6,6 +6,8 @@ import { paragraph_peer_delimiters, inlinetags } from "./data";
 import { display_math_delimiters, delimitersFromList, PreTeXtDelimiterOfAttributes } from "./data";
 import { document_metadata } from "./parse";
 import { sanitizeXMLattributes } from "./reassemble";
+import { alert } from "./utils";
+
 
 const findEndOfMath = function(delimiter, text, startIndex) {
     // Adapted from
