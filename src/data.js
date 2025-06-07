@@ -157,7 +157,7 @@ export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
 
-export const verbatim_tags = [...math_tags, "c", "code", "mrow"];
+export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage"];
 
 export let structural_components = ["section", "subsection", "worksheet", "paragraphs", "backmatter"];
 
@@ -179,12 +179,12 @@ export const display_environments = ["figure", "table", "listing", "enumerate", 
 export const display_subenvironments = ["image", "tabular", "program"];
 export const display_subsubenvironments = ["latex-image", "prefigure", "description", "caption", "tikzpicture"];
 
-export const other_level_1_p_peers = ["figure", "table", "tabular", "enumerate", "ol", "ul", "dl"];
+export const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", "dl"];
 
 
 export const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
 
-export const tags_without_titles = ["p", "figure", "ol", "ul", "dl"];
+export const tags_without_titles = ["p", "figure", "ol", "ul", "dl", "enumerate", "itemize"];
 
       // more precisely: can possibly contain just text
 export const tags_containing_text = ["text", "p",
@@ -207,6 +207,7 @@ export const subenvironments = {  // the tags which occun inside specific enviro
 };
 
 export const containers = ["exercisegroup", "exercises", "prefigure", "tikzpicture",
+                           "sage",
                            "diagram", ...subenvironments["diagram"] ];
 
 export const objects_with_substructure = Object.keys(subenvironments);
@@ -280,11 +281,11 @@ title_like_tags.forEach( (el) => {    // note:  `title` is handled in a special 
 
 
 // some special cases
-outputtags["ol"] = {begin_tag: "<p>\n<ol>", end_tag: "</ol>\n</p>",
-         before_begin: "\n", after_begin: "\n",
+outputtags["ol"] = {begin_tag: "<p>\n<ol", end_tag: "</ol>\n</p>",
+         before_begin: "\n", after_begin: ">\n",
          before_end: "\n", after_end: "\n"};
-outputtags["ul"] = {begin_tag: "<p>\n<ul>", end_tag: "</ul>\n</p>",
-         before_begin: "\n", after_begin: "\n",
+outputtags["ul"] = {begin_tag: "<p>\n<ul", end_tag: "</ul>\n</p>",
+         before_begin: "\n", after_begin: ">\n",
          before_end: "\n", after_end: "\n"};
 outputtags["enumerate"] = outputtags["ol"];
 outputtags["itemize"] = outputtags["ul"];
@@ -310,7 +311,7 @@ export const spacemath_environments = ["cases", "align", "system", "derivation",
 
 //not used yet
 export const possibleattributes = ["source", "ref", "width", "margins", "label", "xmlattributes",
-                           "bbox", "dimensions", "destination", "text", "xml:id", "xmlns"];
+                           "bbox", "dimensions", "destination", "text", "xml:id", "xmlns", "language"];
 
 // start of major refactor: recognize that it takes multiple passes to
 // parse into components, and this requires knowing which objects can occur
@@ -341,6 +342,7 @@ level.push([...display_subsubenvironments]);
 level.push(["prefigure"]);
 level.push(["diagram"]);
 level.push(subenvironments["diagram"]);
+level.push(["sage"]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
@@ -372,7 +374,7 @@ export let aliases = { // in the format "officialname": [list of synonyms].  Tak
     "convention" : ["conv"],
     "corollary" : ["cor","corr","coro","corol","corss"],
     "definition" : ["def","defn","dfn","defi","defin","de"],
-    "ol" : ["enum","enuma","enumerit"],
+    "enumerate" : ["enum","enuma","enumerit"],
     "example" : ["exam","exa","eg","exmp","expl","exm"],
     "exercise" : ["exer", "exers"],
     "em" : ["emph"],
@@ -386,6 +388,7 @@ export let aliases = { // in the format "officialname": [list of synonyms].  Tak
     "question" : ["qu","ques","quest","qsn"],
     "remark" : ["rem","rmk","rema","bem","subrem","rems","rmks"],
     "theorem" : ["thm","theo","theor","thmss"],
+    "ul" : ["itemize"],
     "verbatim" : ["verb"],
     "warning" : ["warn", "wrn"]
 }

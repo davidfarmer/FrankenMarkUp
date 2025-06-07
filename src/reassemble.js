@@ -6,7 +6,7 @@ import { convertMathSnippet } from 'space_math';
 import { alert } from "./utils";
 
 let debugtags = "STart";
-debugtags = "";
+ debugtags = "";
 
 export const reassemblePreTeXt = function(content) {
 
@@ -81,7 +81,9 @@ if (Array.isArray(content)) {
       let this_element_text = "";
       let this_element_opening_tag = "";
       const this_tag = element.tag;
-//    console.log("assembling a ", this_tag, "from", element);
+// if ((this_tag && this_tag.startsWith("e"))) {
+//     console.log("assembling a ", this_tag, "from", element);
+// }
       let these_tags = outputtags[this_tag];
       if (typeof these_tags == "undefined") {
           these_tags = do_nothing_markup
@@ -103,11 +105,16 @@ if (Array.isArray(content)) {
            }
       });
 
-      this_element_opening_tag += these_tags.after_begin;
-
       if ("title" in element && element.title && !tags_without_titles.includes(this_tag)) {
           this_element_text += "\n<title>" + element.title + "</title>" + "\n" 
+      } else if ("title" in element && element.title && tags_without_titles.includes(this_tag)) {
+          if (["ol", "ul", "enumerate", "itemize"].includes(this_tag)) {
+              this_element_opening_tag += " " + element.title
+          }
       }
+
+      this_element_opening_tag += these_tags.after_begin;
+
 
       let this_content = element.content;
 // console.log("this_content element.content", "|"+this_content+"|", typeof this_content );

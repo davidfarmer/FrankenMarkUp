@@ -154,6 +154,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
       let tmp5r = tmp5s; 
       let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]); 
+      tmp5 = extract_lists(tmp5, "sage",0,0, ["sage"]); 
  //     let tmp5 = tmp5u;
 
       if ("biblio" in document_metadata) {

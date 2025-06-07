@@ -704,7 +704,24 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                     this_content["width"] = this_content_copy["width"];
                     delete this_content_copy["width"]
                 }
+
+             }
+            } else if (action == "sage" && tags_to_process.includes(this_content.tag)) {
+// console.log("processing prefigure", this_content, "with parent", parent_tag, "and p_p_tag", parent_parent_tag, "with content", this_content.content);
+// alert("looking for xmlns");
+
+            let this_code = this_content.content.trim();
+
+            let language = "";
+            if (this_code.match(/\s*{/)) {  // }
+                let lang_and_code = firstBracketedString(this_code);
+console.log("lang_and_code", lang_and_code);
+                language = lang_and_code[0].slice(1,-1);
+                this_code = lang_and_code[1];
             }
+            if (language) {this_content.language = language}
+
+            this_content.content = this_code;
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {  // also must handle case of array
@@ -1062,7 +1079,7 @@ export const extractStructure = function(doc) {
     }
 
   console.log("this_text", this_text);
-  alert("did not extract structure");
+//  alert("did not extract structure");
     return doc
 
 }
@@ -1071,12 +1088,25 @@ export const setCoarseStructure = function(doc) {
 
     let this_text = doc;
 
+// Some Markdown adaptations:
     this_text = this_text.replace(/(^|\n)# +([A-Z][^\n]*)\n/g,"$1\\section{$2}");
     this_text = this_text.replace(/(^|\n)## +([A-Z].*)\n/g,"$1\\subsection{$2}");
     this_text = this_text.replace(/(^|\n)### +([A-Z].*)\n/g,"$1\\paragraphs{$2}");
 
- console.log("this_text",this_text);
- alert("this_text");
+//  A Markdown hrule is no structural, so remove
+//  (note:this kills multiline-style MD headings)
+    this_text = this_text.replace(/^ *-{2,} *\n/,"\n");
+    this_text = this_text.replace(/\n *\n *-{2,} *\n *\n/g,"\n\n");
+
+    if (true || markdownMode) {
+        this_text = this_text.replace(/\n *\n *```/g,"\n\n\\begin{sage}\n");
+        this_text = this_text.replace(/\n```({r)/g,"\n\n\\begin{sage}\n$1");
+        this_text = this_text.replace(/``` *\n *\n/g,"\\end{sage}\n\n");
+    }
+
+
+// console.log("this_text",this_text);
+// alert("this_text");
 
     this_text = splitOnStructure(this_text, "section");
     this_text = splitOnStructure(this_text, "subsection");

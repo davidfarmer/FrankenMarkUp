@@ -56,6 +56,23 @@ $e of a = a$ and $a of e = a$ for all $a in G$.
      element $b in G$ such that $a of b = e$ and $b of a = e$.
 \end{definition}
 
+That definition again:
+
+\begin{definition}[Group, again]
+A _group_ is a set $G$ along with a binary operation $of$ such that:
+
+\begin{enumerate}[label="(a)"]
+  \item The operation is associative: if $a,b,c in G$ then <m>a of (b of c) = (a of b) of c</m>.
+
+  \item There exists an _identity element_ $e in G$ such that
+$e of a = a$ and $a of e = a$ for all $a in G$.
+
+  \item For each $a in G$ there exists an _inverse_
+     element $b in G$ such that $a of b = e$ and $b of a = e$.
+\end{enumerate}
+\end{definition}
+
+
 To speak of a group one must refer to both the set and the operation.
 The sentence "The integers are a group." is either incorrect or incomplete,
 depending on your perspective.
