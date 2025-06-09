@@ -50,7 +50,7 @@ export const PTXinlineoutput = function(tag) {
 
 const PreTeXtDelimiterOf = function(delim) {
     return {left:"<" + delim + ">", right:"</" + delim + ">", tag:delim}
-}        
+}
 export const PreTeXtDelimiterOfAttributes = function(delim) {
     return {left:"<" + delim + " ", right:"</" + delim + ">", tag:delim}
 }
@@ -159,7 +159,7 @@ export const possibly_self_closing_inline_tags = ["url"];
 
 export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage"];
 
-export let structural_components = ["section", "subsection", "worksheet", "paragraphs", "backmatter"];
+export let structural_components = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"];
 
 export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)

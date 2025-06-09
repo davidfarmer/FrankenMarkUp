@@ -106,7 +106,7 @@ if (Array.isArray(content)) {
       });
 
       if ("title" in element && element.title && !tags_without_titles.includes(this_tag)) {
-          this_element_text += "\n<title>" + element.title + "</title>" + "\n" 
+          this_element_text += "\n<title>" + element.title + "</title>" + "\n"
       } else if ("title" in element && element.title && tags_without_titles.includes(this_tag)) {
           if (["ol", "ul", "enumerate", "itemize"].includes(this_tag)) {
               this_element_opening_tag += " " + element.title
@@ -196,7 +196,7 @@ export const sanitizeXMLattributes = function(text) {
 
     return new_text
 }
-const sanitizeXMLstring = function(text) {
+export const sanitizeXMLstring = function(text) {
 
     let new_text = text;
 

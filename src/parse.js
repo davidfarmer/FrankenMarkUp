@@ -42,7 +42,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
     let originaltextC = setCoarseStructure(originaltextB);
 
 //console.log("outputtags", outputtags);
-  console.log("originaltextC", originaltextC);
+//  console.log("originaltextC", originaltextC);
       // wrap everything in a section
       let tmp1together = {tag: wrapper, content: originaltextC}
 
@@ -103,7 +103,6 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
 // console.log("new9", new9);
 // alert("new9")
-      // why do we extract lists before oneline environments?
       new9 = extract_lists(new9, "extract li", 0,0, "all");   // "all" is wrong, but later code assumes "p"
 // console.log("new9b", new9);
 // alert("new9b")
@@ -115,6 +114,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //       alert("pause 3");
   // next is maybe overkill, but things like statements contain p's
       new9 = extract_lists(new9, "clean up substructure", 0,0,objects_with_substructure);
+
+
 
       const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
 
@@ -143,6 +144,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  console.log("tmp5w", tmp5w);
 //  alert("tmp5w");
       const tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
+      tmp5v = extract_lists(tmp5v, "split li",0,0, ["li"]);
 //  console.log("tmp5v", tmp5v);
 //  alert("tmp5v");
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
@@ -174,6 +176,20 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       return tmp5p
 };
+
+////////////// 
+
+export function splitLI(anLI, depth=0, listsofar=[], marker="") {
+
+console.log("splitLI", anLI);
+   let thetext = anLI.content.trim();
+
+   if (thetext.match(/\n *(\-|\+|\*|[0-9])/)) {
+       console.log("need to split li:", thetext)
+   }
+   
+   return alLI
+}
 
 ////////////// 
 

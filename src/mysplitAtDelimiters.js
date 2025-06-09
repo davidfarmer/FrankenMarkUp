@@ -4,8 +4,8 @@ import { aliases, display_math_tags, possibleattributes, tags_containing_paragra
 import { toUnicode, subenvironments, containers, spacemath_environments, tags_with_weird_labels} from "./data";
 import { paragraph_peer_delimiters, inlinetags } from "./data";
 import { display_math_delimiters, delimitersFromList, PreTeXtDelimiterOfAttributes } from "./data";
-import { document_metadata } from "./parse";
-import { sanitizeXMLattributes } from "./reassemble";
+import { document_metadata, splitLI } from "./parse";
+import { sanitizeXMLattributes, sanitizeXMLstring } from "./reassemble";
 import { alert } from "./utils";
 
 
@@ -180,11 +180,11 @@ const splitTextIntoParagraphs = function(text) {
     let current_new_text = "";
 
     const this_text = text.split(/\n\s*\n{1,}/);
-console.log("found ", this_text.length, " pieces, which are:", this_text);
+// console.log("found ", this_text.length, " pieces, which are:", this_text);
     this_text.forEach( (element) => {
         const this_new_text = current_new_text + element;
         if (this_new_text) {  // skip empty paragraphs
-console.log("made this_new_text", this_new_text);
+// console.log("made this_new_text", this_new_text);
           const this_new_paragraph = {tag:"p", content: this_new_text};
           newnodelist.push(this_new_paragraph)
         }
@@ -490,9 +490,10 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 this_content.tag = new_tag;
                 this_content.content = new_content;
      //           this_content._parenttag = "ol"
-            } else if (this_content.content.match(/^\s*\-+\s/)) {
+      //      } else if (this_content.content.match(/^\s*\-+\s/)) {
+            } else if (this_content.content.match(/^\s*(\-|\*)+\s/)) {
                 const new_tag = "li";
-                const new_content = this_content.content.replace(/^\s*\-+\s*/,"");
+                const new_content = this_content.content.replace(/^\s*(\-|\*)+\s*/,"");
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
@@ -608,7 +609,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                                '<image source="$1" width="50%"/>');
             }
             if (this_content.content.match(/\\caption/)) {
-         
+
 // console.log("caption", this_content);
   //            this_content.content = this_content.content.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
               this_content.content = this_content.content.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {  // }
@@ -721,7 +722,7 @@ console.log("lang_and_code", lang_and_code);
             }
             if (language) {this_content.language = language}
 
-            this_content.content = this_code;
+            this_content.content = "<input>\n" + sanitizeXMLstring(this_code) + "\n</input>";
 
           } else if (action == "blockquotes"  &&  tags_to_process.includes(this_content.tag)
                       && typeof this_content.content == "string" ) {  // also must handle case of array
@@ -802,7 +803,7 @@ console.log("lang_and_code", lang_and_code);
                   found_list = true;
                   new_list_content = [element];
                   new_list_object.tag = element._parenttag;
-//console.log("started a new list", new_list_content);
+console.log("started a new list", new_list_content);
                 } else if (found_list && element.tag == "li") {
                   new_list_content.push(element)
                 } else if (found_list && element.tag != "li") {
@@ -825,6 +826,11 @@ console.log("lang_and_code", lang_and_code);
             new_list_object = {};
 
             this_content.content = this_statement_content
+
+          } else if (action == "split li"  &&  tags_to_process.includes(this_content.tag)
+                      && typeof this_content.content == "object" ) {  // actually, must be an array
+
+              this_content = splitLI(this_content)
 
           } else if (action == "absorb math"  && ( tags_to_process.includes(this_content.tag) || this_content.tag == root_tag )
                       && typeof this_content.content == "object" ) {  // actually, must be an array
@@ -1078,7 +1084,7 @@ export const extractStructure = function(doc) {
         return the_body
     }
 
-  console.log("this_text", this_text);
+//  console.log("this_text", this_text);
 //  alert("did not extract structure");
     return doc
 
