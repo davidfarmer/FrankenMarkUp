@@ -183,7 +183,7 @@ export const other_level_1_p_peers = ["figure", "table", "tabular", "ol", "ul", 
 
 export const tags_needing_statements = [...theorem_like, ...axiom_like, ...exercise_like, "task"];
 
-export const tags_without_titles = ["p", "figure", "ol", "ul", "dl", "enumerate", "itemize"];
+export const tags_without_titles = ["p", "figure", "li", "ol", "ul", "dl", "enumerate", "itemize"];
 
       // more precisely: can possibly contain just text
 export const tags_containing_text = ["text", "p",
@@ -341,7 +341,7 @@ level.push([...display_subsubenvironments]);
 level.push(["prefigure"]);
 level.push(["diagram"]);
 level.push(subenvironments["diagram"]);
- level.push(["sage"]);
+// level.push(["sage"]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);

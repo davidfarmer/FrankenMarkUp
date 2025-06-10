@@ -489,8 +489,12 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
                 this_content.tag = new_tag;
                 this_content.content = new_content;
-     //           this_content._parenttag = "ol"
-      //      } else if (this_content.content.match(/^\s*\-+\s/)) {
+            } else if (this_content.content.match(/^\s*\\item\[[^\[\]]*\]\s*/)) {
+                const new_tag = "li";
+                const new_content = this_content.content.replace(/^\s*\\item\[[^\[\]]*\]\s*/,"");
+                
+                this_content.tag = new_tag;
+                this_content.content = new_content;
             } else if (this_content.content.match(/^\s*(\-|\*)+\s/)) {
                 const new_tag = "li";
                 const new_content = this_content.content.replace(/^\s*(\-|\*)+\s*/,"");

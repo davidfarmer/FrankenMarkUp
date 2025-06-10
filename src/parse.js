@@ -71,8 +71,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
           } );
       }
-   console.log("preprocessed text 2", new1);
-  alert("preprocessed text 2");
+//   console.log("preprocessed text 2", new1);
+//  alert("preprocessed text 2");
 
       let new7 = {...new1}
 // console.log("about to process new7", new7);
