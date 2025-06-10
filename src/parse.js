@@ -21,6 +21,7 @@ import {
     tags_containing_text,
     tags_containing_paragraphs,
     tags_needing_statements,
+    tagofmarker,
 } from './data.js'
 import {preprocess, setCoarseStructure, extractStructure, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
@@ -116,8 +117,21 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       new9 = extract_lists(new9, "clean up substructure", 0,0,objects_with_substructure);
 
 
+      const tmp5t = new9;
+      const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
+//  console.log("tmp5w", tmp5w);
+//  alert("tmp5w");
+      let tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
+      tmp5v = extract_lists(tmp5v, "split li",0,0, ["ol", "ul"]);
+//  console.log("tmp5v", tmp5v);
+//  alert("tmp5v");
+      const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
+// console.log("tmp5u", tmp5u);
 
-      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
+
+
+      const tmp2 = splitAtDelimiters(tmp5u, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
+//      const tmp2 = splitAtDelimiters(new9, asymmetric_inline_delimiters, 0,firstdepth+1, "all", tags_containing_text);
 
       const tmp3 = splitAtDelimiters(tmp2, "spacelike", 0,firstdepth+1, "all", tags_containing_text);
 
@@ -138,7 +152,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       tmp5z = splitAtDelimiters(tmp5z, asymmetric_inline_delimiters, 0,firstdepth+1,"all", tags_containing_text);
 
 
-
+/*
       const tmp5t = tmp5z;
       const tmp5w = extract_lists(tmp5t, "extract li",0,0, ["p"]);
 //  console.log("tmp5w", tmp5w);
@@ -150,7 +164,11 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
 // console.log("tmp5u", tmp5u);
 //  alert("tmp5u");
-      let tmp5s = extract_lists(tmp5u, "statements",0,0, tags_needing_statements);  // statemetns now part of level
+*/
+
+
+
+      let tmp5s = extract_lists(tmp5z, "statements",0,0, tags_needing_statements);  // statemetns now part of level
 //  console.log("tmp5s", tmp5s);
 //   alert("tmp5s");
 //      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
@@ -179,16 +197,59 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
 ////////////// 
 
-export function splitLI(anLI, depth=0, listsofar=[], marker="") {
+export function splitLI(anOLUL, depth=0, listsofar=[], marker="") {
 
-console.log("splitLI", anLI);
-   let thetext = anLI.content.trim();
+console.log("splitLI", anOLUL);
+   if (anOLUL.content.length > 1) { return anOLUL }
 
-   if (thetext.match(/\n *(\-|\+|\*|[0-9])/)) {
-       console.log("need to split li:", thetext)
+   let theLI = anOLUL.content[0];
+console.log("theLI", theLI);
+   let theLIcontent = anOLUL.content[0].content;
+
+   if (theLIcontent.match(/\n *(\-|\+|\*|[0-9])/)) {
+       console.log("need to split li:", theLIcontent);
+       let split_li = theLIcontent.split(/\n *(\-|\+|\*|[0-9]\.*)/);
+       if (split_li < 3) { alert("malformed list items", theLIcontent) }
+       console.log("split_li", split_li);
+console.log("the anOLUL.content[0].content was", anOLUL.content[0]);
+       anOLUL.content[0].content = split_li.shift();
+console.log("the anOLUL.content[0].content is", anOLUL.content[0]);
+
+console.log(split_li.length,"split_li.length", split_li);
+       while (split_li.length > 0) {
+           let next_marker = split_li.shift();
+           if (next_marker.match(/^[0-9]/)) { next_marker = "1" }
+           const next_contents = split_li.shift().trim();
+console.log("found", tagofmarker[next_marker], "compared to", theLI._parenttag);
+           if (tagofmarker[next_marker] == theLI._parenttag) {
+               let new_li = {tag: "li", _parenttag: tagofmarker[next_marker], content: next_contents};
+               anOLUL.content.push(new_li)
+           } else { // need to start a sublist
+             let new_sublist = { tag: tagofmarker[next_marker], content: [] }
+             new_sublist.content.push({tag:"li", content:next_contents, _parenttag:tagofmarker[next_marker] });
+             while (split_li.length > 0 && tagofmarker[split_li[0]] == tagofmarker[next_marker] ) {
+               let sublist_marker = split_li.shift();
+               if (sublist_marker.match(/^[0-9]/)) { sublist_marker = "1" }
+               const next_sublist_contents = split_li.shift();
+               new_sublist.content.push({tag:"li", content:next_sublist_contents, _parenttag:tagofmarker[sublist_marker] });
+             }
+             let old_last_li = anOLUL.content.pop();
+             console.log("addlig list under", old_last_li);
+             let old_last_li_content = old_last_li.content;
+             let old_last_li_new_content = [{tag: "p", content: old_last_li_content}];
+             old_last_li.content = old_last_li_new_content;
+             old_last_li.content.push(new_sublist);
+
+             anOLUL.content.push(old_last_li)
+           }
+       }
+
+   } else {
+       console.log("will not be splitting:", theLIcontent);
+       return anOLUL
    }
    
-   return alLI
+   return anOLUL
 }
 
 ////////////// 

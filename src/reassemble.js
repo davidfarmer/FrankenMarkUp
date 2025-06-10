@@ -21,6 +21,7 @@ if (Array.isArray(content)) {
 
     if (!Array.isArray(content)) {
        let this_element_text = "";
+console.log("content", content);
        const this_tag = content.tag;
        let these_tags = outputtags[this_tag];
 

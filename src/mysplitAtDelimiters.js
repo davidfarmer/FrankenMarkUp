@@ -399,7 +399,7 @@ export const splitAtDelimiters = function(parse_me, taglist, thisdepth, maxdepth
 
     } else {  // parse_me must be an object, but check
 
-       if (typeof parse_me != "object") { alert("wrong category for ", parse_me) }
+       if (false && typeof parse_me != "object") { alert("wrong category for ", parse_me) }
 
 // console.log("parse_me",parse_me, taglist);
        let current_object = {...parse_me}
@@ -828,6 +828,7 @@ console.log("started a new list", new_list_content);
             this_content.content = this_statement_content
 
           } else if (action == "split li"  &&  tags_to_process.includes(this_content.tag)
+                  //    && typeof this_content.content == "string" ) {  // actually, must be an array  //}
                       && typeof this_content.content == "object" ) {  // actually, must be an array
 
               this_content = splitLI(this_content)
@@ -911,7 +912,7 @@ console.log("started a new list", new_list_content);
 
     } else {
 
-      if (typeof this_content != "string") { console.log("what is it", this_content);  alert("non-object non-string: ", this_content) }
+      if (false && typeof this_content != "string") { console.log("what is it", this_content);  alert("non-object non-string: ", this_content) }
 
 //console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
@@ -1116,12 +1117,13 @@ export const setCoarseStructure = function(doc) {
 
     this_text = splitOnStructure(this_text, "section");
     this_text = splitOnStructure(this_text, "subsection");
+    this_text = splitOnStructure(this_text, "paragraphs");
 
     return this_text;
 
 }
 
-const splitOnStructure = function(doc, marker, depth=0, maxdepth=1) {
+const splitOnStructure = function(doc, marker, depth=0, maxdepth=2) {
 
 // console.log("document_metadata", document_metadata);
     if (depth > maxdepth) { return doc }

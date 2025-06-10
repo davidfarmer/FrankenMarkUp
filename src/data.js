@@ -358,7 +358,14 @@ export const attribute_like = [
     ["xmlattributes", "all"],
     ["title", "all"],
     ["label", "all"],
-]
+];
+
+export const tagofmarker = {
+    "-": "ul",
+    "+": "ol",
+    "*": "ul",
+    "1": "ol"
+}
 
 // Tags can have many aliases
 // (similar to, but less powerful, to the LaTeX `newcommand`)
