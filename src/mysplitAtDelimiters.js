@@ -1105,6 +1105,13 @@ export const setCoarseStructure = function(doc) {
     this_text = this_text.replace(/^ *-{2,} *\n/,"\n");
     this_text = this_text.replace(/\n *\n *-{2,} *\n *\n/g,"\n\n");
 
+// RMarkdown images.  First, no caption case
+    this_text = this_text.replace(/\n *\n *\!\[\]\(([^()]+)\){([^{}]+)} *\n *\n/g,"\n\n\\includegraphics[$2]{$1}\n\n");
+// The caption case?  Need an example first
+
+// url links
+    this_text = this_text.replace(/\[([^\[\]]*)\]\((http[^()]+)\)/g, "\\url{$2}{$1}");
+
     if (true || markdownMode) {
         this_text = this_text.replace(/\n *\n *```/g,"\n\n\\begin{sage}\n");
         this_text = this_text.replace(/\n```({r)/g,"\n\n\\begin{sage}\n$1");
