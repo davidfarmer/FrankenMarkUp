@@ -716,7 +716,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             let language = "";
             if (this_code.match(/\s*{/)) {  // }
                 let lang_and_code = firstBracketedString(this_code);
-console.log("lang_and_code", lang_and_code);
+// console.log("lang_and_code", lang_and_code);
                 language = lang_and_code[0].slice(1,-1);
                 this_code = lang_and_code[1];
             }
@@ -803,7 +803,7 @@ console.log("lang_and_code", lang_and_code);
                   found_list = true;
                   new_list_content = [element];
                   new_list_object.tag = element._parenttag;
-console.log("started a new list", new_list_content);
+// console.log("started a new list", new_list_content);
                 } else if (found_list && element.tag == "li") {
                   new_list_content.push(element)
                 } else if (found_list && element.tag != "li") {

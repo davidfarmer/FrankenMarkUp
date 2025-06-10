@@ -71,8 +71,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
           } );
       }
-//   console.log("preprocessed text 2", new1);
-//  alert("preprocessed text 2");
+   console.log("preprocessed text 2", new1);
+  alert("preprocessed text 2");
 
       let new7 = {...new1}
 // console.log("about to process new7", new7);
@@ -99,6 +99,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       new8 = extract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
 
       new8 = extract_lists(new8, "images",0,0, "all"); 
+
+      new8 = splitAtDelimiters(new8, ["sage"],0,10);    // why 10?
 
       let new9 = {...new8};
 
@@ -199,28 +201,28 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
 export function splitLI(anOLUL, depth=0, listsofar=[], marker="") {
 
-console.log("splitLI", anOLUL);
+//console.log("splitLI", anOLUL);
    if (anOLUL.content.length > 1) { return anOLUL }
 
    let theLI = anOLUL.content[0];
-console.log("theLI", theLI);
+//console.log("theLI", theLI);
    let theLIcontent = anOLUL.content[0].content;
 
    if (theLIcontent.match(/\n *(\-|\+|\*|[0-9])/)) {
-       console.log("need to split li:", theLIcontent);
+//       console.log("need to split li:", theLIcontent);
        let split_li = theLIcontent.split(/\n *(\-|\+|\*|[0-9]\.*)/);
        if (split_li < 3) { alert("malformed list items", theLIcontent) }
-       console.log("split_li", split_li);
-console.log("the anOLUL.content[0].content was", anOLUL.content[0]);
+//       console.log("split_li", split_li);
+//console.log("the anOLUL.content[0].content was", anOLUL.content[0]);
        anOLUL.content[0].content = split_li.shift();
-console.log("the anOLUL.content[0].content is", anOLUL.content[0]);
+//console.log("the anOLUL.content[0].content is", anOLUL.content[0]);
 
-console.log(split_li.length,"split_li.length", split_li);
+//console.log(split_li.length,"split_li.length", split_li);
        while (split_li.length > 0) {
            let next_marker = split_li.shift();
            if (next_marker.match(/^[0-9]/)) { next_marker = "1" }
            const next_contents = split_li.shift().trim();
-console.log("found", tagofmarker[next_marker], "compared to", theLI._parenttag);
+//console.log("found", tagofmarker[next_marker], "compared to", theLI._parenttag);
            if (tagofmarker[next_marker] == theLI._parenttag) {
                let new_li = {tag: "li", _parenttag: tagofmarker[next_marker], content: next_contents};
                anOLUL.content.push(new_li)
@@ -234,7 +236,7 @@ console.log("found", tagofmarker[next_marker], "compared to", theLI._parenttag);
                new_sublist.content.push({tag:"li", content:next_sublist_contents, _parenttag:tagofmarker[sublist_marker] });
              }
              let old_last_li = anOLUL.content.pop();
-             console.log("addlig list under", old_last_li);
+//             console.log("addlig list under", old_last_li);
              let old_last_li_content = old_last_li.content;
              let old_last_li_new_content = [{tag: "p", content: old_last_li_content}];
              old_last_li.content = old_last_li_new_content;

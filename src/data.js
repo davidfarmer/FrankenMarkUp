@@ -341,7 +341,7 @@ level.push([...display_subsubenvironments]);
 level.push(["prefigure"]);
 level.push(["diagram"]);
 level.push(subenvironments["diagram"]);
-level.push(["sage"]);
+ level.push(["sage"]);
 level.push([...list_like]);
 level.push([...list_elements]);
 level.push(["blockquote"]);
