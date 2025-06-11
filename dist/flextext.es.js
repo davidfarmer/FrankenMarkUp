@@ -1,4 +1,4 @@
-const pe = {
+const me = {
   begin_tag: "",
   end_tag: "",
   // not sure we need the 'export'
@@ -8,8 +8,8 @@ const pe = {
   after_end: ""
 }, q = {
   // start with the quirky ones
-  text: pe,
-  placeholder: pe
+  text: me,
+  placeholder: me
 }, D = function(e) {
   return {
     begin_tag: "<" + e,
@@ -56,16 +56,16 @@ const pe = {
   };
 }, ie = function(e) {
   return { left: "<" + e + ">", right: "</" + e + ">", tag: e };
-}, he = function(e) {
-  return { left: "<" + e + " ", right: "</" + e + ">", tag: e };
 }, de = function(e) {
+  return { left: "<" + e + " ", right: "</" + e + ">", tag: e };
+}, oe = function(e) {
   return { left: "\\begin{" + e + "}", right: "\\end{" + e + "}", tag: e };
 }, Ae = function(e) {
   if (!Array.isArray(e))
     return e;
   let t = [];
   return e.forEach((n) => {
-    t.push(he(n)), t.push(ie(n)), t.push(de(n));
+    t.push(de(n)), t.push(ie(n)), t.push(oe(n));
   }), t;
 }, lt = [
   // [latex_name, ptx_tag]
@@ -75,23 +75,26 @@ const pe = {
   // preprocesssor does {abcd*} -> {abcdstar}
   ["align", "mdn"],
   ["alignstar", "md"]
-], B = [
+], C = [
   { left: "$$", right: "$$", tag: "me" }
   //          {left:"\\[", right:"\\]", tag:"me"},   // preprocessor handles these; don't work: not sure why
 ];
 lt.forEach((e) => {
-  B.push(
+  C.push(
     { left: "\\begin{" + e[0] + "}", right: "\\end{" + e[0] + "}", tag: e[1] }
   );
 });
-B.push({ left: "<md>", right: "</md>", tag: "md" });
-B.push({ left: "<md ", right: "</md>", tag: "md" });
-B.push({ left: "<me>", right: "</me>", tag: "me" });
-B.push({ left: "<me ", right: "</me>", tag: "me" });
-B.push({ left: "<mdn", right: "</mdn>", tag: "mdn" });
-B.push({ left: "<men", right: "</men>", tag: "men" });
-const oe = ["md", "mdn", "me", "men"];
-oe.forEach((e) => {
+C.push(
+  { left: "\\begin{sage}", right: "\\end{sage}", tag: "sage" }
+);
+C.push({ left: "<md>", right: "</md>", tag: "md" });
+C.push({ left: "<md ", right: "</md>", tag: "md" });
+C.push({ left: "<me>", right: "</me>", tag: "me" });
+C.push({ left: "<me ", right: "</me>", tag: "me" });
+C.push({ left: "<mdn", right: "</mdn>", tag: "mdn" });
+C.push({ left: "<men", right: "</men>", tag: "men" });
+const le = ["md", "mdn", "me", "men"];
+le.forEach((e) => {
   q[e] = {
     begin_tag: `
 <` + e,
@@ -106,8 +109,8 @@ oe.forEach((e) => {
 `
   };
 });
-[...oe];
-const Ee = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Te = ["ol", "ul", "dl"], at = ["li"], Pe = ["aside", "historical", "biographical"], fe = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], ye = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Ne = ["convention", "insight", "note", "observation", "remark", "warning"], Se = ["example", "problem", "question"], je = ["definition"], le = ["exercise"], Oe = ["proof"], Xe = ["activity", "exploration", "investigation", "project"], ae = ["hint", "answer", "solution"], Ze = ["case", "task"], be = ["em", "term", "alert", "m", "q", "c", "tag"];
+[...le];
+const Ee = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Te = ["ol", "ul", "dl"], at = ["li"], Pe = ["aside", "historical", "biographical"], fe = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], ye = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Ne = ["convention", "insight", "note", "observation", "remark", "warning"], Se = ["example", "problem", "question"], je = ["definition"], ae = ["exercise"], Oe = ["proof"], Xe = ["activity", "exploration", "investigation", "project"], se = ["hint", "answer", "solution"], Ze = ["case", "task"], be = ["em", "term", "alert", "m", "q", "c", "tag"];
 let Re = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"], Ie = [
   // peer of p cildren of (sub)sections
   ...Pe,
@@ -117,10 +120,10 @@ let Re = ["article", "chapter", "section", "subsection", "worksheet", "paragraph
   ...Ne,
   ...Se,
   ...je,
-  ...le,
+  ...ae,
   ...Oe,
   ...Xe,
-  ...ae,
+  ...se,
   "blockquote",
   "sidebyside",
   "li"
@@ -128,13 +131,13 @@ let Re = ["article", "chapter", "section", "subsection", "worksheet", "paragraph
 const Q = [
   ...Re,
   ...Ie,
-  ...ae,
+  ...se,
   ...Ze,
   ...Ee,
   "enumerate",
   "itemize",
   "placeholder"
-], Ce = ["figure", "table", "listing", "enumerate", "itemize"], ze = ["image", "tabular", "program"], Be = ["latex-image", "prefigure", "description", "caption", "tikzpicture"], Fe = ["figure", "table", "tabular", "ol", "ul", "dl"], st = [...fe, ...ye, ...le, "task"], $e = ["p", "figure", "li", "ol", "ul", "dl", "enumerate", "itemize"], R = [
+], Ce = ["figure", "table", "listing", "enumerate", "itemize"], ze = ["image", "tabular", "program"], Be = ["latex-image", "prefigure", "description", "caption", "tikzpicture"], Fe = ["figure", "table", "tabular", "ol", "ul", "dl"], st = [...fe, ...ye, ...ae, "task"], $e = ["p", "figure", "li", "ol", "ul", "dl", "enumerate", "itemize"], R = [
   "text",
   "p",
   "fn",
@@ -168,17 +171,18 @@ const Q = [
   "sage",
   "diagram",
   ...K.diagram
-], pt = Object.keys(K), z = [];
+], pt = Object.keys(K), I = [];
 let We = [...Re, ...Ie], ve = [...We, ...Te];
 ve.push("p");
 ve.push("statement");
 We.forEach((e) => {
-  z.push(he(e)), z.push(ie(e)), z.push(de(e));
+  I.push(de(e)), I.push(ie(e)), I.push(oe(e));
 });
+I.push(oe("sage"));
 Fe.forEach((e) => {
-  z.push(he(e)), z.push(ie(e)), z.push(de(e));
+  I.push(de(e)), I.push(ie(e)), I.push(oe(e));
 });
-let ne = Array.from(z, ({ tag: e }) => e);
+let ne = Array.from(I, ({ tag: e }) => e);
 ne = [...new Set(ne)];
 ve.forEach((e) => {
   q[e] = nt(e);
@@ -302,12 +306,12 @@ k.push(["page"]);
 k.push(["paragraphs", "objectives"]);
 k.push(["sidebyside"]);
 k.push([...Xe]);
-k.push([...Se, ...le]);
+k.push([...Se, ...ae]);
 k.push(["introduction", "conclusion"]);
 k.push([...fe, ...ye, ...Ne, ...je]);
 k.push(["task"]);
 k.push(["statement"]);
-k.push([...Oe, ...ae]);
+k.push([...Oe, ...se]);
 k.push([...Ze]);
 k.push([...Pe]);
 k.push([...Ce]);
@@ -322,9 +326,9 @@ k.push(["blockquote"]);
 k.push(["p"]);
 k.push("displaymath");
 k.push(["mrow"]);
-const se = [
-  ["extraneous math", oe],
-  ["workspace", [...le]],
+const ue = [
+  ["extraneous math", le],
+  ["workspace", [...ae]],
   ["margins", ["worksheet", "sidebyside"]],
   ["margin", ["worksheet", "sidebyside"]],
   ["xmlattributes", "all"],
@@ -3450,27 +3454,27 @@ function re(e, t, n) {
           }
           let w = !0;
           (Ke(c) || Ye(c)) && (y != "space" && f[0].length == 0 || g[p - 1]) && g[m + 1] && g[p - 1] != " " && g[m + 1] != " " && (w = !1);
-          let x = ue(c), E = !1;
+          let x = ce(c), E = !1;
           y != "space" && d[c].script && (x -= 0.1, w && (E = !0, v.exPriority = !0, P.exPriority = !0, b.exPriority = !0), w || (w = !0), Ot(o, c) && (w = !1));
           let Z = 0;
-          if (o.exPriority && !E && (Z += 0.2), w && (o.noPriority || x + Z < ue(o.key))) {
-            let j = !1;
+          if (o.exPriority && !E && (Z += 0.2), w && (o.noPriority || x + Z < ce(o.key))) {
+            let S = !1;
             for (o.value = v.value, o.children = v.children, o.pair = v.pair, o.exPriority = v.exPriority, o.noPriority = v.noPriority; o.parent; ) {
               let T = o.position;
               if (o = o.parent, Z = 0, !E) {
-                for (let C of o.children)
-                  if (C.exPriority) {
+                for (let B of o.children)
+                  if (B.exPriority) {
                     Z += 0.2;
                     break;
                   }
               }
-              if (!o.children[0].noPriority && x + Z >= ue(o.children[0].key)) {
-                let C = o.children[T], O = new _(T, null, o.children[0].key, null, n);
-                O.noPriority = o.children[T].noPriority, O.exPriority = o.children[T].exPriority, o.children[T] = O, O.parent = o, O.insertNode(C), C.key = c, C.noPriority = P.noPriority, C.exPriority = P.exPriority, O.insertNode(P), O.insertNode(b), o = O.children[2], j = !0;
+              if (!o.children[0].noPriority && x + Z >= ce(o.children[0].key)) {
+                let B = o.children[T], j = new _(T, null, o.children[0].key, null, n);
+                j.noPriority = o.children[T].noPriority, j.exPriority = o.children[T].exPriority, o.children[T] = j, j.parent = o, j.insertNode(B), B.key = c, B.noPriority = P.noPriority, B.exPriority = P.exPriority, j.insertNode(P), j.insertNode(b), o = j.children[2], S = !0;
                 break;
               }
             }
-            if (!j) {
+            if (!S) {
               let T = new _(0, "", null, null, n);
               r.root.key = c, T.insertNode(r.root), T.insertNode(P), T.insertNode(b), r.root = T, o = r.root.children[2];
             }
@@ -3482,16 +3486,16 @@ function re(e, t, n) {
           f = [g.substring(0, p), c, g.substring(m + 1)], f[2][0] == " " && (f[2] = f[2].substring(1)), v = new _(0, f[0], c, null, n), P = new _(0, f[1], c, null, n), b = new _(0, f[2], c, null, n), a && (a = V(v.value, a, n), v = a, v.key = c, a = void 0);
           let $ = new _();
           if ($.conversiontarget = n, $.value = "", $.insert(c, c), b.key = c, d[c].pairedArgument) {
-            let j = _e(g, p, c, d[c].pairedArgument, d[c].family);
-            if (j != -1) {
-              let T = [g.substring(m + 1, j), g.substring(j + 1)], C = re(T[0].trim(), t, n)[0].root, O = new _(0, T[1], c, null, n);
-              $.insertNode(C), $.insertNode(O);
+            let S = _e(g, p, c, d[c].pairedArgument, d[c].family);
+            if (S != -1) {
+              let T = [g.substring(m + 1, S), g.substring(S + 1)], B = re(T[0].trim(), t, n)[0].root, j = new _(0, T[1], c, null, n);
+              $.insertNode(B), $.insertNode(j);
             } else
               $.insertNode(b);
           } else
             $.insertNode(b);
-          let I = o;
-          o = $.children[$.children.length - 1], v.value.length > 0 && ($ = _t(v, $)), $.value = "", I.parent ? ($.key = I.parent.children[I.position].key, $.position = I.position, $.parent = I.parent, I.parent.children[I.position] = $) : r.root = $, d[c] && d[c].extraArgument && u.push([$, d[c].extraArgument]);
+          let z = o;
+          o = $.children[$.children.length - 1], v.value.length > 0 && ($ = _t(v, $)), $.value = "", z.parent ? ($.key = z.parent.children[z.position].key, $.position = z.position, $.parent = z.parent, z.parent.children[z.position] = $) : r.root = $, d[c] && d[c].extraArgument && u.push([$, d[c].extraArgument]);
           break;
         case "postfix":
         // such as "!" for factorial.
@@ -3502,8 +3506,8 @@ function re(e, t, n) {
           let M = new _();
           if (M.conversiontarget = n, M.value = "", M.insert(c, c), M = V(f[0], M, n), a = H(a, M, n), console.debug("now have stackedTreeNode", a), u.length > 0) {
             a.key = u[0][0].children[0].key;
-            let j = u[0][0].children.pop();
-            u[0][0].insertNode(a), u[0][0].insertNode(j), u[0][1]--, u[0][1] == 0 && u.shift(), a = void 0;
+            let S = u[0][0].children.pop();
+            u[0][0].insertNode(a), u[0][0].insertNode(S), u[0][1]--, u[0][1] == 0 && u.shift(), a = void 0;
           }
           o.value = f[2], console.debug("now have currentNode", o);
           break;
@@ -3587,7 +3591,7 @@ function Ke(e) {
   let t = ee(e);
   return t && t.type == "relation";
 }
-function ue(e) {
+function ce(e) {
   let t = ee(e);
   switch (e) {
     case " ":
@@ -3802,9 +3806,9 @@ function Ct(e, t, n, r) {
 const X = function(...e) {
   typeof window < "u" && window.alert ? window.alert(...e) : console.log("alert", ...e);
 };
-let me = "STart";
-me = "";
-const ge = function(e) {
+let ge = "STart";
+ge = "";
+const he = function(e) {
   if (typeof e == "string")
     return e;
   if (!Array.isArray(e)) {
@@ -3812,11 +3816,11 @@ const ge = function(e) {
     console.log("content", e);
     const i = e.tag;
     let o = q[i];
-    return o || (o = D(i)), r += o.before_begin + o.begin_tag + me, "xmlattributes" in e && e.xmlattributes && (r += " " + e.xmlattributes.trim()), "id" in e && e.id && (r += ' xml:id="' + U(e.id) + '"'), Object.keys(e).forEach((u) => {
+    return o || (o = D(i)), r += o.before_begin + o.begin_tag + ge, "xmlattributes" in e && e.xmlattributes && (r += " " + e.xmlattributes.trim()), "id" in e && e.id && (r += ' xml:id="' + U(e.id) + '"'), Object.keys(e).forEach((u) => {
       ["tag", "content", "title", "xmlattributes", "id"].includes(u) || (r += " " + u + '="' + e.el + '"');
     }), r += o.after_begin, "title" in e && e.title && (r += `
 <title>` + qe(e.title) + `</title>
-`), r + ge(e.content) + o.before_end + o.end_tag + o.after_end;
+`), r + he(e.content) + o.before_end + o.end_tag + o.after_end;
   }
   const t = e;
   let n = "";
@@ -3829,12 +3833,12 @@ const ge = function(e) {
     let s = "", a = "";
     const u = r.tag;
     let h = q[u];
-    typeof h > "u" && (h = pe), a += h.before_begin + h.begin_tag + me, "xmlattributes" in r && r.xmlattributes && (a += " " + r.xmlattributes.trim()), "id" in r && r.id && (a += ' xml:id="' + U(r.id) + '"'), Object.keys(r).forEach((y) => {
+    typeof h > "u" && (h = me), a += h.before_begin + h.begin_tag + ge, "xmlattributes" in r && r.xmlattributes && (a += " " + r.xmlattributes.trim()), "id" in r && r.id && (a += ' xml:id="' + U(r.id) + '"'), Object.keys(r).forEach((y) => {
       !["tag", "content", "title", "xmlattributes", "id"].includes(y) && !y.startsWith("_") && (a += " " + y + '="' + r[y] + '"');
     }), "title" in r && r.title && !$e.includes(u) ? s += `
 <title>` + qe(r.title) + `</title>
 ` : "title" in r && r.title && $e.includes(u) && ["ol", "ul", "enumerate", "itemize"].includes(u) && (a += " " + r.title), a += h.after_begin;
-    let p = r.content, l = ge(p);
+    let p = r.content, l = he(p);
     ["c", "code", "tabular"].includes(u) && (l = Ue(l));
     let m = "";
     ["m", "md", "me", "mdn", "men"].includes(u) && (l.match(/^.*(\.|,|;)\s*$/s) && (l = l.replace(/\s*$/, ""), m = l.slice(-1), l = l.slice(0, -1)), l.match(/(\\|{)/) ? l = zt(l) : (l = It(l, "LaTeX"), l = l.replace(/&/g, " \\amp "))), s = s + l;
@@ -3883,7 +3887,7 @@ const ge = function(e) {
   let r = [], i = "";
   return e.forEach((o, s) => {
     if (n.includes(o.tag))
-      i && (r.push({ tag: "p", content: i }), i = ""), Q.includes(o.tag) && typeof o.content == "string" ? (o.content = xe(o.content, z), o.content = G(o.content, t, n)) : Q.includes(o.tag) && (o.content = G(o.content, t, n)), r.push(o);
+      i && (r.push({ tag: "p", content: i }), i = ""), Q.includes(o.tag) && typeof o.content == "string" ? (o.content = xe(o.content, I), o.content = G(o.content, t, n)) : Q.includes(o.tag) && (o.content = G(o.content, t, n)), r.push(o);
     else if (o.tag == "text")
       o.content.split(/\n\s*\n{1,}/).forEach((u) => {
         const h = i + u;
@@ -3960,8 +3964,8 @@ const ge = function(e) {
   }), t;
 }, rt = function(e) {
   let t = "";
-  return t = e.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, ce), t = t.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, ce), t = t.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, ce), t;
-}, ce = function(e, t, n) {
+  return t = e.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, pe), t = t.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, pe), t = t.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, pe), t;
+}, pe = function(e, t, n) {
   return ht[t + n];
 }, qe = function(e) {
   let t = e;
@@ -3981,9 +3985,9 @@ const ge = function(e) {
     var r = new RegExp("\\\\" + n + "{([^{}]+)}", "g");
     t = t.replace(r, "<" + n + ">$1</" + n + ">");
   }), t;
-}, S = function(e, t, n, r, i = "all", o = "all", s = "") {
+}, O = function(e, t, n, r, i = "all", o = "all", s = "") {
   let a = [];
-  typeof t == "string" ? t == "displaymath" ? a = B : t == "spacelike" ? a = "spacelike" : X("unknown taglist " + t) : typeof t[0] == "string" ? a = Ae(t) : a = t;
+  typeof t == "string" ? t == "displaymath" ? a = C : t == "spacelike" ? a = "spacelike" : X("unknown taglist " + t) : typeof t[0] == "string" ? a = Ae(t) : a = t;
   let u = [];
   if (Array.isArray(e))
     return e.forEach((h, g) => {
@@ -3991,7 +3995,7 @@ const ge = function(e) {
         u.push(h);
       else {
         let p;
-        i == "all" || i.includes(h.tag) ? p = S(h, t, n + 1, r, i, o, h.tag) : p = h, Array.isArray(p) ? p.forEach((l) => {
+        i == "all" || i.includes(h.tag) ? p = O(h, t, n + 1, r, i, o, h.tag) : p = h, Array.isArray(p) ? p.forEach((l) => {
           u.push(l);
         }) : u.push(p);
       }
@@ -4008,7 +4012,7 @@ const ge = function(e) {
     if (n > r && h.tag != "text")
       return h;
     let g = h.content;
-    return (i == "all" || o.includes(h.tag)) && (g = S(g, t, n + 1, r, i, o, h.tag)), h.tag == "text" && typeof g == "string" ? h.content = g : h.tag != "text" ? g.length == 1 && g[0].tag == "text" ? h.content = g[0].content : h.content = g : h = g, h;
+    return (i == "all" || o.includes(h.tag)) && (g = O(g, t, n + 1, r, i, o, h.tag)), h.tag == "text" && typeof g == "string" ? h.content = g : h.tag != "text" ? g.length == 1 && g[0].tag == "text" ? h.content = g[0].content : h.content = g : h = g, h;
   }
 }, L = function(e, t, n = 0, r = 0, i = "all", o = "", s = "", a = "section") {
   let u = [];
@@ -4045,12 +4049,12 @@ const ge = function(e) {
       }
     } else if (t == "xmlattributes" && typeof e.content == "string") {
       var h = new RegExp("^\\s*(" + te.join("|") + ")[^<>+]*>", "s");
-      if (h.test(e.content) || e.content.match(/^\s*[^\n<>+]*>/))
+      if (h.test(e.content) || e.content.match(/^\s*[^\n<>+%\`]*>/))
         if (e.content.match(/^\s*>/))
           e.content = e.content.replace(/^\s*>/, "");
         else {
           let p = e.content.split(">", 1)[0];
-          e.content = e.content.replace(/^\s*[^<>]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += p : e.xmlattributes = p;
+          e.content = e.content.replace(/^\s*[^<>%]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += p : e.xmlattributes = p;
         }
     } else if (t == "attributes" && typeof e.content == "string") {
       const p = e.content.split(/(\n\s*\n{1,})/);
@@ -4102,7 +4106,7 @@ const ge = function(e) {
           c.tag == "statement" && (m = !0);
         }), !m) {
           let c = "", y = 0;
-          for (y = 0; y < e.content.length && (c = e.content[y], !ae.includes(c.tag)); ++y)
+          for (y = 0; y < e.content.length && (c = e.content[y], !se.includes(c.tag)); ++y)
             p.push(c);
           l = { tag: "statement", content: p };
           let f = e.content.slice(y);
@@ -4165,7 +4169,7 @@ const ge = function(e) {
       for (m = 0; m < e.content.length; ++m) {
         l = e.content[m];
         const c = p.length;
-        oe.includes(l.tag) ? c == 0 ? p.push({ ...l }) : p[c - 1].tag != "p" ? p.push({ ...l }) : typeof p[c - 1].content == "string" ? (p[c - 1].content = [{ tag: "text", content: p[c - 1].content }], p[c - 1].content.push({ ...l })) : p[c - 1].content.push({ ...l }) : l.tag == "p" ? typeof l.content == "string" && l.content.match(/\s*\+\+\+saMePaR/) ? (l.content = l.content.replace(/\s*\+\+\+saMePaR\s*/, ""), p[c - 1].content.push({ tag: "text", content: l.content })) : typeof l.content == "string" ? p.push({ ...l }) : l.content.length > 0 && l.content[0].tag == "text" && typeof l.content[0].content == "string" && l.content[0].content.match(/\s*\+\+\+saMePaR/) ? (l.content[0].content = l.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), l.content.forEach((y) => {
+        le.includes(l.tag) ? c == 0 ? p.push({ ...l }) : p[c - 1].tag != "p" ? p.push({ ...l }) : typeof p[c - 1].content == "string" ? (p[c - 1].content = [{ tag: "text", content: p[c - 1].content }], p[c - 1].content.push({ ...l })) : p[c - 1].content.push({ ...l }) : l.tag == "p" ? typeof l.content == "string" && l.content.match(/\s*\+\+\+saMePaR/) ? (l.content = l.content.replace(/\s*\+\+\+saMePaR\s*/, ""), p[c - 1].content.push({ tag: "text", content: l.content })) : typeof l.content == "string" ? p.push({ ...l }) : l.content.length > 0 && l.content[0].tag == "text" && typeof l.content[0].content == "string" && l.content[0].content.match(/\s*\+\+\+saMePaR/) ? (l.content[0].content = l.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), l.content.forEach((y) => {
           p[c - 1].content.push(y);
         })) : l.content.length > 0 && p.push({ ...l }) : p.push({ ...l });
       }
@@ -4213,7 +4217,6 @@ $2`), i;
 }, Vt = function(e) {
   let t = e;
   if (t.match(/document(style|class)/)) {
-    t = t.replace(/%.*/g, "");
     let n = t.replace(/\\begin{document}.*$/s, "");
     A.preamble = n, A.documentclass = "article";
     let r = t.replace(/^.*\\begin{document}(.*)\\end{document}.*/s, "$1"), i = r.replace(/\\maketitle.*$/s, "");
@@ -4290,27 +4293,27 @@ function Kt(e, t = "placeholder") {
   let s = { ...o };
   const a = 17;
   for (let M = 0; M < a; ++M)
-    k.forEach((j) => {
-      s = S(s, j, 0, M), se.forEach((T) => {
+    k.forEach((S) => {
+      s = O(s, S, 0, M), ue.forEach((T) => {
         s = L(s, T[0], 0, M, T[1]);
       });
     });
   let u = { ...s };
   u = G(u, "all", ne);
   let h = { ...u };
-  h = L(h, "oneline environments", 0, 0, "all"), h = L(h, "attributes", 0, 0, "all"), se.forEach((M) => {
+  h = L(h, "oneline environments", 0, 0, "all"), h = L(h, "attributes", 0, 0, "all"), ue.forEach((M) => {
     h = L(h, M[0], 0, 0, M[1]);
-  }), h = G(h, "all", ne), h = L(h, "blockquotes", 0, 0, ["p"]), h = L(h, "images", 0, 0, "all"), h = S(h, ["sage"], 0, 10);
+  }), h = G(h, "all", ne), h = L(h, "blockquotes", 0, 0, ["p"]), h = L(h, "images", 0, 0, "all");
   let g = { ...h };
-  g = L(g, "extract li", 0, 0, "all"), se.forEach((M) => {
+  g = L(g, "extract li", 0, 0, "all"), ue.forEach((M) => {
     g = L(g, M[0], 0, 0, M[1]);
   }), g = L(g, "clean up substructure", 0, 0, pt);
   const l = L(g, "extract li", 0, 0, ["p"]);
   let m = L(l, "gather li", 0, 0, Q);
   m = L(m, "split li", 0, 0, ["ol", "ul"]);
-  const c = L(m, "absorb math", 0, 0, Q, "", "", t), y = S(c, W, 0, a + 1, "all", R), f = S(y, "spacelike", 0, a + 1, "all", R), v = S(f, W, 0, a + 1, "all", R), P = S(v, W, 0, a + 1, "all", R), b = L(P, "fonts", 0, 0, R), w = L(b, "texlike", 0, 0, R);
-  let x = S(w, "spacelike", 0, a + 1, "all", R);
-  x = S(x, W, 0, a + 1, "all", R), x = S(x, W, 0, a + 1, "all", R);
+  const c = L(m, "absorb math", 0, 0, Q, "", "", t), y = O(c, W, 0, a + 1, "all", R), f = O(y, "spacelike", 0, a + 1, "all", R), v = O(f, W, 0, a + 1, "all", R), P = O(v, W, 0, a + 1, "all", R), b = L(P, "fonts", 0, 0, R), w = L(b, "texlike", 0, 0, R);
+  let x = O(w, "spacelike", 0, a + 1, "all", R);
+  x = O(x, W, 0, a + 1, "all", R), x = O(x, W, 0, a + 1, "all", R);
   let Z = L(x, "statements", 0, 0, st), $ = L(Z, "prefigure", 0, 0, ["prefigure"]);
   if ($ = L($, "sage", 0, 0, ["sage"]), "biblio" in A) {
     let M = { tag: "backmatter" };
@@ -4321,7 +4324,7 @@ function Kt(e, t = "placeholder") {
 </references>
 `, $.content.push(M);
   }
-  return console.log("tmp5", $), ge($);
+  return console.log("tmp5", $), he($);
 }
 function Gt(e, t = 0, n = [], r = "") {
   if (e.content.length > 1)
