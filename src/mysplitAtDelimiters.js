@@ -277,9 +277,66 @@ const recastSpacedDelimiters = function(this_content) {
     return the_text
 }
 
+const texLike = function(this_content) {
+
+        let new_text = "";
+        new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
+        new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
+        new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
+        new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
+        new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
+            // for those who write (\ref{...}) instead of \eqref{...}
+        new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
+                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
+                              });
+        new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
+                       //           return 'PPPPPPP';
+                                  z = z.replace(/, */g, " ");
+                                  z = sanitizeXMLattributes(z);
+                                  return '<xref ref="' + z + '"/>'
+                              });
+   //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
+      
+        new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
+        new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {  // }
+            let caption_plus = firstBracketedString(z);
+// console.log("caption_plus[0]", caption_plus[0]);
+            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
+        });
+        new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
+        new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
+                                  return '<url href="' + z + '">' + w + '</url>'
+                              });
+        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {  // }
+                                  return '<url href="' + z + '"/>'
+                              });
+// console.log("found genuine text:", this_content, "which is now",new_text);
+        return new_text
+}
+
+const texFonts = function(this_content) {
+
+    let new_text = "";
+    new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, accentedASCII);
+    new_text = new_text.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, accentedASCII);
+    new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
+
+    return new_text
+}
+
 const accentedASCII = function(fullstring, accent, letter) {
 
     return toUnicode[accent + letter]
+}
+
+export const convertTextInPlace = function(this_content) {
+
+    let the_text = this_content;
+    the_text = recastSpacedDelimiters(the_text);
+    the_text = texLike(the_text);
+    the_text = texFonts(the_text);
+
+    return the_text
 }
 
 const preprocessAliases = function(this_content) {
@@ -920,51 +977,56 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
 //console.log("this_tag", this_tag, tags_to_process.includes(this_tag));
       if (action == "do_nothing") { return this_content + "X"}
+
       else if (action == "fonts" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
-        let new_text = "";
-        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, accentedASCII);
-        new_text = this_content.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, accentedASCII);
-        new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
-// console.log("found genuine text:", this_content, "which is now",new_text);
-        return new_text
+        return texFonts(this_content)
+//        let new_text = "";
+//        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, accentedASCII);
+//        new_text = this_content.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, accentedASCII);
+//        new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
+// // console.log("found genuine text:", this_content, "which is now",new_text);
+//        return new_text
       } else if (action == "texlike" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
 // console.log("texlike", this_content);
-        let new_text = "";
-        new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
-        new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
-        new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
-        new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
-        new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
+
+        return texLike(this_content);
+
+//        let new_text = "";
+//        new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
+//        new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
+//        new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
+//        new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
+//        new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
             // for those who write (\ref{...}) instead of \eqref{...}
-        new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
-                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
-                              });
-        new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
+//        new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
+//                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
+//                              });
+//        new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
                        //           return 'PPPPPPP';
-                                  z = z.replace(/, */g, " ");
-                                  z = sanitizeXMLattributes(z);
-                                  return '<xref ref="' + z + '"/>'
-                              });
+//                                  z = z.replace(/, */g, " ");
+//                                  z = sanitizeXMLattributes(z);
+//                                  return '<xref ref="' + z + '"/>'
+//                              });
    //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
 
          // not good enough:  need to match {}  // also, did not work
-        new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
-        new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {
-            let caption_plus = firstBracketedString(z);
-console.log("caption_plus[0]", caption_plus[0]);
-            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
-        });
-        new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
-        new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
-                                  return '<url href="' + z + '">' + w + '</url>'
-                              });
-        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {  // }
-                                  return '<url href="' + z + '"/>'
-                              });
-// console.log("found genuine text:", this_content, "which is now",new_text);
-        return new_text
+//        new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
+//        new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {
+//            let caption_plus = firstBracketedString(z);
+   //console.log("caption_plus[0]", caption_plus[0]);
+//            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
+//        });
+//        new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
+//        new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
+//                                  return '<url href="' + z + '">' + w + '</url>'
+//                              });
+//        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {  // }
+//                                  return '<url href="' + z + '"/>'
+//                              });
+   // console.log("found genuine text:", this_content, "which is now",new_text);
+//        return new_text
 
       } else { return this_content }
     }

@@ -394,7 +394,7 @@ export let aliases = { // in the format "officialname": [list of synonyms].  Tak
     "question" : ["qu","ques","quest","qsn"],
     "remark" : ["rem","rmk","rema","bem","subrem","rems","rmks"],
     "theorem" : ["thm","theo","theor","thmss"],
-    "ul" : ["itemize"],
+ //   "ul" : ["itemize"],
     "verbatim" : ["verb"],
     "warning" : ["warn", "wrn"]
 }
