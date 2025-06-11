@@ -93,6 +93,11 @@ remapped_math_tags.forEach( (el) => {
         {left:"\\begin{" + el[0] + "}", right:"\\end{" + el[0] + "}", tag:el[1]}
     );
 });
+
+display_math_delimiters.push(
+    {left:"\\begin{" + "sage" + "}", right:"\\end{" + "sage" + "}", tag:"sage"}
+);
+
 display_math_delimiters.push({left: "<md>", right: "</md>", tag: "md"});
 display_math_delimiters.push({left: "<md ", right: "</md>", tag: "md"});
 display_math_delimiters.push({left: "<me>", right: "</me>", tag: "me"});
@@ -227,6 +232,10 @@ paragraph_peer_ptx_and_latex_text.forEach( (el) => {
     paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );
     paragraph_peer_delimiters.push( LaTeXDelimiterOf(el) );
 });
+
+paragraph_peer_delimiters.push( LaTeXDelimiterOf("sage") );
+
+
 other_level_1_p_peers.forEach( (el) => {
     paragraph_peer_delimiters.push( PreTeXtDelimiterOfAttributes(el) );
     paragraph_peer_delimiters.push( PreTeXtDelimiterOf(el) );

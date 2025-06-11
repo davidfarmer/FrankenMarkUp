@@ -100,7 +100,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       new8 = extract_lists(new8, "images",0,0, "all"); 
 
-      new8 = splitAtDelimiters(new8, ["sage"],0,10);    // why 10?
+//      new8 = splitAtDelimiters(new8, ["sage"],0,10);    // why 10?
 
       let new9 = {...new8};
 

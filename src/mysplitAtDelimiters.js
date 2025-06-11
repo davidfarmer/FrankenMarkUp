@@ -580,7 +580,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                       && typeof this_content.content == "string" ) {
 
             var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>+]*>", "s");
-            if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+]*>/)) {
+            if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+%\`]*>/)) {
 //   console.log("maybe found an xmlattribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
@@ -589,7 +589,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
 //  console.log("this attribute", this_attribute);
            //       this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
-                  this_content.content = this_content.content.replace(/^\s*[^<>]*>/s, "")
+                  this_content.content = this_content.content.replace(/^\s*[^<>%]*>/s, "")
 // console.log("now this_content.content",this_content.content);
                   if ("xmlattributes" in this_content) {
                     this_content.xmlattributes += this_attribute
@@ -1107,8 +1107,8 @@ export const extractStructure = function(doc) {
 //  console.log("found full LaTeX document")
         // need to extract some metadata
 
-        // delete % comments
-        this_text = this_text.replace(/%.*/g, "");
+//        // delete % comments
+//        this_text = this_text.replace(/%.*/g, "");
 
         let preamble = this_text.replace(/\\begin{document}.*$/s, "");
         document_metadata["preamble"] = preamble;
