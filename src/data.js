@@ -130,7 +130,7 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
 export const list_like = ["ol", "ul", "dl"]; 
-const other_pure_containers = ["code","mrow"];  // currently unused
+const other_pure_containers = ["code","mrow", "biblio"];  // currently unused
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
@@ -162,7 +162,7 @@ export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
 
-export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage"];
+export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage", "biblio"];
 
 export let structural_components = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"];
 
@@ -211,7 +211,7 @@ export const subenvironments = {  // the tags which occun inside specific enviro
 };
 
 export const containers = ["exercisegroup", "exercises", "prefigure", "tikzpicture",
-                           "sage",
+                           "sage", "references",
                            "diagram", ...subenvironments["diagram"] ];
 
 export const objects_with_substructure = Object.keys(subenvironments);
@@ -334,6 +334,8 @@ level.push(["chapter"]);
 level.push(["section"]);
 level.push(["subsection"]);
 level.push(["worksheet"]);
+level.push(["backmatter"]);
+level.push(["references"]);
 level.push(["page"]);
 level.push(["paragraphs", "objectives"]);
 level.push(["sidebyside"]);
@@ -359,6 +361,7 @@ level.push(["blockquote"]);
 level.push(["p"]);
 level.push("displaymath");
 level.push(["mrow"]);
+// level.push(["biblio"]);
 
 export const attribute_like = [
     ["extraneous math", display_math_tags],
