@@ -169,6 +169,7 @@ const Q = [
   "prefigure",
   "tikzpicture",
   "sage",
+  "references",
   "diagram",
   ...U.diagram
 ], pt = Object.keys(U), I = [];
@@ -304,6 +305,8 @@ w.push(["chapter"]);
 w.push(["section"]);
 w.push(["subsection"]);
 w.push(["worksheet"]);
+w.push(["backmatter"]);
+w.push(["references"]);
 w.push(["page"]);
 w.push(["paragraphs", "objectives"]);
 w.push(["sidebyside"]);
