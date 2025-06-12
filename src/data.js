@@ -33,7 +33,7 @@ export const PTXcontaineroutput = function(tag) {  // eg, "theorem"
         before_end: "", after_end: "\n"}
 }
 export const PTXtitleoutput = function(tag) {
-    return  { begin_tag: "<" + tag + "",
+    return  { begin_tag: "<" + tag + ">",
                        end_tag: "</" + tag + ">",
         before_begin: "\n", after_begin: "",
         before_end: "", after_end: "\n"}
@@ -329,6 +329,8 @@ export const possibleattributes = ["source", "ref", "width", "margins", "label",
 
 export let level = [];
 
+level.push(["article"]);
+level.push(["chapter"]);
 level.push(["section"]);
 level.push(["subsection"]);
 level.push(["worksheet"]);

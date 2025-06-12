@@ -102,7 +102,7 @@ console.log("content", content);
 // if (element.tag == "prefigure") { console.log("element", element) }
       const possible_attributes = Object.keys(element);
            possible_attributes.forEach( (el) => {
-           if (!["tag", "content", "title", "xmlattributes", "id"].includes(el) && !el.startsWith("_")) {
+           if (!["tag", "content", "title", "xmlattributes", "id", "text"].includes(el) && !el.startsWith("_")) {
                this_element_opening_tag += " " + el + '="' + element[el] + '"';
            }
       });
@@ -123,12 +123,12 @@ console.log("content", content);
 
       if (typeof this_content == "string" ) // && !verbatim_tags.includes(this_tag) )
         {
-       // next lines not quite right:  need to detect start or end of a of a `p`
-       // mixed content is the problem
-   //       this_content = this_content.replace(/^\s*\n+([^\s])/, " $1");  // leading spaces are okay
-   //       this_content = this_content.replace(/\s+$/, " ");  // trailing spaces and \n are not
+             // why is this here?
         }
       let this_new_text = reassemblePreTeXt(this_content);
+    // this is a bad hack for how figures are processed
+      if ("text" in element) { this_new_text = reassemblePreTeXt(element.text) + this_new_text }
+
 //  console.log("this_new_text", "|"+this_new_text+"|");
   //    if (this_tag != "text") {   // }
 //  console.log(this_tag, !verbatim_tags.includes(this_tag), "oo", this_new_text);
@@ -202,7 +202,7 @@ export const sanitizeXMLstring = function(text) {
 
     let new_text = text;
 
-    new_text = new_text.replace(/&/g, "&amp;");
+    new_text = new_text.replace(/&([^a])/g, "&amp;$1");
     new_text = new_text.replace(/</g, "&lt;");
     new_text = new_text.replace(/>/g, "&gt;");
 

@@ -49,7 +49,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       if ("documentclass" in document_metadata && document_metadata["documentclass"]) {
           tmp1together["tag"] = document_metadata["documentclass"]
-      } else { tmp1together["tag"] = "article" }  // ? wrapper ?
+      } else { tmp1together["tag"] = wrapper }  // ? wrapper ?
 
       if ("title" in document_metadata && document_metadata["title"]) {
           tmp1together["title"] = document_metadata["title"]
@@ -60,9 +60,9 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       let new1 = {...tmp1together};
 
-//console.log("starting iteration on new1", new1);
-//alert("new1");
-      const firstdepth =  17;
+// console.log("starting iteration on new1", new1);
+// alert("new1");
+      const firstdepth =  19;
       for (let depth = 0; depth < firstdepth; ++depth) {
           let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {
@@ -98,7 +98,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
       new8 = extract_lists(new8, "blockquotes", 0,0,["p"]);  // meaning: Markdown style
 
-      new8 = extract_lists(new8, "images",0,0, "all"); 
+      new8 = extract_lists(new8, "images",0,0, "all");
 
 //      new8 = splitAtDelimiters(new8, ["sage"],0,10);    // why 10?
 
@@ -173,10 +173,11 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       let tmp5s = extract_lists(tmp5z, "statements",0,0, tags_needing_statements);  // statemetns now part of level
 //  console.log("tmp5s", tmp5s);
 //   alert("tmp5s");
-//      let tmp5r = extract_lists(tmp5s, "images",0,0, "all"); 
-      let tmp5r = tmp5s; 
-      let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]); 
-      tmp5 = extract_lists(tmp5, "sage",0,0, ["sage"]); 
+//      let tmp5r = extract_lists(tmp5s, "images",0,0, "all");
+      let tmp5r = tmp5s;
+      let tmp5 = extract_lists(tmp5r, "prefigure",0,0, ["prefigure"]);
+      tmp5 = extract_lists(tmp5, "sage",0,0, ["sage"]);
+      tmp5 = extract_lists(tmp5, "ppp",0,0, []);
  //     let tmp5 = tmp5u;
 
       if ("biblio" in document_metadata) {
@@ -197,7 +198,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       return tmp5p
 };
 
-////////////// 
+//////////////
 
 export function splitLI(anOLUL, depth=0, listsofar=[], marker="") {
 
@@ -250,11 +251,11 @@ export function splitLI(anOLUL, depth=0, listsofar=[], marker="") {
        console.log("will not be splitting:", theLIcontent);
        return anOLUL
    }
-   
+
    return anOLUL
 }
 
-////////////// 
+//////////////
 
 function processBiblio(latexbib) {
 
@@ -272,7 +273,7 @@ function processBiblio(latexbib) {
 
 }
 
-////////////// 
+//////////////
 
 // not used yet
 function processTable(tab) {

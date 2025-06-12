@@ -296,12 +296,12 @@ const texLike = function(this_content) {
                                   return '<xref ref="' + z + '"/>'
                               });
    //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
-      
+
         new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {  // }
             let caption_plus = firstBracketedString(z);
 // console.log("caption_plus[0]", caption_plus[0]);
-            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
+            return "<" + y + ">" + convertTextInPlace(caption_plus[0]) + "</" + y + ">" + "\n" + z
         });
         new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
         new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
@@ -549,7 +549,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             } else if (this_content.content.match(/^\s*\\item\[[^\[\]]*\]\s*/)) {
                 const new_tag = "li";
                 const new_content = this_content.content.replace(/^\s*\\item\[[^\[\]]*\]\s*/,"");
-                
+
                 this_content.tag = new_tag;
                 this_content.content = new_content;
             } else if (this_content.content.match(/^\s*(\-|\*)+\s/)) {
@@ -672,13 +672,12 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
             if (this_content.content.match(/\\caption/)) {
 
 // console.log("caption", this_content);
-  //            this_content.content = this_content.content.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
               this_content.content = this_content.content.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {  // }
                   let caption_plus = firstBracketedString(z);
 // console.log("caption_plus[0]", caption_plus[0]);
                   let this_caption = caption_plus[0].slice(1,-1).trim();
                   this_caption = this_caption.replace(/\\(text)*(rm|sf|it|bf|sl)*\s*/, "");
-                  return "<" + y + ">" + this_caption + "</" + y + ">" + "\n" + caption_plus[1]
+                  return "<" + y + ">" + convertTextInPlace(this_caption) + "</" + y + ">" + "\n" + caption_plus[1]
               });
             }
 
@@ -901,7 +900,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
   // what to do and I have not gone back to refactor
 
 
- // console.log("this_content.content", [...this_content.content]);
+//  console.log("this_content.content",this_content.content[0], [...this_content.content]);
             let this_new_content = [];
 
             let element = "";
@@ -954,6 +953,9 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                   } else {
                        // empty list, so throw it away
                   }
+                } else if (element.tag == "text") {
+console.log("found text", element.content);   // this can't happen":  see hack below
+                    element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
                 } else {  // some other element, so just save it
                     this_new_content.push({...element})
                 }
@@ -961,6 +963,21 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
             this_content.content = [...this_new_content]
 
+          } else if (action == "absorb math"  && this_content.tag == "text" ) {  // silly hack because of reprocessing
+              this_content.content = this_content.content.replace(/\s*\+\+\+saMePaR\s*/,"");
+
+          } else if (action == "ppp"  && (this_content.tag == "p" || this_content.tag == "li" )) {
+              if (typeof this_content.content == "string") {
+                  this_content.content = this_content.content.replace(/^( *\n)*/, "");
+                  this_content.content = this_content.content.replace(/( *\n)*$/, "");
+              } else {
+                  this_content.content.forEach( (element) => {
+                      if (element.tag == "text" || display_math_tags.includes(element.tag)) {
+                        element.content = element.content.replace(/^( *\n)*/, "");
+                        element.content = element.content.replace(/( *\n)*$/, "");
+                      }
+                  } );
+              }
           }    // last of many special transformations
 
 // console.log("past the special trans", action, "xx", this_content);
@@ -981,52 +998,12 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
       else if (action == "fonts" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
         return texFonts(this_content)
-//        let new_text = "";
-//        new_text = this_content.replace(/\\('|"|\^|`|~|-|c|H|u|v) ([a-zA-Z])/mg, accentedASCII);
-//        new_text = this_content.replace(/\\('|"|\^|`|~|-)([a-zA-Z])/mg, accentedASCII);
-//        new_text = new_text.replace(/\\('|"|\^|`|~|-|c|H|u|v){([a-zA-Z])}/mg, accentedASCII);
-// // console.log("found genuine text:", this_content, "which is now",new_text);
-//        return new_text
+
       } else if (action == "texlike" && tags_to_process.includes(parent_tag)) {  // note: this_content already known
                                                                           // to be a string
 // console.log("texlike", this_content);
 
         return texLike(this_content);
-
-//        let new_text = "";
-//        new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
-//        new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
-//        new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
-//        new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
-//        new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
-            // for those who write (\ref{...}) instead of \eqref{...}
-//        new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
-//                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
-//                              });
-//        new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
-                       //           return 'PPPPPPP';
-//                                  z = z.replace(/, */g, " ");
-//                                  z = sanitizeXMLattributes(z);
-//                                  return '<xref ref="' + z + '"/>'
-//                              });
-   //     new_text = new_text.replace(/\\fn{([^{}]+)}/g, "<fn>$1</fn>");
-
-         // not good enough:  need to match {}  // also, did not work
-//        new_text = new_text.replace(/\\(caption){([^{}]+)}/sg, "<$1>$2</$1>");
-//        new_text = new_text.replace(/\\(caption)\s*({.*)/sg, function(x,y,z) {
-//            let caption_plus = firstBracketedString(z);
-   //console.log("caption_plus[0]", caption_plus[0]);
-//            return "<" + y + ">" + caption_plus[0] + "</" + y + ">" + "\n" + z
-//        });
-//        new_text = new_text.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>");
-//        new_text = new_text.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(x,y,z,p,w) {
-//                                  return '<url href="' + z + '">' + w + '</url>'
-//                              });
-//        new_text = new_text.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(x,y,z) {  // }
-//                                  return '<url href="' + z + '"/>'
-//                              });
-   // console.log("found genuine text:", this_content, "which is now",new_text);
-//        return new_text
 
       } else { return this_content }
     }
