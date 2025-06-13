@@ -3850,7 +3850,9 @@ const ie = function(e) {
     ["m", "md", "me", "mdn", "men"].includes(u) && (a.match(/^.*(\.|,|;)\s*$/s) && (a = a.replace(/\s*$/, ""), m = a.slice(-1), a = a.slice(0, -1)), a.match(/(\\|{)/) ? a = zt(a) : (a = It(a, "LaTeX"), a = a.replace(/&/g, " \\amp "))), s = s + a;
     let p = h.before_end + h.end_tag + m + h.after_end;
     s.match(/^\s*<mdn>.*<\/mdn>\s*$/s) ? o = s : o = l + s + p, s.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), s = ""), o = o.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3"), n += o;
-  }), n;
+  }), n.replace(/^\s*<p>\s*(<\?[^<>]*\?>)\s*<\/p>\s*/, `$1
+
+`);
 }, J = function(e) {
   let t = e;
   return t = t.replace(/[^a-zA-Z0-9\-_ ]/g, "_"), t;
