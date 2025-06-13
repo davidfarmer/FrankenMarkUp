@@ -300,6 +300,7 @@ const mt = ["cases", "align", "system", "derivation", "linearsystem"], re = [
   "language"
 ];
 let w = [];
+w.push(["pretext"]);
 w.push(["article"]);
 w.push(["chapter"]);
 w.push(["section"]);
@@ -4174,7 +4175,7 @@ const ie = function(e) {
       for (m = 0; m < e.content.length; ++m) {
         a = e.content[m];
         const p = c.length;
-        K.includes(a.tag) ? p == 0 ? c.push({ ...a }) : c[p - 1].tag != "p" ? c.push({ ...a }) : typeof c[p - 1].content == "string" ? (c[p - 1].content = [{ tag: "text", content: c[p - 1].content }], c[p - 1].content.push({ ...a })) : c[p - 1].content.push({ ...a }) : a.tag == "p" ? typeof a.content == "string" && a.content.match(/\s*\+\+\+saMePaR/) ? (a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, ""), c[p - 1].content.push({ tag: "text", content: a.content })) : typeof a.content == "string" ? c.push({ ...a }) : a.content.length > 0 && a.content[0].tag == "text" && typeof a.content[0].content == "string" && a.content[0].content.match(/\s*\+\+\+saMePaR/) ? (a.content[0].content = a.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), a.content.forEach((y) => {
+        K.includes(a.tag) ? p == 0 ? c.push({ ...a }) : c[p - 1].tag != "p" ? c.push({ ...a }) : typeof c[p - 1].content == "string" ? (c[p - 1].content = [{ tag: "text", content: c[p - 1].content }], c[p - 1].content.push({ ...a })) : c[p - 1].content.push({ ...a }) : a.tag == "p" ? typeof a.content == "string" && a.content.match(/\s*\+\+\+saMePaR/) ? (a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, ""), console.log("               about to push", a.content, "as", p, "(m1) on", c), c[p - 1].content.push({ tag: "text", content: a.content })) : typeof a.content == "string" ? c.push({ ...a }) : a.content.length > 0 && a.content[0].tag == "text" && typeof a.content[0].content == "string" && a.content[0].content.match(/\s*\+\+\+saMePaR/) ? (a.content[0].content = a.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), a.content.forEach((y) => {
           c[p - 1].content.push(y);
         })) : a.content.length > 0 && c.push({ ...a }) : a.tag == "text" ? (console.log("found text", a.content), a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, "")) : c.push({ ...a });
       }
@@ -4190,7 +4191,7 @@ const ie = function(e) {
 }, Ht = function(e) {
   let t = e.replace(/ +(\n|$)/g, `
 `);
-  t = Wt(t), t = t.replace(new RegExp("{([a-z]{3,})\\*", "d"), "$1star"), ct.forEach((s) => {
+  t = Wt(t), t = t.replace(new RegExp("{([a-z]{3,})\\*", "d"), "$1star"), t = t.replace(/section\*/g, "section"), ct.forEach((s) => {
     const l = new RegExp(
       "(\\\\begin{" + s + "})(.*?)(\\\\end{" + s + "})",
       "sg"
@@ -4282,7 +4283,7 @@ $1`), t = t.replace(/``` *\n *\n/g, `\\end{sage}
     let l = [], u = {}, h = !0, g = !1, c = "";
     return s.forEach((a, m) => {
       let p = a.trim();
-      if (h) {
+      if (console.log("element", p), h) {
         if (!p)
           return;
         a != t ? m == 0 ? (u.tag = "introduction", u.content = a, l.push({ ...u }), u = {}) : R("did not find " + t + ":" + a + "X") : (u.tag = t, h = !1, g = !0);
@@ -4290,7 +4291,7 @@ $1`), t = t.replace(/``` *\n *\n/g, `\\end{sage}
         let [y, f] = ee(p);
         u.title = y.slice(1, -1), f.match(/^\s*\\label/) && (f = f.replace(/^\s*\\label\s*/, ""), [c, f] = ee(f), c = c.slice(1, -1), c && (u.id = J(c))), u.content = f.trim(), g = !1, h = !0, l.push({ ...u }), u = {};
       }
-    }), Object.keys(u).length && R("some content was not saved"), l;
+    }), Object.keys(u).length && (console.log("current_section", u), R("some content was not saved")), l;
   }
 };
 let A = {};
@@ -4298,7 +4299,7 @@ function Kt(e, t = "placeholder") {
   let n = Ht(e), r = Vt(n), i = Qt(r), o = { tag: t, content: i };
   "documentclass" in A && A.documentclass ? o.tag = A.documentclass : o.tag = t, "title" in A && A.title ? o.title = A.title : "shorttitle" in A && A.shorttitle && (o.title = A.shorttitle);
   let s = { ...o };
-  const l = 19;
+  const l = 20;
   for (let M = 0; M < l; ++M)
     w.forEach((S) => {
       s = O(s, S, 0, M), pe.forEach((T) => {
