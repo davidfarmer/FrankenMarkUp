@@ -186,7 +186,7 @@ console.log("content", content);
 
  //   assembled_text = assembled_text.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3");
 
-    return assembled_text
+    return assembled_text.replace(/^\s*<p>\s*(<\?[^<>]*\?>)\s*<\/p>\s*/,"$1\n\n");
 }
 
 export const sanitizeXMLattributes = function(text) {
