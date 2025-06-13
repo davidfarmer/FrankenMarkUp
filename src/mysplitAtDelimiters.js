@@ -931,7 +931,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
-// console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
+ console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
@@ -1021,6 +1021,7 @@ export const preprocess = function(just_text) {
 
    // things like {equation*} -> {equation*}
     originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
+    originaltextX = originaltextX.replace(/section\*/g,"section");
 
       tags_with_weird_labels.forEach( (tag) => {
           const regex = new RegExp(
@@ -1217,6 +1218,7 @@ const splitOnStructure = function(doc, marker, depth=0, maxdepth=2) {
 
         this_doc_sections.forEach(  (element, index) => {
           let element_trimmed = element.trim();
+console.log("element", element_trimmed);
 
           if (looking_for_section) {
             if (!element_trimmed) { return } // ie, next iteration
@@ -1269,7 +1271,10 @@ const splitOnStructure = function(doc, marker, depth=0, maxdepth=2) {
 
         });
 
-        if (Object.keys(current_section).length) { alert("some content was not saved") }
+        if (Object.keys(current_section).length) {
+            console.log("current_section",current_section);
+            alert("some content was not saved")
+        }
 
 // console.log(text_reassembled);
 // alert("this_text_sections");

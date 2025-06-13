@@ -62,7 +62,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 
 // console.log("starting iteration on new1", new1);
 // alert("new1");
-      const firstdepth =  19;
+      const firstdepth =  20;
       for (let depth = 0; depth < firstdepth; ++depth) {
           let trimmed_levels = level    //  currently not trimming level.slice(depth);      // need to actually trim them!
           trimmed_levels.forEach( (lev) => {

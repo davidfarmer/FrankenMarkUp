@@ -329,6 +329,7 @@ export const possibleattributes = ["source", "ref", "width", "margins", "label",
 
 export let level = [];
 
+level.push(["pretext"]);
 level.push(["article"]);
 level.push(["chapter"]);
 level.push(["section"]);
