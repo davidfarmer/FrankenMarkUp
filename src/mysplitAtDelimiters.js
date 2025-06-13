@@ -932,6 +932,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
          // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
  console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
+console.log("specifically item",items_so_far - 1,"which is", this_new_content[items_so_far - 1]);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
@@ -1019,6 +1020,10 @@ export const preprocess = function(just_text) {
 
     originaltextX = preprocessAliases(originaltextX);
 
+   // XML comments (can these be something else, such as in Tikz?
+    originaltextX = originaltextX.replace(/<--/g, "\\begin{comment}");
+    originaltextX = originaltextX.replace(/-->/g, "\\end{comment}");
+
    // things like {equation*} -> {equation*}
     originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
     originaltextX = originaltextX.replace(/section\*/g,"section");
@@ -1048,7 +1053,7 @@ export const preprocess = function(just_text) {
    // the questionable way we recognize paragraphs
    // to do: use a list of math modes
    //        make sure \[...\] works
-      originaltextB = originaltextB.replace(/\n\\\[([^\[\]]+)\\\]\n/sg, "\n\\begin{equationstar}$1\\end{equationstar}\n");  // old LaTeX
+      originaltextB = originaltextB.replace(/\n *\\\[([^\[\]]+)\\\] *\n/sg, "\n\\begin{equationstar}$1\\end{equationstar}\n");  // old LaTeX
       originaltextB = originaltextB.replace(/(\$\$|\\end{equation}|\\end{align}|\\end{equationstar}|\\end{alignstar}) *\n([^\s])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
       originaltextB = originaltextB.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, "$1\n+++saMePaR$2");  // should take "equation" and "align" from a list
 

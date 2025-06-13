@@ -130,7 +130,7 @@ export const randomtags_containing_p = ["reading-questions", "introduction", "co
 // LaTeX, TeX, PreTeXt, [[what else?]]
 
 export const list_like = ["ol", "ul", "dl"]; 
-const other_pure_containers = ["code","mrow", "biblio"];  // currently unused
+const other_pure_containers = ["code","mrow", "biblio", "comment"];  // currently unused
 export const list_elements = ["li"];
 
 export const aside_like = ["aside", "historical", "biographical"];
@@ -156,13 +156,13 @@ export const hint_like = ["hint", "answer", "solution"];
 
 export const subpart_like = ["case", "task"];
 
-export const inlinetags = ["em", "term", "alert", "m", "q", "c", "tag"];
+export const inlinetags = ["em", "term", "alert", "m", "q", "c", "comment"];  // , "tag"];
 // also need to handle self-closing tags
 
 export const self_closing_inline_tags = ["idx", "latex", "tex", "pretext", "ie", "eg"];  //rethink this
 export const possibly_self_closing_inline_tags = ["url"];
 
-export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage", "biblio"];
+export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage", "biblio", "comment"];
 
 export let structural_components = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"];
 
@@ -211,7 +211,7 @@ export const subenvironments = {  // the tags which occun inside specific enviro
 };
 
 export const containers = ["exercisegroup", "exercises", "prefigure", "tikzpicture",
-                           "sage", "references",
+                           "sage", "references", "comment",
                            "diagram", ...subenvironments["diagram"] ];
 
 export const objects_with_substructure = Object.keys(subenvironments);
@@ -309,6 +309,10 @@ outputtags["image"] = {begin_tag: "<image", end_tag: "</image>",  // should not 
 outputtags["description"] = {begin_tag: "<description>", end_tag: "</description>",  // img or image?  should not be a special case?
          before_begin: "\n", after_begin: "",
          before_end: "", after_end: "\n"};
+
+outputtags["comment"] = {begin_tag: "<--", end_tag: "-->",  // should not be a special case?
+         before_begin: "", after_begin: "",
+         before_end: "", after_end: ""};
 
 outputtags["p"] = PTXblockoutput("p")
 outputtags["li"] = PTXblockoutput("li")

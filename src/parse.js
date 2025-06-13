@@ -77,6 +77,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       let new7 = {...new1}
 // console.log("about to process new7", new7);
 // alert("7");
+      new7 = splitAtDelimiters(new7, ["comment"], 0, 10);
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
 //    console.log("processed text 7", new7);
 //         alert("pause 2");
