@@ -6,7 +6,7 @@ const he = {
   after_begin: "",
   before_end: "",
   after_end: ""
-}, q = {
+}, _ = {
   // start with the quirky ones
   text: he,
   placeholder: he
@@ -95,7 +95,7 @@ C.push({ left: "<mdn", right: "</mdn>", tag: "mdn" });
 C.push({ left: "<men", right: "</men>", tag: "men" });
 const K = ["md", "mdn", "me", "men"];
 K.forEach((e) => {
-  q[e] = {
+  _[e] = {
     begin_tag: `
 <` + e,
     end_tag: "</" + e + ">",
@@ -110,7 +110,7 @@ K.forEach((e) => {
   };
 });
 [...K];
-const Ee = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Te = ["ol", "ul", "dl"], lt = ["li"], Pe = ["aside", "historical", "biographical"], ye = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], be = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Ne = ["convention", "insight", "note", "observation", "remark", "warning"], Se = ["example", "problem", "question"], je = ["definition"], ue = ["exercise"], Oe = ["proof"], Re = ["activity", "exploration", "investigation", "project"], ce = ["hint", "answer", "solution"], Xe = ["case", "task"], ve = ["em", "term", "alert", "m", "q", "c", "tag"];
+const Ee = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet", "page"], Te = ["ol", "ul", "dl"], lt = ["li"], Pe = ["aside", "historical", "biographical"], ye = ["algorithm", "claim", "corollary", "fact", "identity", "lemma", "proposition", "theorem"], be = ["assumption", "axiom", "conjecture", "heuristic", "hypothesis", "principle"], Ne = ["convention", "insight", "note", "observation", "remark", "warning"], Se = ["example", "problem", "question"], je = ["definition"], ue = ["exercise"], Oe = ["proof"], Re = ["activity", "exploration", "investigation", "project"], ce = ["hint", "answer", "solution"], Xe = ["case", "task"], ve = ["em", "term", "alert", "m", "q", "c", "comment"];
 let Ze = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"], Ie = [
   // peer of p cildren of (sub)sections
   ...Pe,
@@ -170,6 +170,7 @@ const Q = [
   "tikzpicture",
   "sage",
   "references",
+  "comment",
   "diagram",
   ...U.diagram
 ], pt = Object.keys(U), I = [];
@@ -186,19 +187,19 @@ Fe.forEach((e) => {
 let oe = Array.from(I, ({ tag: e }) => e);
 oe = [...new Set(oe)];
 we.forEach((e) => {
-  q[e] = nt(e);
+  _[e] = nt(e);
 });
 Fe.forEach((e) => {
-  q[e] = D(e);
+  _[e] = D(e);
 });
 Ee.forEach((e) => {
-  q[e] = D(e);
+  _[e] = D(e);
 });
 De.forEach((e) => {
-  q[e] = D(e);
+  _[e] = D(e);
 });
 [...Ce, ...ze, ...Be].forEach((e) => {
-  q[e] = D(e);
+  _[e] = D(e);
 });
 let W = [
   { left: "\\(", right: "\\)", tag: "m" }
@@ -208,12 +209,12 @@ ve.forEach((e) => {
   W.push(le(e));
 });
 ve.forEach((e) => {
-  q[e] = ot(e);
+  _[e] = ot(e);
 });
 ut.forEach((e) => {
-  q[e] = it(e);
+  _[e] = it(e);
 });
-q.ol = {
+_.ol = {
   begin_tag: `<p>
 <ol`,
   end_tag: `</ol>
@@ -227,7 +228,7 @@ q.ol = {
   after_end: `
 `
 };
-q.ul = {
+_.ul = {
   begin_tag: `<p>
 <ul`,
   end_tag: `</ul>
@@ -241,9 +242,9 @@ q.ul = {
   after_end: `
 `
 };
-q.enumerate = q.ol;
-q.itemize = q.ul;
-q.tikzpicture = {
+_.enumerate = _.ol;
+_.itemize = _.ul;
+_.tikzpicture = {
   begin_tag: `<image>
 <latex-image>
 \\begin{tikzpicture}`,
@@ -259,7 +260,7 @@ q.tikzpicture = {
   after_end: `
 `
 };
-q.image = {
+_.image = {
   begin_tag: "<image",
   end_tag: "</image>",
   // should not be a special case?
@@ -271,7 +272,7 @@ q.image = {
   after_end: `
 `
 };
-q.description = {
+_.description = {
   begin_tag: "<description>",
   end_tag: "</description>",
   // img or image?  should not be a special case?
@@ -282,8 +283,17 @@ q.description = {
   after_end: `
 `
 };
-q.p = D("p");
-q.li = D("li");
+_.comment = {
+  begin_tag: "<--",
+  end_tag: "-->",
+  // should not be a special case?
+  before_begin: "",
+  after_begin: "",
+  before_end: "",
+  after_end: ""
+};
+_.p = D("p");
+_.li = D("li");
 const mt = ["cases", "align", "system", "derivation", "linearsystem"], re = [
   "source",
   "ref",
@@ -3203,7 +3213,7 @@ String.prototype.myHash = function() {
     n = this.charCodeAt(t), e = (e << 5) - e + n, e |= 0;
   return e;
 };
-class _ {
+class q {
   /*
     constructor(position, value, key = null, parent = null, conversiontarget) {
   */
@@ -3211,7 +3221,7 @@ class _ {
     this.position = t, this.value = n, this.outputvalue = n, this.key = r, this.parent = i, this.conversiontarget = o, this.children = [], this.pair = [], this.noPriority = !1, this.exPriority = !1;
   }
   insert(t, n = t) {
-    return this.children.push(new _(this.children.length, t, n, this, this.conversiontarget)), !0;
+    return this.children.push(new q(this.children.length, t, n, this, this.conversiontarget)), !0;
   }
   insertNode(t) {
     return t.parent = this, t.position = this.children.length, this.children.push(t), !0;
@@ -3231,9 +3241,9 @@ class _ {
       console.debug("the root", this.treeRoot), this.value.length > 1 && (this.value = this.value.trim()), this.addLeafMarkup();
     } else {
       console.debug("not a Leaf", this.pair, this);
-      let n = this.children[0].key, r, i, o = this.children.length, s = 0;
-      for (; this.children[s].value != n; )
-        s++;
+      let n = this.children[0].key, r, i, o = this.children.length, u = 0;
+      for (; this.children[u].value != n; )
+        u++;
       if (n == " ")
         this.children.length > 1 && this.children[1].value == n ? (n == " " && (n = "\\,"), r = this.children[0].value + n + this.children[2].value, console.debug("adding Oo to", this, "because of", this.children[0]), i = this.children[0].outputvalue + this.children[1].outputvalue + this.children[2].outputvalue, this.key && this.key != " " && d[this.key].type != "function" && !d[this.key].wrappedarguments && d[this.key].priority > 20 && (console.debug("maybe wrapping this.key", this.key, "for", i), this.conversiontarget == "MathML" ? i = "<mrow>" + i + "</mrow>" : this.conversiontarget == "Speech" && (console.debug("AddIng quantity", this), i = "quantityS " + i + " Sendquantity"))) : (i = this.children[1].outputvalue, r = this.children[1].value);
       else if (n == "")
@@ -3241,19 +3251,19 @@ class _ {
       else {
         console.debug("about to use conversiontarget", this.conversiontarget);
         try {
-          console.debug("               trying to extract using key", n, "position", s, "numberOfSiblings", o, "from", this, "with rule of", s + 1 + "," + o), this.conversiontarget == "MathML" ? (r = d[n].rule[s + 1 + "," + o], i = d[n].ruleML[s + 1 + "," + o], console.debug("               attempted       MathML conversion: ", r, "newOutputValue", i)) : this.conversiontarget == "Speech" ? (r = d[n].rule[s + 1 + "," + o], i = d[n].speech[s + 1 + "," + o]) : (r = d[n].rule[s + 1 + "," + o], i = d[n].rule[s + 1 + "," + o]);
+          console.debug("               trying to extract using key", n, "position", u, "numberOfSiblings", o, "from", this, "with rule of", u + 1 + "," + o), this.conversiontarget == "MathML" ? (r = d[n].rule[u + 1 + "," + o], i = d[n].ruleML[u + 1 + "," + o], console.debug("               attempted       MathML conversion: ", r, "newOutputValue", i)) : this.conversiontarget == "Speech" ? (r = d[n].rule[u + 1 + "," + o], i = d[n].speech[u + 1 + "," + o]) : (r = d[n].rule[u + 1 + "," + o], i = d[n].rule[u + 1 + "," + o]);
         } catch {
-          r = d[n].rule[s + 1 + "," + o], i = d[n].rule[s + 1 + "," + o], console.debug("                      MathML conversion failed on", r);
+          r = d[n].rule[u + 1 + "," + o], i = d[n].rule[u + 1 + "," + o], console.debug("                      MathML conversion failed on", r);
         }
         if (r.includes("#comma?") && (this.key && d[this.key].type == "operator" && d[this.key].priority < 0 ? r = r.replace(/#comma\?\[(\S*)\&(\S*)\]$/, "$1") : r = r.replace(/#comma\?\[(\S*)\&(\S*)\]$/, "$2")), r.includes("#{}")) {
-          let l = !0, u = this;
-          for (["^^", "__"].includes(u.key) && (l = !1); u.parent && isScriptPure(u.key); )
-            u = u.parent, ["^^", "__"].includes(u.key) && (l = !1);
+          let l = !0, s = this;
+          for (["^^", "__"].includes(s.key) && (l = !1); s.parent && isScriptPure(s.key); )
+            s = s.parent, ["^^", "__"].includes(s.key) && (l = !1);
           l ? r = r.replace("#{}", "{}") : r = r.replace("#{}", "");
         }
         for (let l = 0; l < this.children.length; l++) {
-          let u = this.children[l].value, h = this.children[l].outputvalue, g = u, c = h;
-          r.includes("#@" + (l + 1)) && (g.length > 1 && (g = "{" + g + "}"), r = r.replace("#@" + (l + 1), g), i = i.replace("#@" + (l + 1), c)), t.includes("caseEnvironment") ? (r = r.replace("#&", "&"), i = i.replace("#&", "&")) : (r = r.replace("#&\\text{", "\\text{ "), r = r.replace("#&", ""), i = i.replace("#&\\text{", "\\text{ "), i = i.replace("#&", "")), r = r.replace("#" + (l + 1) + "@1", u[0]), r = r.replace("#" + (l + 1) + "@-1", u.substring(1)), r = r.replace("#" + (l + 1), u), i = i.replace("#" + (l + 1) + "@1", h[0]), i = i.replace("#" + (l + 1) + "@-1", h.substring(1)), i = i.replace("#" + (l + 1), h);
+          let s = this.children[l].value, h = this.children[l].outputvalue, g = s, p = h;
+          r.includes("#@" + (l + 1)) && (g.length > 1 && (g = "{" + g + "}"), r = r.replace("#@" + (l + 1), g), i = i.replace("#@" + (l + 1), p)), t.includes("caseEnvironment") ? (r = r.replace("#&", "&"), i = i.replace("#&", "&")) : (r = r.replace("#&\\text{", "\\text{ "), r = r.replace("#&", ""), i = i.replace("#&\\text{", "\\text{ "), i = i.replace("#&", "")), r = r.replace("#" + (l + 1) + "@1", s[0]), r = r.replace("#" + (l + 1) + "@-1", s.substring(1)), r = r.replace("#" + (l + 1), s), i = i.replace("#" + (l + 1) + "@1", h[0]), i = i.replace("#" + (l + 1) + "@-1", h.substring(1)), i = i.replace("#" + (l + 1), h);
         }
       }
       this.value = r, this.outputvalue = i, this.children = [];
@@ -3288,7 +3298,7 @@ class _ {
 }
 class Mt {
   constructor(t, n, r, i) {
-    this.root = new _(t, n, r, null, i), console.debug("       Tree 0 conversiontarget", i);
+    this.root = new q(t, n, r, null, i), console.debug("       Tree 0 conversiontarget", i);
   }
   *preOrderTraversal(t = this.root) {
     if (yield t, t.children.length)
@@ -3305,7 +3315,7 @@ class Mt {
     console.debug("       Tree 1 conversiontarget", this.conversiontarget);
     for (let i of this.preOrderTraversal())
       if (console.debug("trying Tree1 node", i), i.value === t)
-        return i.children.push(new _(n, r, i, conversiontarget)), !0;
+        return i.children.push(new q(n, r, i, conversiontarget)), !0;
     return !1;
   }
   remove(t) {
@@ -3372,11 +3382,11 @@ function Ge(e, t) {
 }
 function ne(e, t, n) {
   console.debug("starting M2TreeConvert  conversiontarget", n);
-  let r = new Mt(0, e, null, n), i = "", o = r.root, s = !0, l, u = [], h = {};
-  for (console.debug("continuing M2TreeConvert  conversiontarget", n, "on", e); s; ) {
+  let r = new Mt(0, e, null, n), i = "", o = r.root, u = !0, l, s = [], h = {};
+  for (console.debug("continuing M2TreeConvert  conversiontarget", n, "on", e); u; ) {
     let g = o.value;
     console.debug("fullStr", "X" + g + "X");
-    let c = 0, a = 0, m = 0, p, y;
+    let p = 0, a = 0, m = 0, c, y;
     for (; g.length > m; ) {
       let f = g[m], v = !1, P = !1;
       for (let b of [['"', '"']])
@@ -3386,13 +3396,13 @@ function ne(e, t, n) {
           if (x != -1) {
             let k = [g.substring(0, m), g.substring(m + 1, x), g.substring(x + 1)];
             console.debug("children are", k), o.value = "";
-            let E = new _(0, "\\ \\ \\text{" + k[1] + "}\\ \\ ", "justatest", null, n);
-            if (console.debug("qNode was", E, "with children", E.children), E = V(k[0], E, n), console.debug("qNode is", E, "with children", E.children), console.debug("stackedTreeNode was", l), l = H(l, E, n), console.debug("stackedTreeNode is", l, "with children", l.children), u.length > 0) {
-              l.key = u[0][0].children[0].key;
-              let X = u[0][0].children.pop();
-              u[0][0].insertNode(l), u[0][0].insertNode(X), u[0][1]--, u[0][1] == 0 && u.shift(), l = void 0;
+            let E = new q(0, "\\ \\ \\text{" + k[1] + "}\\ \\ ", "justatest", null, n);
+            if (console.debug("qNode was", E, "with children", E.children), E = V(k[0], E, n), console.debug("qNode is", E, "with children", E.children), console.debug("stackedTreeNode was", l), l = H(l, E, n), console.debug("stackedTreeNode is", l, "with children", l.children), s.length > 0) {
+              l.key = s[0][0].children[0].key;
+              let X = s[0][0].children.pop();
+              s[0][0].insertNode(l), s[0][0].insertNode(X), s[0][1]--, s[0][1] == 0 && s.shift(), l = void 0;
             }
-            g = g.substring(x + 1), m = 0, a = 0, p = void 0, y = void 0, v = !0;
+            g = g.substring(x + 1), m = 0, a = 0, c = void 0, y = void 0, v = !0;
           }
         }
       if (Et(f)) {
@@ -3402,12 +3412,12 @@ function ne(e, t, n) {
           let x = [g.substring(0, m), g.substring(m + 1, b), g.substring(b + 1)];
           o.value = "";
           let k = ne(x[1].trim(), t, n)[0].root;
-          if (k.pair.push([f, g[b]]), k = V(x[0], k, n), console.debug("just made pNode", k), l = H(l, k, n), console.debug("just made stackedTreeNode", l), u.length > 0) {
-            l.key = u[0][0].children[0].key;
-            let E = u[0][0].children.pop();
-            u[0][0].insertNode(l), u[0][0].insertNode(E), u[0][1]--, u[0][1] == 0 && u.shift(), l = void 0;
+          if (k.pair.push([f, g[b]]), k = V(x[0], k, n), console.debug("just made pNode", k), l = H(l, k, n), console.debug("just made stackedTreeNode", l), s.length > 0) {
+            l.key = s[0][0].children[0].key;
+            let E = s[0][0].children.pop();
+            s[0][0].insertNode(l), s[0][0].insertNode(E), s[0][1]--, s[0][1] == 0 && s.shift(), l = void 0;
           }
-          g = g.substring(b + 1), m = 0, a = 0, p = void 0, y = void 0, v = !0;
+          g = g.substring(b + 1), m = 0, a = 0, c = void 0, y = void 0, v = !0;
         }
       }
       if (f == "<" && g[m + 1] != " ") {
@@ -3417,12 +3427,12 @@ function ne(e, t, n) {
           let x = [g.substring(0, m), g.substring(m + 1, b), g.substring(b + 1)];
           o.value = "";
           let k = ne(x[1].trim(), t, n)[0].root;
-          if (k.pair.push(["\\langle ", "\\rangle "]), k = V(x[0], k, n), l = H(l, k, n), u.length > 0) {
-            l.key = u[0][0].children[0].key;
-            let E = u[0][0].children.pop();
-            u[0][0].insertNode(l), u[0][0].insertNode(E), u[0][1]--, u[0][1] == 0 && u.shift(), l = void 0;
+          if (k.pair.push(["\\langle ", "\\rangle "]), k = V(x[0], k, n), l = H(l, k, n), s.length > 0) {
+            l.key = s[0][0].children[0].key;
+            let E = s[0][0].children.pop();
+            s[0][0].insertNode(l), s[0][0].insertNode(E), s[0][1]--, s[0][1] == 0 && s.shift(), l = void 0;
           }
-          g = g.substring(b + 1), m = 0, a = 0, p = void 0, y = void 0, v = !0, console.debug("keyType", y);
+          g = g.substring(b + 1), m = 0, a = 0, c = void 0, y = void 0, v = !0, console.debug("keyType", y);
         }
       }
       console.debug("OUT j", a, "on", "X" + g + "X", "woith counter", m);
@@ -3433,11 +3443,11 @@ function ne(e, t, n) {
         }
         let x = g.substring(b, m + 1), k = At(g, x, m, l);
         if (console.debug("subStr", x, "type", k), k) {
-          p = x, c = b, y = k, P = !0, console.debug("A keyType", y, "with key", "X" + p + "X", "from subStr", x);
+          c = x, p = b, y = k, P = !0, console.debug("A keyType", y, "with key", "X" + c + "X", "from subStr", x);
           break;
         }
         if (x == " " && (m >= 1 || o.parent && o.parent.children.length == 2 && o.position == 1 || l) && !Tt(St(g, m))) {
-          p = x, c = b, y = "space", P = !0, console.debug("B keyType", y);
+          c = x, p = b, y = "space", P = !0, console.debug("B keyType", y);
           break;
         } else
           console.debug("     maybe breaking on multiword subStr", x);
@@ -3446,25 +3456,25 @@ function ne(e, t, n) {
         break;
       v || (m++, f.match(/[\s\d]/g) && (a = m));
     }
-    if (console.debug("is there a" + p + "key?"), p) {
-      console.debug("yes, there is there a" + p + "key"), !d[p] && p != " " && p != "" && (p = xe.getItem(p)), console.debug("and now it is" + p + "key of", y, "keyType");
+    if (console.debug("is there a" + c + "key?"), c) {
+      console.debug("yes, there is there a" + c + "key"), !d[c] && c != " " && c != "" && (c = xe.getItem(c)), console.debug("and now it is" + c + "key of", y, "keyType");
       let f, v, P, b;
       switch (y) {
         case "space":
         case "operator":
         //operators
         case "relation":
-          if (f = [g.substring(0, c), p, g.substring(m + 1)], y == "relation" && t.includes("&beforeFirstRelation") && !h["&beforeFirstRelation"] && (h["&beforeFirstRelation"] = !0, f[2] = "&" + f[2]), v = new _(0, f[0], p, null, n), P = new _(0, f[1], p, null, n), b = new _(0, f[2], p, null, n), l && (l = qt(v.value, l, n), v = l, v.key = p, l = void 0), y == "space" && u.length > 0) {
-            o.value = f[0], b.key = u[0][0].children[0].key, u[0][0].insertNode(b), o = u[0][0].children[u[0][0].children.length - 1], u[0][1]--, u[0][1] == 0 && u.shift();
+          if (f = [g.substring(0, p), c, g.substring(m + 1)], y == "relation" && t.includes("&beforeFirstRelation") && !h["&beforeFirstRelation"] && (h["&beforeFirstRelation"] = !0, f[2] = "&" + f[2]), v = new q(0, f[0], c, null, n), P = new q(0, f[1], c, null, n), b = new q(0, f[2], c, null, n), l && (l = qt(v.value, l, n), v = l, v.key = c, l = void 0), y == "space" && s.length > 0) {
+            o.value = f[0], b.key = s[0][0].children[0].key, s[0][0].insertNode(b), o = s[0][0].children[s[0][0].children.length - 1], s[0][1]--, s[0][1] == 0 && s.shift();
             break;
           }
           let x = !0;
-          (Ke(p) || Ye(p)) && (y != "space" && f[0].length == 0 || g[c - 1]) && g[m + 1] && g[c - 1] != " " && g[m + 1] != " " && (x = !1);
-          let k = me(p), E = !1;
-          y != "space" && d[p].script && (k -= 0.1, x && (E = !0, v.exPriority = !0, P.exPriority = !0, b.exPriority = !0), x || (x = !0), Ot(o, p) && (x = !1));
+          (Ke(c) || Ye(c)) && (y != "space" && f[0].length == 0 || g[p - 1]) && g[m + 1] && g[p - 1] != " " && g[m + 1] != " " && (x = !1);
+          let k = me(c), E = !1;
+          y != "space" && d[c].script && (k -= 0.1, x && (E = !0, v.exPriority = !0, P.exPriority = !0, b.exPriority = !0), x || (x = !0), Ot(o, c) && (x = !1));
           let X = 0;
           if (o.exPriority && !E && (X += 0.2), x && (o.noPriority || k + X < me(o.key))) {
-            let S = !1;
+            let j = !1;
             for (o.value = v.value, o.children = v.children, o.pair = v.pair, o.exPriority = v.exPriority, o.noPriority = v.noPriority; o.parent; ) {
               let T = o.position;
               if (o = o.parent, X = 0, !E) {
@@ -3475,68 +3485,68 @@ function ne(e, t, n) {
                   }
               }
               if (!o.children[0].noPriority && k + X >= me(o.children[0].key)) {
-                let B = o.children[T], j = new _(T, null, o.children[0].key, null, n);
-                j.noPriority = o.children[T].noPriority, j.exPriority = o.children[T].exPriority, o.children[T] = j, j.parent = o, j.insertNode(B), B.key = p, B.noPriority = P.noPriority, B.exPriority = P.exPriority, j.insertNode(P), j.insertNode(b), o = j.children[2], S = !0;
+                let B = o.children[T], O = new q(T, null, o.children[0].key, null, n);
+                O.noPriority = o.children[T].noPriority, O.exPriority = o.children[T].exPriority, o.children[T] = O, O.parent = o, O.insertNode(B), B.key = c, B.noPriority = P.noPriority, B.exPriority = P.exPriority, O.insertNode(P), O.insertNode(b), o = O.children[2], j = !0;
                 break;
               }
             }
-            if (!S) {
-              let T = new _(0, "", null, null, n);
-              r.root.key = p, T.insertNode(r.root), T.insertNode(P), T.insertNode(b), r.root = T, o = r.root.children[2];
+            if (!j) {
+              let T = new q(0, "", null, null, n);
+              r.root.key = c, T.insertNode(r.root), T.insertNode(P), T.insertNode(b), r.root = T, o = r.root.children[2];
             }
           } else
             x || (v.noPriority = !0, P.noPriority = !0, b.noPriority = !0), o.value = "", o.insertNode(v), o.insertNode(P), o.insertNode(b), o = o.children[2];
           break;
         //break case
         case "function":
-          f = [g.substring(0, c), p, g.substring(m + 1)], f[2][0] == " " && (f[2] = f[2].substring(1)), v = new _(0, f[0], p, null, n), P = new _(0, f[1], p, null, n), b = new _(0, f[2], p, null, n), l && (l = V(v.value, l, n), v = l, v.key = p, l = void 0);
-          let $ = new _();
-          if ($.conversiontarget = n, $.value = "", $.insert(p, p), b.key = p, d[p].pairedArgument) {
-            let S = qe(g, c, p, d[p].pairedArgument, d[p].family);
-            if (S != -1) {
-              let T = [g.substring(m + 1, S), g.substring(S + 1)], B = ne(T[0].trim(), t, n)[0].root, j = new _(0, T[1], p, null, n);
-              $.insertNode(B), $.insertNode(j);
+          f = [g.substring(0, p), c, g.substring(m + 1)], f[2][0] == " " && (f[2] = f[2].substring(1)), v = new q(0, f[0], c, null, n), P = new q(0, f[1], c, null, n), b = new q(0, f[2], c, null, n), l && (l = V(v.value, l, n), v = l, v.key = c, l = void 0);
+          let $ = new q();
+          if ($.conversiontarget = n, $.value = "", $.insert(c, c), b.key = c, d[c].pairedArgument) {
+            let j = qe(g, p, c, d[c].pairedArgument, d[c].family);
+            if (j != -1) {
+              let T = [g.substring(m + 1, j), g.substring(j + 1)], B = ne(T[0].trim(), t, n)[0].root, O = new q(0, T[1], c, null, n);
+              $.insertNode(B), $.insertNode(O);
             } else
               $.insertNode(b);
           } else
             $.insertNode(b);
           let z = o;
-          o = $.children[$.children.length - 1], v.value.length > 0 && ($ = _t(v, $)), $.value = "", z.parent ? ($.key = z.parent.children[z.position].key, $.position = z.position, $.parent = z.parent, z.parent.children[z.position] = $) : r.root = $, d[p] && d[p].extraArgument && u.push([$, d[p].extraArgument]);
+          o = $.children[$.children.length - 1], v.value.length > 0 && ($ = _t(v, $)), $.value = "", z.parent ? ($.key = z.parent.children[z.position].key, $.position = z.position, $.parent = z.parent, z.parent.children[z.position] = $) : r.root = $, d[c] && d[c].extraArgument && s.push([$, d[c].extraArgument]);
           break;
         case "postfix":
         // such as "!" for factorial.
         case "symbol":
         //symbols
         case "letter":
-          f = [g.substring(0, c), p, g.substring(m + 1)], console.debug("making a symbolNode with", f);
-          let M = new _();
-          if (M.conversiontarget = n, M.value = "", M.insert(p, p), M = V(f[0], M, n), l = H(l, M, n), console.debug("now have stackedTreeNode", l), u.length > 0) {
-            l.key = u[0][0].children[0].key;
-            let S = u[0][0].children.pop();
-            u[0][0].insertNode(l), u[0][0].insertNode(S), u[0][1]--, u[0][1] == 0 && u.shift(), l = void 0;
+          f = [g.substring(0, p), c, g.substring(m + 1)], console.debug("making a symbolNode with", f);
+          let M = new q();
+          if (M.conversiontarget = n, M.value = "", M.insert(c, c), M = V(f[0], M, n), l = H(l, M, n), console.debug("now have stackedTreeNode", l), s.length > 0) {
+            l.key = s[0][0].children[0].key;
+            let j = s[0][0].children.pop();
+            s[0][0].insertNode(l), s[0][0].insertNode(j), s[0][1]--, s[0][1] == 0 && s.shift(), l = void 0;
           }
           o.value = f[2], console.debug("now have currentNode", o);
           break;
         case "multiline":
-          f = [g.substring(0, c), p, g.substring(m + 1)];
-          let $e = new _(0, f[0], null, null, n);
-          l = H(l, $e, n), o.value = f[2], i = p, console.debug("----------- just set exParam = ", i);
+          f = [g.substring(0, p), c, g.substring(m + 1)];
+          let $e = new q(0, f[0], null, null, n);
+          l = H(l, $e, n), o.value = f[2], i = c, console.debug("----------- just set exParam = ", i);
           break;
         case "UNUSED":
-          f = [g.substring(0, c), p, g.substring(m + 1)], o.value = f[2];
+          f = [g.substring(0, p), c, g.substring(m + 1)], o.value = f[2];
           break;
       }
     } else {
       if (l) {
         if (g.trim() != "") {
           console.debug("388 M2TreeConvert  conversiontarget", n);
-          let v = new _();
+          let v = new q();
           v.conversiontarget = n, l.key = "", v.insertNode(l), v.insert("", ""), v.insert(g, ""), l = v;
         }
         let f = o.position;
         l.position = f, l.key = o.key, o.parent ? (l.parent = o.parent, o.parent.children[f] = l) : r.root = l;
       }
-      s = !1;
+      u = !1;
       break;
     }
   }
@@ -3545,7 +3555,7 @@ function ne(e, t, n) {
 function H(e, t, n) {
   if (e) {
     console.debug("stackNode M2TreeConvert  stackedTreeNode.conversiontarget", e.conversiontarget);
-    let r = new _();
+    let r = new q();
     r.conversiontarget = n, e.key = "", r.insertNode(e), r.insert("", ""), t.key = "", r.insertNode(t), e = r;
   } else
     e = t;
@@ -3554,7 +3564,7 @@ function H(e, t, n) {
 function V(e, t, n) {
   if (e.trim() != "") {
     console.debug("combinePrev M2TreeConvert  ", e, "xx", t, "cc", n);
-    let r = new _();
+    let r = new q();
     r.conversiontarget = n, t.key = "", r.insert(e, ""), r.insert("", ""), r.insertNode(t), t = r, console.debug(" combinePrev pNode.conversiontarget", t);
   }
   return t;
@@ -3565,7 +3575,7 @@ function _t(e, t) {
 function qt(e, t, n) {
   if (e.trim() != "") {
     console.debug("combineAfter M2TreeConvert  conversiontarget", n);
-    let r = new _();
+    let r = new q();
     r.conversiontarget = n, t.key = "", r.insertNode(t), r.insert("", ""), r.insert(e, ""), t = r;
   }
   return t;
@@ -3644,11 +3654,11 @@ function qe(e, t, n, r, i) {
   if (e.substring(t, t + n.length) != n)
     throw new Error("No " + n + " at index " + t + " of " + e);
   let o = 1;
-  for (let s = t + 1; s < e.length; s++) {
-    if (e.substring(s, s + r.length) == r && --o == 0)
-      return s;
+  for (let u = t + 1; u < e.length; u++) {
+    if (e.substring(u, u + r.length) == r && --o == 0)
+      return u;
     for (let l of i)
-      e.substring(s, s + l.length) == l && e[s - 1].match(/[\s\d]/g) && o++;
+      e.substring(u, u + l.length) == l && e[u - 1].match(/[\s\d]/g) && o++;
   }
   return -1;
 }
@@ -3691,9 +3701,9 @@ function Xt(e, t, n, r) {
   for (let h of xe.getAllMultiLine()) {
     let g = e.indexOf(h.slice(0, -1) + "(");
     for (; g != -1; ) {
-      let c = Ct(e, g + h.length - 1, "(", ")");
-      if (c != -1) {
-        let a = [e.substring(0, g), e.substring(g + h.length, c), e.substring(c + 1)];
+      let p = Ct(e, g + h.length - 1, "(", ")");
+      if (p != -1) {
+        let a = [e.substring(0, g), e.substring(g + h.length, p), e.substring(p + 1)];
         newMiddleStr = h + `
  `, d[h].emptyLineBeforeIndent ? (newMiddleStr += a[1].replaceAll(";", `
 
@@ -3706,55 +3716,55 @@ function Xt(e, t, n, r) {
   }
   e = e.replaceAll("\\,", ""), e = e.replaceAll("\\:", ""), e = e.replaceAll("\\;", ""), e = e.replaceAll("\\!", ""), e = e.replace(/([a-zA-Z])\\/g, "$1 "), e = e.replaceAll("\\", "");
   let i = e.split(`
-`), o = "", s = [], l = "";
+`), o = "", u = [], l = "";
   for (; i.length > 0; ) {
-    var u = [];
-    if (s[0] && d[s[0]].params && (u = d[s[0]].params), console.debug("  ++  ++  ++  ++  ++  ++  ++  ++  ++  ++ "), console.debug("top of loop  ", i), console.debug("params = ", u), i[0].trim() == "" && !u.includes("system") && !u.includes("derivation") && !u.includes("align")) {
+    var s = [];
+    if (u[0] && d[u[0]].params && (s = d[u[0]].params), console.debug("  ++  ++  ++  ++  ++  ++  ++  ++  ++  ++ "), console.debug("top of loop  ", i), console.debug("params = ", s), i[0].trim() == "" && !s.includes("system") && !s.includes("derivation") && !s.includes("align")) {
       console.info("skipping empty string"), i.shift();
       continue;
     }
-    if (u.length > 0 && u.includes("caseEnvironment")) {
-      let m = i[0], p = m.split(/(if|when|unless|otherwise)/g);
-      p.length != 3 ? console.error("invalid cases line", m) : (m = "casesline(" + p[0] + ")(" + p[1] + ")(" + p[2] + ")", i[0] = m), console.debug("thisLinePieces", p);
-    } else if (u.length > 0 && (u.includes("system") || u.includes("derivation"))) {
+    if (s.length > 0 && s.includes("caseEnvironment")) {
+      let m = i[0], c = m.split(/(if|when|unless|otherwise)/g);
+      c.length != 3 ? console.error("invalid cases line", m) : (m = "casesline(" + c[0] + ")(" + c[1] + ")(" + c[2] + ")", i[0] = m), console.debug("thisLinePieces", c);
+    } else if (s.length > 0 && (s.includes("system") || s.includes("derivation"))) {
       let m = i[0];
       for (; i.length > 1 && i[1].trim() != ""; )
         m += i[1], i.splice(1, 1);
-      let p = m.split(/(<=|>=|:=|<|>|=|~|≈|approx|asymp).*?/);
-      if (p.length > 3) {
+      let c = m.split(/(<=|>=|:=|<|>|=|~|≈|approx|asymp).*?/);
+      if (c.length > 3) {
         let y = "";
-        for (; p.length >= 3; )
-          y = p.pop() + y;
-        p[2] = y;
+        for (; c.length >= 3; )
+          y = c.pop() + y;
+        c[2] = y;
       }
-      p.length != 3 ? console.warn("invalid system/derivation/align line", m, "with pieces", p) : (p[0].trim() == "" ? m = "derivationline(" + p[1].trim() + ")(" + p[2].trim() + ")" : m = "systemline(" + p[0].trim() + ")(" + p[1].trim() + ")(" + p[2].trim() + ")", i[0] = m);
-    } else if (u.length > 0 && u.includes("align")) {
+      c.length != 3 ? console.warn("invalid system/derivation/align line", m, "with pieces", c) : (c[0].trim() == "" ? m = "derivationline(" + c[1].trim() + ")(" + c[2].trim() + ")" : m = "systemline(" + c[0].trim() + ")(" + c[1].trim() + ")(" + c[2].trim() + ")", i[0] = m);
+    } else if (s.length > 0 && s.includes("align")) {
       let m = i[0];
       for (; i.length > 1 && i[1].trim() != ""; )
         m += i[1], i.splice(1, 1);
-      let p = m.split(/(🎯).*?/);
-      if (p[1] == "🎯" && (p[1] = ""), p.length > 3) {
+      let c = m.split(/(🎯).*?/);
+      if (c[1] == "🎯" && (c[1] = ""), c.length > 3) {
         let y = "";
-        for (; p.length >= 3; )
-          y = p.pop() + y;
-        p[2] = y;
-      } else p.length == 3 ? (m = "alignline(" + p[0].trim() + ")(" + p[1].trim() + ")(" + p[2].trim() + ")", i[0] = m) : i[0] = "";
+        for (; c.length >= 3; )
+          y = c.pop() + y;
+        c[2] = y;
+      } else c.length == 3 ? (m = "alignline(" + c[0].trim() + ")(" + c[1].trim() + ")(" + c[2].trim() + ")", i[0] = m) : i[0] = "";
     }
-    let h = ne(i[0].trim(), u, r);
+    let h = ne(i[0].trim(), s, r);
     console.debug("temp");
-    let g = h[0], c = h[1], a = Rt(g, u);
-    u.length && u.includes("caseEnvironment") ? r == "Speech" : u.length && (u.includes("system") || u.includes("derivation") || u.includes("align")) && (u.includes("system") || u.includes("derivation") || u.includes("align"), r == "Speech"), i.length > 0 && c.length == 0 && (s.length > 0 && (!d[s[0]].absorbEmptyLine || i[0].trim().length > 0) ? d[s[0]].absorbEmptyLine && i.length > 1 && i[1].trim().length > 0 || i.length == 2 && i[1].trim().length == 0 || i.length == 1 || (d[s[0]].changeLineTurn ? a += d[s[0]].changeLineTurn + `
-` : a += "") : i.length > 1 && (d[s[0]] && d[s[0]].absorbEmptyLine && i[0].trim().length == 0 || (a += `
-`))), l = i[0], i.shift(), d[c] && (d[c].seperateOut && (a += n), d[c].noBeginEnd ? a += d[c].note + "{" : c == "cases:" ? a += "\\begin{" + d[c].note + `}
+    let g = h[0], p = h[1], a = Rt(g, s);
+    s.length && s.includes("caseEnvironment") ? r == "Speech" : s.length && (s.includes("system") || s.includes("derivation") || s.includes("align")) && (s.includes("system") || s.includes("derivation") || s.includes("align"), r == "Speech"), i.length > 0 && p.length == 0 && (u.length > 0 && (!d[u[0]].absorbEmptyLine || i[0].trim().length > 0) ? d[u[0]].absorbEmptyLine && i.length > 1 && i[1].trim().length > 0 || i.length == 2 && i[1].trim().length == 0 || i.length == 1 || (d[u[0]].changeLineTurn ? a += d[u[0]].changeLineTurn + `
+` : a += "") : i.length > 1 && (d[u[0]] && d[u[0]].absorbEmptyLine && i[0].trim().length == 0 || (a += `
+`))), l = i[0], i.shift(), d[p] && (d[p].seperateOut && (a += n), d[p].noBeginEnd ? a += d[p].note + "{" : p == "cases:" ? a += "\\begin{" + d[p].note + `}
 ` : a += `
-<` + d[c].note + `>
-`, s.push(c)), s.length > 0 && i[0] && i[0][0] != " " && (!d[s[0]].emptyLineBeforeIndent || l.trim().length == 0) && (d[s[0]].noBeginEnd ? a += "}" : a += "AA\\end{" + d[s[0]].note + "}", d[s[0]].lineBreak && (a += `
-`), d[s[0]].seperateOut && (a += t), s.shift()), o += a;
+<` + d[p].note + `>
+`, u.push(p)), u.length > 0 && i[0] && i[0][0] != " " && (!d[u[0]].emptyLineBeforeIndent || l.trim().length == 0) && (d[u[0]].noBeginEnd ? a += "}" : a += "AA\\end{" + d[u[0]].note + "}", d[u[0]].lineBreak && (a += `
+`), d[u[0]].seperateOut && (a += t), u.shift()), o += a;
   }
-  for (; s.length > 0; )
-    d[s[0]].noBeginEnd ? o += "}" : u.length && u.includes("caseEnvironment") ? o += "\\end{" + d[s[0]].note + `}
-` : o += "</" + d[s[0]].note + `>
-`, d[s[0]].seperateOut && (o += t), s.shift();
+  for (; u.length > 0; )
+    d[u[0]].noBeginEnd ? o += "}" : s.length && s.includes("caseEnvironment") ? o += "\\end{" + d[u[0]].note + `}
+` : o += "</" + d[u[0]].note + `>
+`, d[u[0]].seperateOut && (o += t), u.shift();
   return vt(o);
 }
 class Zt {
@@ -3821,9 +3831,9 @@ const ie = function(e) {
     let r = "";
     console.log("content", e);
     const i = e.tag;
-    let o = q[i];
-    return o || (o = D(i)), r += o.before_begin + o.begin_tag + de, "xmlattributes" in e && e.xmlattributes && (r += " " + e.xmlattributes.trim()), "id" in e && e.id && (r += ' xml:id="' + J(e.id) + '"'), Object.keys(e).forEach((u) => {
-      ["tag", "content", "title", "xmlattributes", "id"].includes(u) || (r += " " + u + '="' + e.el + '"');
+    let o = _[i];
+    return o || (o = D(i)), r += o.before_begin + o.begin_tag + de, "xmlattributes" in e && e.xmlattributes && (r += " " + e.xmlattributes.trim()), "id" in e && e.id && (r += ' xml:id="' + J(e.id) + '"'), Object.keys(e).forEach((s) => {
+      ["tag", "content", "title", "xmlattributes", "id"].includes(s) || (r += " " + s + '="' + e.el + '"');
     }), r += o.after_begin, "title" in e && e.title && (r += `
 <title>` + ae(e.title) + `</title>
 `), r + ie(e.content) + o.before_end + o.end_tag + o.after_end;
@@ -3836,20 +3846,20 @@ const ie = function(e) {
       r.match(/^\s*$/) || (o += "<TEXT>" + r + "</TEXT>", console.log("just added error of", r));
       return;
     }
-    let s = "", l = "";
-    const u = r.tag;
-    let h = q[u];
+    let u = "", l = "";
+    const s = r.tag;
+    let h = _[s];
     typeof h > "u" && (h = he), l += h.before_begin + h.begin_tag + de, "xmlattributes" in r && r.xmlattributes && (l += " " + r.xmlattributes.trim()), "id" in r && r.id && (l += ' xml:id="' + J(r.id) + '"'), Object.keys(r).forEach((y) => {
       !["tag", "content", "title", "xmlattributes", "id", "text"].includes(y) && !y.startsWith("_") && (l += " " + y + '="' + r[y] + '"');
-    }), "title" in r && r.title && !Me.includes(u) ? s += `
+    }), "title" in r && r.title && !Me.includes(s) ? u += `
 <title>` + ae(r.title) + `</title>
-` : "title" in r && r.title && Me.includes(u) && ["ol", "ul", "enumerate", "itemize"].includes(u) && (l += " " + r.title), l += h.after_begin;
-    let c = r.content, a = ie(c);
-    "text" in r && (a = ie(r.text) + a), ["c", "code", "tabular"].includes(u) && (a = Ue(a));
+` : "title" in r && r.title && Me.includes(s) && ["ol", "ul", "enumerate", "itemize"].includes(s) && (l += " " + r.title), l += h.after_begin;
+    let p = r.content, a = ie(p);
+    "text" in r && (a = ie(r.text) + a), ["c", "code", "tabular"].includes(s) && (a = Ue(a));
     let m = "";
-    ["m", "md", "me", "mdn", "men"].includes(u) && (a.match(/^.*(\.|,|;)\s*$/s) && (a = a.replace(/\s*$/, ""), m = a.slice(-1), a = a.slice(0, -1)), a.match(/(\\|{)/) ? a = zt(a) : (a = It(a, "LaTeX"), a = a.replace(/&/g, " \\amp "))), s = s + a;
-    let p = h.before_end + h.end_tag + m + h.after_end;
-    s.match(/^\s*<mdn>.*<\/mdn>\s*$/s) ? o = s : o = l + s + p, s.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), s = ""), o = o.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3"), n += o;
+    ["m", "md", "me", "mdn", "men"].includes(s) && (a.match(/^.*(\.|,|;)\s*$/s) && (a = a.replace(/\s*$/, ""), m = a.slice(-1), a = a.slice(0, -1)), a.match(/(\\|{)/) ? a = zt(a) : (a = It(a, "LaTeX"), a = a.replace(/&/g, " \\amp "))), u = u + a;
+    let c = h.before_end + h.end_tag + m + h.after_end;
+    u.match(/^\s*<mdn>.*<\/mdn>\s*$/s) ? o = u : o = l + u + c, u.match(/^\s*<p>\s*<\/p>\s*$/) && (console.log("empty p"), u = ""), o = o.replace(/(\/)(me|md|men|mdn)>\s+(\.|,|;|:)/g, "$1$2>$3"), n += o;
   }), n.replace(/^\s*<p>\s*(<\?[^<>]*\?>)\s*<\/p>\s*/, `$1
 
 `);
@@ -3866,22 +3876,22 @@ const ie = function(e) {
   let r = n, i = 0;
   const o = e.length;
   for (; r < t.length; ) {
-    const s = t[r];
+    const u = t[r];
     if (i <= 0 && t.slice(r, r + o) === e)
       return r;
-    s === "\\" ? r++ : s === "{" ? i++ : s === "}" && i--, r++;
+    u === "\\" ? r++ : u === "{" ? i++ : u === "}" && i--, r++;
   }
   return -1;
 }, ee = function(e, t = 0, n = "{", r = "}") {
   let i = e.trimStart();
   if (!i)
     return console.log("empty string sent to first_bracketed_string()"), ["", ""];
-  let o = "", s = "", l = "";
+  let o = "", u = "", l = "";
   if (t == 0 && i[0] != n)
     return ["", i];
   for (t == 0 ? (l = n, t = 1, i = i.substring(1)) : l = ""; t > 0 && i; )
-    s = i.substring(0, 1), s == n && o != "\\" ? t += 1 : s == r && o != "\\" && (t -= 1), l += s, o == "\\" && s == "\\" ? o = `
-` : o = s, i = i.substring(1);
+    u = i.substring(0, 1), u == n && o != "\\" ? t += 1 : u == r && o != "\\" && (t -= 1), l += u, o == "\\" && u == "\\" ? o = `
+` : o = u, i = i.substring(1);
   return t == 0 ? [l, i] : (console.log("no matching bracket %s in %s XX", n, i), ["", l.substring(1)]);
 }, Ft = function(e) {
   return e.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
@@ -3893,12 +3903,12 @@ const ie = function(e) {
     return o.content = G(o.content, t, n), o;
   }
   let r = [], i = "";
-  return e.forEach((o, s) => {
+  return e.forEach((o, u) => {
     if (n.includes(o.tag))
       i && (r.push({ tag: "p", content: i }), i = ""), Q.includes(o.tag) && typeof o.content == "string" ? (o.content = ke(o.content, I), o.content = G(o.content, t, n)) : Q.includes(o.tag) && (o.content = G(o.content, t, n)), r.push(o);
     else if (o.tag == "text")
-      o.content.split(/\n\s*\n{1,}/).forEach((u) => {
-        const h = i + u;
+      o.content.split(/\n\s*\n{1,}/).forEach((s) => {
+        const h = i + s;
         if (h) {
           const g = { tag: "p", content: h };
           r.push(g);
@@ -3919,8 +3929,8 @@ const ie = function(e) {
   return e.split(/\n\s*\n{1,}/).forEach((i) => {
     const o = n + i;
     if (o) {
-      const s = { tag: "p", content: o };
-      t.push(s);
+      const u = { tag: "p", content: o };
+      t.push(u);
     }
     n = "";
   }), t;
@@ -3929,23 +3939,23 @@ const ie = function(e) {
   var n = e;
   let r;
   const i = [], o = new RegExp(
-    "(" + t.map((s) => Ft(s.left)).join("|") + ")"
+    "(" + t.map((u) => Ft(u.left)).join("|") + ")"
   );
   for (; r = n.search(o), r !== -1; ) {
     r > 0 && (i.push({
       tag: "text",
       content: n.slice(0, r)
     }), n = n.slice(r));
-    const s = t.findIndex((h) => n.startsWith(h.left));
-    if (r = Bt(t[s].right, n, t[s].left.length), r === -1)
+    const u = t.findIndex((h) => n.startsWith(h.left));
+    if (r = Bt(t[u].right, n, t[u].left.length), r === -1)
       break;
-    const l = n.slice(0, r + t[s].right.length), u = Dt.test(l) ? l : n.slice(t[s].left.length, r);
+    const l = n.slice(0, r + t[u].right.length), s = Dt.test(l) ? l : n.slice(t[u].left.length, r);
     i.push({
       //        type: "math",
-      tag: t[s].tag,
-      content: u
+      tag: t[u].tag,
+      content: s
       //       rawData,
-    }), n = n.slice(r + t[s].right.length);
+    }), n = n.slice(r + t[u].right.length);
   }
   return n.match(/^\s*$/) || i.push({
     tag: "text",
@@ -3965,8 +3975,8 @@ const ie = function(e) {
     let o = ee(i);
     return "<" + r + ">" + ae(o[0]) + "</" + r + `>
 ` + i;
-  }), t = t.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>"), t = t.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(n, r, i, o, s) {
-    return '<url href="' + i + '">' + s + "</url>";
+  }), t = t.replace(/\\(q|term|em|m|c|fn){([^{}]+)}/g, "<$1>$2</$1>"), t = t.replace(/\\(url|href){([^{}]+)}({|\[)([^{}\[\]]+)(\]|})/g, function(n, r, i, o, u) {
+    return '<url href="' + i + '">' + u + "</url>";
   }), t = t.replace(/\\(url|href){([^{}]+)}([^{]|$)/g, function(n, r, i) {
     return '<url href="' + i + '"/>';
   }), t;
@@ -3985,49 +3995,49 @@ const ie = function(e) {
   for (let [n, r] of Object.entries(gt)) {
     let i = n;
     r.forEach((o) => {
-      let s = o;
-      t = t.replace("<" + s + ">", "<" + i + ">"), t = t.replace("<" + s + " ", "<" + i + " "), t = t.replace("</" + s + ">", "</" + i + ">"), t = t.replace("\\begin{" + s + "}", "\\begin{" + i + "}"), t = t.replace("\\end{" + s + "}", "\\end{" + i + "}"), t = t.replace("\\" + s + "{", "\\" + i + "{");
+      let u = o;
+      t = t.replace("<" + u + ">", "<" + i + ">"), t = t.replace("<" + u + " ", "<" + i + " "), t = t.replace("</" + u + ">", "</" + i + ">"), t = t.replace("\\begin{" + u + "}", "\\begin{" + i + "}"), t = t.replace("\\end{" + u + "}", "\\end{" + i + "}"), t = t.replace("\\" + u + "{", "\\" + i + "{");
     });
   }
   return ve.forEach((n) => {
     var r = new RegExp("\\\\" + n + "{([^{}]+)}", "g");
     t = t.replace(r, "<" + n + ">$1</" + n + ">");
   }), t;
-}, O = function(e, t, n, r, i = "all", o = "all", s = "") {
+}, S = function(e, t, n, r, i = "all", o = "all", u = "") {
   let l = [];
   typeof t == "string" ? t == "displaymath" ? l = C : t == "spacelike" ? l = "spacelike" : R("unknown taglist " + t) : typeof t[0] == "string" ? l = Ae(t) : l = t;
-  let u = [];
+  let s = [];
   if (Array.isArray(e))
     return e.forEach((h, g) => {
       if (n > r && h.tag != "text")
-        u.push(h);
+        s.push(h);
       else {
-        let c;
-        i == "all" || i.includes(h.tag) ? c = O(h, t, n + 1, r, i, o, h.tag) : c = h, Array.isArray(c) ? c.forEach((a) => {
-          u.push(a);
-        }) : u.push(c);
+        let p;
+        i == "all" || i.includes(h.tag) ? p = S(h, t, n + 1, r, i, o, h.tag) : p = h, Array.isArray(p) ? p.forEach((a) => {
+          s.push(a);
+        }) : s.push(p);
       }
-    }), u;
+    }), s;
   if (typeof e == "string") {
     if (n > r + 2)
       return e;
     if (l === "spacelike")
-      return o == "all" || o.includes(s) ? et(e) : e;
+      return o == "all" || o.includes(u) ? et(e) : e;
     let h = e;
-    return l === "makeparagraphs" ? (o == "all" || o.includes(s)) && (h = Je(h)) : (o == "all" || o.includes(s)) && (h = ke(h, l)), h;
+    return l === "makeparagraphs" ? (o == "all" || o.includes(u)) && (h = Je(h)) : (o == "all" || o.includes(u)) && (h = ke(h, l)), h;
   } else {
     let h = { ...e };
     if (n > r && h.tag != "text")
       return h;
     let g = h.content;
-    return (i == "all" || o.includes(h.tag)) && (g = O(g, t, n + 1, r, i, o, h.tag)), h.tag == "text" && typeof g == "string" ? h.content = g : h.tag != "text" ? g.length == 1 && g[0].tag == "text" ? h.content = g[0].content : h.content = g : h = g, h;
+    return (i == "all" || o.includes(h.tag)) && (g = S(g, t, n + 1, r, i, o, h.tag)), h.tag == "text" && typeof g == "string" ? h.content = g : h.tag != "text" ? g.length == 1 && g[0].tag == "text" ? h.content = g[0].content : h.content = g : h = g, h;
   }
-}, L = function(e, t, n = 0, r = 0, i = "all", o = "", s = "", l = "section") {
-  let u = [];
+}, L = function(e, t, n = 0, r = 0, i = "all", o = "", u = "", l = "section") {
+  let s = [];
   if (Array.isArray(e))
-    e.forEach((g, c) => {
+    e.forEach((g, p) => {
       let a;
-      typeof g == "object" ? a = L({ ...g }, t, n + 1, r, i, g.tag, o) : a = L(g, t, n + 1, r, i, o, s), u.push(a);
+      typeof g == "object" ? a = L({ ...g }, t, n + 1, r, i, g.tag, o) : a = L(g, t, n + 1, r, i, o, u), s.push(a);
     });
   else if (typeof e == "object") {
     if (t == "oneline environments" && e.tag == "p" && typeof e.content == "string") {
@@ -4040,20 +4050,20 @@ const ie = function(e) {
       }
     } else if (t == "extract li" && e.tag == "p" && typeof e.content == "string") {
       if (e.content.match(/^\s*\\item\s/)) {
-        const c = "li", a = e.content.replace(/^\s*\\item\s*/, "");
-        e.tag = c, e.content = a;
+        const p = "li", a = e.content.replace(/^\s*\\item\s*/, "");
+        e.tag = p, e.content = a;
       } else if (e.content.match(/^\s*\\item\[[^\[\]]*\]\s*/)) {
-        const c = "li", a = e.content.replace(/^\s*\\item\[[^\[\]]*\]\s*/, "");
-        e.tag = c, e.content = a;
+        const p = "li", a = e.content.replace(/^\s*\\item\[[^\[\]]*\]\s*/, "");
+        e.tag = p, e.content = a;
       } else if (e.content.match(/^\s*(\-|\*)+\s/)) {
-        const c = "li", a = e.content.replace(/^\s*(\-|\*)+\s*/, "");
-        e.tag = c, e.content = a, e._parenttag = "ul";
+        const p = "li", a = e.content.replace(/^\s*(\-|\*)+\s*/, "");
+        e.tag = p, e.content = a, e._parenttag = "ul";
       } else if (e.content.match(/^\s*\++\s/)) {
-        const c = "li", a = e.content.replace(/^\s*\++\s*/, "");
-        e.tag = c, e.content = a, e._parenttag = "ol";
+        const p = "li", a = e.content.replace(/^\s*\++\s*/, "");
+        e.tag = p, e.content = a, e._parenttag = "ol";
       } else if (e.content.match(/^\s*\(*[0-9]+\.*\)*\s/)) {
-        const c = "li", a = e.content.replace(/^\s*\(*[0-9]+\.*\)*\s*/, "");
-        e.tag = c, e.content = a, e._parenttag = "ol";
+        const p = "li", a = e.content.replace(/^\s*\(*[0-9]+\.*\)*\s*/, "");
+        e.tag = p, e.content = a, e._parenttag = "ol";
       }
     } else if (t == "xmlattributes" && typeof e.content == "string") {
       var h = new RegExp("^\\s*(" + re.join("|") + ")[^<>+]*>", "s");
@@ -4061,36 +4071,36 @@ const ie = function(e) {
         if (e.content.match(/^\s*>/))
           e.content = e.content.replace(/^\s*>/, "");
         else {
-          let c = e.content.split(">", 1)[0];
-          e.content = e.content.replace(/^\s*[^<>%]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += c : e.xmlattributes = c;
+          let p = e.content.split(">", 1)[0];
+          e.content = e.content.replace(/^\s*[^<>%]*>/s, ""), "xmlattributes" in e ? e.xmlattributes += p : e.xmlattributes = p;
         }
     } else if (t == "attributes" && typeof e.content == "string") {
-      const c = e.content.split(/(\n\s*\n{1,})/);
-      if (c.length > 1) {
+      const p = e.content.split(/(\n\s*\n{1,})/);
+      if (p.length > 1) {
         let a = "";
         var h = new RegExp("^(" + re.join("|") + ")");
-        c.forEach((p) => {
-          let y = p.trim();
+        p.forEach((c) => {
+          let y = c.trim();
           if (h.test(y)) {
             let f = y.split(":", 1)[0], v = y.split(":", 2)[1].trim();
             e[f] = v;
           } else
-            a += p;
+            a += c;
         }), e.content = a;
       }
     } else if (t == "title" && !De.includes(e.tag) && typeof e.content == "string") {
       if (e.content.match(/^\s*\[/) || e.content.match(/^\s*<title>/))
         if (e.content.match(/^\s*\[/)) {
-          let c = e.content.split("]", 1)[0];
-          c = c.replace(/\s*\[/, ""), e.title = c, e.content = e.content.replace(/^\s*\[[^\[\]]*\]/, "");
+          let p = e.content.split("]", 1)[0];
+          p = p.replace(/\s*\[/, ""), e.title = p, e.content = e.content.replace(/^\s*\[[^\[\]]*\]/, "");
         } else {
-          let c = e.content.split("</title>", 1)[0];
-          c = c.replace(/\s*<title>/, ""), e.title = c, e.content = e.content.replace(/^\s*<title>.*?<\/title>/, "");
+          let p = e.content.split("</title>", 1)[0];
+          p = p.replace(/\s*<title>/, ""), e.title = p, e.content = e.content.replace(/^\s*<title>.*?<\/title>/, "");
         }
     } else if (t == "label" && typeof e.content == "string") {
       if (e.content.match(/^\s*(\\*)label{[^{}]*}/)) {
-        let c = e.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
-        c = J(c), e.id = c, e.content = e.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "");
+        let p = e.content.replace(/^\s*(\\*)label{([^{}]*)}.*/s, "$2");
+        p = J(p), e.id = p, e.content = e.content.replace(/^\s*(\\*)label{([^{}]*)}\s*/, "");
       }
     } else if (t == "images" && typeof e.content == "string")
       e.content.match(/\\includegraphics/) && (e.content = e.content.replace(
@@ -4099,126 +4109,126 @@ const ie = function(e) {
       ), e.content = e.content.replace(
         /\\includegraphics\s*{\s*([^{}]*)\s*}/,
         '<image source="$1" width="50%"/>'
-      )), e.content.match(/\\caption/) && (e.content = e.content.replace(/\\(caption)\s*({.*)/sg, function(c, a, m) {
-        let p = ee(m), y = p[0].slice(1, -1).trim();
+      )), e.content.match(/\\caption/) && (e.content = e.content.replace(/\\(caption)\s*({.*)/sg, function(p, a, m) {
+        let c = ee(m), y = c[0].slice(1, -1).trim();
         return y = y.replace(/\\(text)*(rm|sf|it|bf|sl)*\s*/, ""), "<" + a + ">" + ae(y) + "</" + a + `>
-` + p[1];
+` + c[1];
       }));
     else if (t == "statements" && i.includes(o)) {
-      let c = [], a = {};
+      let p = [], a = {};
       if (typeof e.content == "string")
-        c = [{ tag: "text", content: e.content }], a = { tag: "statement", content: c }, e.content = [a];
+        p = [{ tag: "text", content: e.content }], a = { tag: "statement", content: p }, e.content = [a];
       else {
         let m = !1;
-        if (e.content.forEach((p) => {
-          p.tag == "statement" && (m = !0);
+        if (e.content.forEach((c) => {
+          c.tag == "statement" && (m = !0);
         }), !m) {
-          let p = "", y = 0;
-          for (y = 0; y < e.content.length && (p = e.content[y], !ce.includes(p.tag)); ++y)
-            c.push(p);
-          a = { tag: "statement", content: c };
+          let c = "", y = 0;
+          for (y = 0; y < e.content.length && (c = e.content[y], !ce.includes(c.tag)); ++y)
+            p.push(c);
+          a = { tag: "statement", content: p };
           let f = e.content.slice(y);
           f.unshift(a), e.content = f;
         }
       }
     } else if (t == "prefigure" && i.includes(e.tag)) {
       !("xmlns" in e) && !("xmlattributes" in e && e.xmlattributes.includes("xmlns")) && (e.xmlns = "https://prefigure.org");
-      let c = [], a = {};
+      let p = [], a = {};
       if (typeof e.content == "string") {
         const m = e.content;
-        if (c = m, a = { tag: "diagram", content: c }, "dimensions" in e && (a.dimensions = e.dimensions, delete e.dimensions), "margins" in e && (a.margins = e.margins, delete e.margins), e.content = [a], "bbox" in e) {
-          let p = { tag: "coordinates", bbox: e.bbox, content: m };
-          delete e.bbox, a.content = [p];
+        if (p = m, a = { tag: "diagram", content: p }, "dimensions" in e && (a.dimensions = e.dimensions, delete e.dimensions), "margins" in e && (a.margins = e.margins, delete e.margins), e.content = [a], "bbox" in e) {
+          let c = { tag: "coordinates", bbox: e.bbox, content: m };
+          delete e.bbox, a.content = [c];
         }
       }
-      if (s != "image") {
+      if (u != "image") {
         let m = { ...e };
         m.content = [...e.content], e = { tag: "image", content: [m] }, "width" in m && (e.width = m.width, delete m.width);
       }
     } else if (t == "sage" && i.includes(e.tag)) {
-      let c = e.content.trim(), a = "";
-      if (c.match(/\s*{/)) {
-        let m = ee(c);
-        a = m[0].slice(1, -1), c = m[1];
+      let p = e.content.trim(), a = "";
+      if (p.match(/\s*{/)) {
+        let m = ee(p);
+        a = m[0].slice(1, -1), p = m[1];
       }
       a && (e.language = a), e.content = `<input>
-` + Ue(c) + `
+` + Ue(p) + `
 </input>`;
     } else if (t == "blockquotes" && i.includes(e.tag) && typeof e.content == "string") {
       if (e.content.match(/^\s*\+\+\+sTaRTbQ>/)) {
-        let c = e.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
-        c = c.replace(/\n\s*>/g, `
+        let p = e.content.replace(/^\s*\+\+\+sTaRTbQ>/, "");
+        p = p.replace(/\n\s*>/g, `
 `);
-        let a = c.split(/\n\s*\n{1,}/), m = [];
-        a.forEach((p, y) => {
-          m.push({ tag: "p", content: p });
+        let a = p.split(/\n\s*\n{1,}/), m = [];
+        a.forEach((c, y) => {
+          m.push({ tag: "p", content: c });
         }), e.content = m, e.tag = "blockquote";
       }
     } else if (t == "substructure" && i.includes(e.tag) && typeof e.content == "string") {
-      const c = U[e.tag], a = Ae(c), m = ke(e.content, a);
+      const p = U[e.tag], a = Ae(p), m = ke(e.content, a);
       e.content = [...m];
     } else if (t == "clean up substructure" && i.includes(e.tag) && Array.isArray(e.content)) {
-      const c = e.tag;
+      const p = e.tag;
       let a = [];
       e.content.forEach((m) => {
-        U[c].includes(m.tag) ? a.push(m) : re.includes(m.tag) ? e[m.tag] = m.content : m.tag == "text" && m.content.match(/^\s*$/) && "attributes" in m ? "attributes" in e ? e.attributes += m.attributes : e.attributes = m.attributes : m.tag == "text" && m.content.match(/^\s*$/) || (console.log("problem content", m), R("problem content: see console.log"));
+        U[p].includes(m.tag) ? a.push(m) : re.includes(m.tag) ? e[m.tag] = m.content : m.tag == "text" && m.content.match(/^\s*$/) && "attributes" in m ? "attributes" in e ? e.attributes += m.attributes : e.attributes = m.attributes : m.tag == "text" && m.content.match(/^\s*$/) || (console.log("problem content", m), R("problem content: see console.log"));
       }), e.content = [...a];
     } else if (t == "extraneous math" && i.includes(e.tag) && typeof e.content == "string")
       e.content = e.content.replace(/^\s*\+\+\+saMePaR/, "");
     else if (t == "gather li" && i.includes(e.tag) && typeof e.content == "object") {
-      let c = [], a = "", m = 0, p = !1, y = [], f = {};
+      let p = [], a = "", m = 0, c = !1, y = [], f = {};
       for (m = 0; m < e.content.length; ++m)
-        a = e.content[m], !p && a.tag != "li" ? c.push(a) : !p && a.tag == "li" ? (p = !0, y = [a], f.tag = a._parenttag) : p && a.tag == "li" ? y.push(a) : p && a.tag != "li" && (f.content = [...y], c.push({ ...f }), p = !1, f = {}, y = [], c.push(a));
-      p && (f.content = y, c.push({ ...f })), p = !1, y = [], f = {}, e.content = c;
+        a = e.content[m], !c && a.tag != "li" ? p.push(a) : !c && a.tag == "li" ? (c = !0, y = [a], f.tag = a._parenttag) : c && a.tag == "li" ? y.push(a) : c && a.tag != "li" && (f.content = [...y], p.push({ ...f }), c = !1, f = {}, y = [], p.push(a));
+      c && (f.content = y, p.push({ ...f })), c = !1, y = [], f = {}, e.content = p;
     } else if (t == "split li" && i.includes(e.tag) && typeof e.content == "object")
       e = Gt(e);
     else if (t == "absorb math" && (i.includes(e.tag) || e.tag == l) && typeof e.content == "object") {
-      let c = [], a = "", m = 0;
+      let p = [], a = "", m = 0;
       for (m = 0; m < e.content.length; ++m) {
         a = e.content[m];
-        const p = c.length;
-        K.includes(a.tag) ? p == 0 ? c.push({ ...a }) : c[p - 1].tag != "p" ? c.push({ ...a }) : typeof c[p - 1].content == "string" ? (c[p - 1].content = [{ tag: "text", content: c[p - 1].content }], c[p - 1].content.push({ ...a })) : c[p - 1].content.push({ ...a }) : a.tag == "p" ? typeof a.content == "string" && a.content.match(/\s*\+\+\+saMePaR/) ? (a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, ""), console.log("               about to push", a.content, "as", p, "(m1) on", c), c[p - 1].content.push({ tag: "text", content: a.content })) : typeof a.content == "string" ? c.push({ ...a }) : a.content.length > 0 && a.content[0].tag == "text" && typeof a.content[0].content == "string" && a.content[0].content.match(/\s*\+\+\+saMePaR/) ? (a.content[0].content = a.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), a.content.forEach((y) => {
-          c[p - 1].content.push(y);
-        })) : a.content.length > 0 && c.push({ ...a }) : a.tag == "text" ? (console.log("found text", a.content), a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, "")) : c.push({ ...a });
+        const c = p.length;
+        K.includes(a.tag) ? c == 0 ? p.push({ ...a }) : p[c - 1].tag != "p" ? p.push({ ...a }) : typeof p[c - 1].content == "string" ? (p[c - 1].content = [{ tag: "text", content: p[c - 1].content }], p[c - 1].content.push({ ...a })) : p[c - 1].content.push({ ...a }) : a.tag == "p" ? typeof a.content == "string" && a.content.match(/\s*\+\+\+saMePaR/) ? (a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, ""), console.log("               about to push", a.content, "as", c, "(m1) on", p), console.log("specifically item", c - 1, "which is", p[c - 1]), p[c - 1].content.push({ tag: "text", content: a.content })) : typeof a.content == "string" ? p.push({ ...a }) : a.content.length > 0 && a.content[0].tag == "text" && typeof a.content[0].content == "string" && a.content[0].content.match(/\s*\+\+\+saMePaR/) ? (a.content[0].content = a.content[0].content.replace(/\s*\+\+\+saMePaR\s*/, ""), a.content.forEach((y) => {
+          p[c - 1].content.push(y);
+        })) : a.content.length > 0 && p.push({ ...a }) : a.tag == "text" ? (console.log("found text", a.content), a.content = a.content.replace(/\s*\+\+\+saMePaR\s*/, "")) : p.push({ ...a });
       }
-      e.content = [...c];
-    } else t == "absorb math" && e.tag == "text" ? e.content = e.content.replace(/\s*\+\+\+saMePaR\s*/, "") : t == "ppp" && (e.tag == "p" || e.tag == "li") && (typeof e.content == "string" ? (e.content = e.content.replace(/^( *\n)*/, ""), e.content = e.content.replace(/( *\n)*$/, "")) : e.content.forEach((c) => {
-      (c.tag == "text" || K.includes(c.tag)) && (c.content = c.content.replace(/^( *\n)*/, ""), c.content = c.content.replace(/( *\n)*$/, ""));
+      e.content = [...p];
+    } else t == "absorb math" && e.tag == "text" ? e.content = e.content.replace(/\s*\+\+\+saMePaR\s*/, "") : t == "ppp" && (e.tag == "p" || e.tag == "li") && (typeof e.content == "string" ? (e.content = e.content.replace(/^( *\n)*/, ""), e.content = e.content.replace(/( *\n)*$/, "")) : e.content.forEach((p) => {
+      (p.tag == "text" || K.includes(p.tag)) && (p.content = p.content.replace(/^( *\n)*/, ""), p.content = p.content.replace(/( *\n)*$/, ""));
     }));
     let g = { ...e };
     return g.content = L(g.content, t, n + 1, r, i, g.tag, o), g;
   } else
     return t == "do_nothing" ? e + "X" : t == "fonts" && i.includes(o) ? rt(e) : t == "texlike" && i.includes(o) ? tt(e) : e;
-  return u;
+  return s;
 }, Ht = function(e) {
   let t = e.replace(/ +(\n|$)/g, `
 `);
-  t = Wt(t), t = t.replace(new RegExp("{([a-z]{3,})\\*", "d"), "$1star"), t = t.replace(/section\*/g, "section"), ct.forEach((s) => {
+  t = Wt(t), t = t.replace(/<--/g, "\\begin{comment}"), t = t.replace(/-->/g, "\\end{comment}"), t = t.replace(new RegExp("{([a-z]{3,})\\*", "d"), "$1star"), t = t.replace(/section\*/g, "section"), ct.forEach((u) => {
     const l = new RegExp(
-      "(\\\\begin{" + s + "})(.*?)(\\\\end{" + s + "})",
+      "(\\\\begin{" + u + "})(.*?)(\\\\end{" + u + "})",
       "sg"
     );
-    t = t.replace(l, function(u, h, g, c) {
+    t = t.replace(l, function(s, h, g, p) {
       if (g.match(/\\label\s*{/)) {
         const a = g.replace(/^(.*?)(\s*\\label{[^{}]*}\s*)(.*)$/s, "$2"), m = g.replace(/^(.*?)(\\label{[^{}]*}\s*)(.*)$/s, "$1$3");
-        return h + a + m + c;
+        return h + a + m + p;
       } else
-        return h + g + c;
+        return h + g + p;
     });
   });
   let r = t.replace(/([^\s])\\label({|\[|\()/g, `$1
 \\label$2`).replace(/\n\s*\n\s*>/g, `
 
 +++sTaRTbQ>`);
-  r = r.replace(/\n\\\[([^\[\]]+)\\\]\n/sg, `
+  r = r.replace(/\n *\\\[([^\[\]]+)\\\] *\n/sg, `
 \\begin{equationstar}$1\\end{equationstar}
 `), r = r.replace(/(\$\$|\\end{equation}|\\end{align}|\\end{equationstar}|\\end{alignstar}) *\n([^\s])/g, `$1
 +++saMePaR$2`), r = r.replace(/(\/me>|\/md>|\/men>|\/mdn>) *\n *([^\n<])/g, `$1
 +++saMePaR$2`), r = r.replace(/<p>\s*(<ol>|<ul>|<dl>)/g, "$1"), r = r.replace(/(<\/ol>|<\/ul>|<\/dl>)\s*<\/p>/g, "$1"), r = r.replace(/\s*?\n+\s*?\\item\s+/g, `
 
 \\item `);
-  let i = r.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(s, l, u, h) {
-    const g = u.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
+  let i = r.replace(/(<diagram)(.*?)(<\/diagram>)/sg, function(u, l, s, h) {
+    const g = s.replace(/(<|<\/)definition(>)/g, "$1predefinition$2");
     return l + g + h;
   });
   const o = new RegExp("([^\\n])(\\n *(" + re.join("|") + ") *:)", "g");
@@ -4233,20 +4243,20 @@ $2`), i;
     if (A.metadata = i, i.match(/\\title\s*/)) {
       let l = i.replace(/^.*\\title\s*/s, "");
       if (l.startsWith("[")) {
-        let u = l.replace(/^\[(.*?)\]\s*{(.*?)}.*$/s, "$1");
-        A.shorttitle = u;
+        let s = l.replace(/^\[(.*?)\]\s*{(.*?)}.*$/s, "$1");
+        A.shorttitle = s;
         let h = l.replace(/^\[(.*?)\]\s*{(.*?)}.*$/s, "$2");
         A.title = h;
       } else if (l.startsWith("{")) {
-        let u = l.replace(/^{(.*?)}.*$/s, "$1");
-        A.title = u;
+        let s = l.replace(/^{(.*?)}.*$/s, "$1");
+        A.title = s;
       } else
         R("had trouble extracting title");
     } else
       R("Did not find title");
     let o = r.replace(/^.*\\maketitle/s, "");
-    const s = o.split("\\begin{thebibliography}");
-    return s.length == 2 && (o = s[0], A.biblio = s[1]), o;
+    const u = o.split("\\begin{thebibliography}");
+    return u.length == 2 && (o = u[0], A.biblio = u[1]), o;
   }
   return e;
 }, Qt = function(e) {
@@ -4273,44 +4283,44 @@ $1`), t = t.replace(/``` *\n *\n/g, `\\end{sage}
   if (Array.isArray(e)) {
     let i = [...e];
     return i.forEach((o) => {
-      const s = Y(o.content, t, n + 1, r);
-      typeof s == "string" || (o.content = [...Y(s, t, n + 1, r)]);
+      const u = Y(o.content, t, n + 1, r);
+      typeof u == "string" || (o.content = [...Y(u, t, n + 1, r)]);
     }), i;
   } else {
     let i = e;
     const o = new RegExp("\\\\(" + t + ")", "g");
-    let s = i.split(o);
-    if (s.length == 1)
-      return s[0];
-    let l = [], u = {}, h = !0, g = !1, c = "";
-    return s.forEach((a, m) => {
-      let p = a.trim();
-      if (console.log("element", p), h) {
-        if (!p)
+    let u = i.split(o);
+    if (u.length == 1)
+      return u[0];
+    let l = [], s = {}, h = !0, g = !1, p = "";
+    return u.forEach((a, m) => {
+      let c = a.trim();
+      if (console.log("element", c), h) {
+        if (!c)
           return;
-        a != t ? m == 0 ? (u.tag = "introduction", u.content = a, l.push({ ...u }), u = {}) : R("did not find " + t + ":" + a + "X") : (u.tag = t, h = !1, g = !0);
-      } else if (g && (p = a.trim(), p.startsWith("{"))) {
-        let [y, f] = ee(p);
-        u.title = y.slice(1, -1), f.match(/^\s*\\label/) && (f = f.replace(/^\s*\\label\s*/, ""), [c, f] = ee(f), c = c.slice(1, -1), c && (u.id = J(c))), u.content = f.trim(), g = !1, h = !0, l.push({ ...u }), u = {};
+        a != t ? m == 0 ? (s.tag = "introduction", s.content = a, l.push({ ...s }), s = {}) : R("did not find " + t + ":" + a + "X") : (s.tag = t, h = !1, g = !0);
+      } else if (g && (c = a.trim(), c.startsWith("{"))) {
+        let [y, f] = ee(c);
+        s.title = y.slice(1, -1), f.match(/^\s*\\label/) && (f = f.replace(/^\s*\\label\s*/, ""), [p, f] = ee(f), p = p.slice(1, -1), p && (s.id = J(p))), s.content = f.trim(), g = !1, h = !0, l.push({ ...s }), s = {};
       }
-    }), Object.keys(u).length && (console.log("current_section", u), R("some content was not saved")), l;
+    }), Object.keys(s).length && (console.log("current_section", s), R("some content was not saved")), l;
   }
 };
 let A = {};
 function Kt(e, t = "placeholder") {
   let n = Ht(e), r = Vt(n), i = Qt(r), o = { tag: t, content: i };
   "documentclass" in A && A.documentclass ? o.tag = A.documentclass : o.tag = t, "title" in A && A.title ? o.title = A.title : "shorttitle" in A && A.shorttitle && (o.title = A.shorttitle);
-  let s = { ...o };
+  let u = { ...o };
   const l = 20;
   for (let M = 0; M < l; ++M)
-    w.forEach((S) => {
-      s = O(s, S, 0, M), pe.forEach((T) => {
-        s = L(s, T[0], 0, M, T[1]);
+    w.forEach((j) => {
+      u = S(u, j, 0, M), pe.forEach((T) => {
+        u = L(u, T[0], 0, M, T[1]);
       });
     });
-  let u = { ...s };
-  u = G(u, "all", oe);
-  let h = { ...u };
+  let s = { ...u };
+  s = S(s, ["comment"], 0, 10), s = G(s, "all", oe);
+  let h = { ...s };
   h = L(h, "oneline environments", 0, 0, "all"), h = L(h, "attributes", 0, 0, "all"), pe.forEach((M) => {
     h = L(h, M[0], 0, 0, M[1]);
   }), h = G(h, "all", oe), h = L(h, "blockquotes", 0, 0, ["p"]), h = L(h, "images", 0, 0, "all");
@@ -4321,9 +4331,9 @@ function Kt(e, t = "placeholder") {
   const a = L(g, "extract li", 0, 0, ["p"]);
   let m = L(a, "gather li", 0, 0, Q);
   m = L(m, "split li", 0, 0, ["ol", "ul"]);
-  const p = L(m, "absorb math", 0, 0, Q, "", "", t), y = O(p, W, 0, l + 1, "all", Z), f = O(y, "spacelike", 0, l + 1, "all", Z), v = O(f, W, 0, l + 1, "all", Z), P = O(v, W, 0, l + 1, "all", Z), b = L(P, "fonts", 0, 0, Z), x = L(b, "texlike", 0, 0, Z);
-  let k = O(x, "spacelike", 0, l + 1, "all", Z);
-  k = O(k, W, 0, l + 1, "all", Z), k = O(k, W, 0, l + 1, "all", Z);
+  const c = L(m, "absorb math", 0, 0, Q, "", "", t), y = S(c, W, 0, l + 1, "all", Z), f = S(y, "spacelike", 0, l + 1, "all", Z), v = S(f, W, 0, l + 1, "all", Z), P = S(v, W, 0, l + 1, "all", Z), b = L(P, "fonts", 0, 0, Z), x = L(b, "texlike", 0, 0, Z);
+  let k = S(x, "spacelike", 0, l + 1, "all", Z);
+  k = S(k, W, 0, l + 1, "all", Z), k = S(k, W, 0, l + 1, "all", Z);
   let X = L(k, "statements", 0, 0, st), $ = L(X, "prefigure", 0, 0, ["prefigure"]);
   if ($ = L($, "sage", 0, 0, ["sage"]), $ = L($, "ppp", 0, 0, []), "biblio" in A) {
     let M = { tag: "backmatter" };
@@ -4341,21 +4351,21 @@ function Gt(e, t = 0, n = [], r = "") {
     return e;
   let i = e.content[0], o = e.content[0].content;
   if (o.match(/\n *(\-|\+|\*|[0-9])/)) {
-    let s = o.split(/\n *(\-|\+|\*|[0-9]\.*)/);
-    for (s < 3 && R("malformed list items", o), e.content[0].content = s.shift(); s.length > 0; ) {
-      let l = s.shift();
+    let u = o.split(/\n *(\-|\+|\*|[0-9]\.*)/);
+    for (u < 3 && R("malformed list items", o), e.content[0].content = u.shift(); u.length > 0; ) {
+      let l = u.shift();
       l.match(/^[0-9]/) && (l = "1");
-      const u = s.shift().trim();
+      const s = u.shift().trim();
       if (F[l] == i._parenttag) {
-        let h = { tag: "li", _parenttag: F[l], content: u };
+        let h = { tag: "li", _parenttag: F[l], content: s };
         e.content.push(h);
       } else {
         let h = { tag: F[l], content: [] };
-        for (h.content.push({ tag: "li", content: u, _parenttag: F[l] }); s.length > 0 && F[s[0]] == F[l]; ) {
-          let m = s.shift();
+        for (h.content.push({ tag: "li", content: s, _parenttag: F[l] }); u.length > 0 && F[u[0]] == F[l]; ) {
+          let m = u.shift();
           m.match(/^[0-9]/) && (m = "1");
-          const p = s.shift();
-          h.content.push({ tag: "li", content: p, _parenttag: F[m] });
+          const c = u.shift();
+          h.content.push({ tag: "li", content: c, _parenttag: F[m] });
         }
         let g = e.content.pop(), a = [{ tag: "p", content: g.content }];
         g.content = a, g.content.push(h), e.content.push(g);
