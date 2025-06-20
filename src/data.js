@@ -122,7 +122,7 @@ export const randomtags = ["fn",
               "output",
               ];
 
-export const randomtags_containing_p = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet","page"];
+export const randomtags_containing_p = ["reading-questions", "introduction", "conclusion", "objectives", "statement", "task", "worksheet","page", "abstract"];
                       // exercisegroup should be in a different category
 
 //  const containers = ["exercisegroup", "exercises", "prefigure", "diagram", ...subenvironments["diagram"] ];  // only contain tags, not p
@@ -164,7 +164,7 @@ export const possibly_self_closing_inline_tags = ["url"];
 
 export const verbatim_tags = [...math_tags, "c", "code", "mrow", "sage", "biblio", "comment"];
 
-export let structural_components = ["article", "chapter", "section", "subsection", "worksheet", "paragraphs", "backmatter"];
+export let structural_components = ["article", "chapter", "section", "subsection", "introduction", "worksheet", "paragraphs", "backmatter", "abstract"];
 
 export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)sections
     ...aside_like, ...theorem_like, ...axiom_like, // ...list_like,  (this caused an infinite recursion)
@@ -176,7 +176,7 @@ export let level_1_p_peers_containing_p = [ // peer of p cildren of (sub)section
 ];
 
 export const tags_containing_paragraphs = [...structural_components, ...level_1_p_peers_containing_p, ...hint_like,
-            ...subpart_like, ...randomtags_containing_p, "enumerate", "itemize",
+            ...subpart_like, ...randomtags_containing_p, "enumerate", "itemize", // "ol", "ul",
             "placeholder"];
 
 export const display_environments = ["figure", "table", "listing", "enumerate", "itemize"];
@@ -338,6 +338,7 @@ level.push(["article"]);
 level.push(["chapter"]);
 level.push(["section"]);
 level.push(["subsection"]);
+level.push(["abstract"]);
 level.push(["worksheet"]);
 level.push(["backmatter"]);
 level.push(["references"]);

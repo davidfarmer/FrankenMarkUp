@@ -23,7 +23,7 @@ import {
     tags_needing_statements,
     tagofmarker,
 } from './data.js'
-import {preprocess, setCoarseStructure, extractStructure, splitIntoParagraphs, splitAtDelimiters, extract_lists } from './mysplitAtDelimiters.js'
+import {preprocess, setCoarseStructure, extractStructure, splitIntoParagraphs, splitAtDelimiters, extract_lists, convertTextInPlace } from './mysplitAtDelimiters.js'
 import {reassemblePreTeXt} from './reassemble.js'
 import { alert } from './utils.js';
 
@@ -79,8 +79,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 // alert("7");
       new7 = splitAtDelimiters(new7, ["comment"], 0, 10);
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
-//    console.log("processed text 7", new7);
-//         alert("pause 2");
+    console.log("processed text 7", new7);
+         alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
 //  console.log("new8", new8);
@@ -126,10 +126,12 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  alert("tmp5w");
       let tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
       tmp5v = extract_lists(tmp5v, "split li",0,0, ["ol", "ul"]);
-//  console.log("tmp5v", tmp5v);
-//  alert("tmp5v");
+  console.log("tmp5v", tmp5v);
+  alert("tmp5v");
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
 // console.log("tmp5u", tmp5u);
+  console.log("tmp5u", tmp5u);
+  alert("tmp5u");
 
 
 
@@ -169,6 +171,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  alert("tmp5u");
 */
 
+ console.log("tmp5z", tmp5z);
+  alert("tmp5z");
 
 
       let tmp5s = extract_lists(tmp5z, "statements",0,0, tags_needing_statements);  // statemetns now part of level
@@ -193,7 +197,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
-// alert("the end");
+ alert("the end");
       const tmp5p = reassemblePreTeXt(tmp5);
 
       return tmp5p
@@ -264,6 +268,10 @@ function processBiblio(latexbib) {
 
    thetext = thetext.replace(/{[^{}]+}/, "");
    thetext = thetext.replace(/\s*\\(begin|end){thebibliography}\s*/, "");
+   thetext = thetext.replace(/%.*/g, "");
+
+   thetext = convertTextInPlace(thetext);
+   thetext = thetext.replace(/&([^m])/, "&amp;$1");
 
   // quick and dirty: go back and split it up and reprocess separately
    thetext = thetext.replace(/\s*\\bibitem\s*{([^{}]+)}\s*/g, '</biblio>\n\n<biblio type="raw" xml:id="$1">');

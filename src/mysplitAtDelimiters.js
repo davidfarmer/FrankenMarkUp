@@ -262,7 +262,7 @@ const recastSpacedDelimiters = function(this_content) {
 // need to do this properly, from spacelike_inline_delimiters
 // example:   {left:"_", right:"_", tag:"term"},
 //        const regexp =
-    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-<]|th\b|st\b|nd\b)/mg, "$1<m>$2</m>$3");
+    the_text = the_text.replace(/(^|\s|~)\$([^\$\n]+)\$(\s|$|[.,!?;:\-<\}]|\)|th\b|st\b|nd\b)/mg, "$1<m>$2</m>$3");
     the_text = the_text.replace(/(^|\s)_([^_\n]+)_(\s|$|[.,!?;:])/mg, "$1<term>$2</term>$3");
     the_text = the_text.replace(/(^|\s)\*\*([^*\n]+)\*\*(\s|$|[.,!?;:])/mg, "$1<alert>$2</alert>$3");
     the_text = the_text.replace(/(^|\s)\*([^*\n]+)\*(\s|$|[.,!?;:])/mg, "$1<em>$2</em>$3");
@@ -281,13 +281,22 @@ const texLike = function(this_content) {
 
         let new_text = "";
         new_text = this_content.replace(/([^-])\-\-([^-])/mg, "$1<mdash/>$2");
+
+        new_text = new_text.replace(/{\\em +/g, "\\em{");
+        new_text = new_text.replace(/{\\bf +/g, "\\textbf{");
+        new_text = new_text.replace(/{\\it +/g, "\\textit{");
+        new_text = new_text.replace(/{\\sc +/g, "\\sc{");
+
         new_text = new_text.replace(/\bLaTeX\b/mg, "<latex/>");
         new_text = new_text.replace(/\bTeX\b/mg, "<tex/>");
         new_text = new_text.replace(/\bPreTeXt\b/mg, "<pretext/>");
         new_text = new_text.replace(/([^\\])~/mg, "$1<nbsp/>");
             // for those who write (\ref{...}) instead of \eqref{...}
         new_text = new_text.replace(/\(\\(ref|eqref|cite){([^{}]+)}\)/g, function(x,y,z) {
-                                  return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
+                                  z = z.replace(/, */g, " ");
+                                  z = sanitizeXMLattributes(z);
+                                  return '<xref ref="' + z + '"/>'
+                      //            return '<xref ref="' + z.replace(/, */g, " ") + '"/>'
                               });
         new_text = new_text.replace(/\\(ref|eqref|cite){([^{}]+)}/g, function(x,y,z) {
                        //           return 'PPPPPPP';
@@ -537,7 +546,8 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                 }
             }
 
-          } else if (action == "extract li"  && this_content.tag == "p" // &&  tags_to_process.includes(this_content.tag)
+          } else if (action == "extract li"  && 
+                (this_content.tag == "p" || this_content.tag == "enumerate" || this_content.tag == "itemize")
                       && typeof this_content.content == "string" ) {
 
             if (this_content.content.match(/^\s*\\item\s/)) {
@@ -580,7 +590,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                       && typeof this_content.content == "string" ) {
 
             var regex = new RegExp("^\\s*(" + possibleattributes.join("|") + ")[^<>+]*>", "s");
-            if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+%\`]*>/)) {
+            if (regex.test(this_content.content) || this_content.content.match(/^\s*[^\n<>+%\`\\$()]*>/)) {
 //   console.log("maybe found an xmlattribute", this_content.content);
                 if (this_content.content.match(/^\s*>/)) { //no actual attribute
                   this_content.content = this_content.content.replace(/^\s*>/, "")
@@ -589,7 +599,7 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
 
 //  console.log("this attribute", this_attribute);
            //       this_content.content = this_content.content.replace(/^\s*[^\n<>+]*>/, "")
-                  this_content.content = this_content.content.replace(/^\s*[^<>%]*>/s, "")
+                  this_content.content = this_content.content.replace(/^\s*[^<>%]*?>/s, "")
 // console.log("now this_content.content",this_content.content);
                   if ("xmlattributes" in this_content) {
                     this_content.xmlattributes += this_attribute
@@ -913,8 +923,10 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
          // display math should not start a paragraph, so connect to previous p, if it exists
                   if (items_so_far == 0) {
          // should not happen, but just in case
+console.log("it happened 1", element);
                     this_new_content.push({...element})
                   } else if(this_new_content[items_so_far - 1].tag != "p") {   // again, should not happen
+console.log("it happened 2", element);
                     this_new_content.push({...element})
                   } else {  //last was a p, so put the display math on the end
                     if (typeof this_new_content[items_so_far - 1].content == "string") {
@@ -931,8 +943,8 @@ export const extract_lists = function(this_content, action, thisdepth=0, maxdept
                   if (typeof element.content == "string" && element.content.match(/\s*\+\+\+saMePaR/)) {
          // connect to previous p
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
- console.log("               about to push", element.content, "as", items_so_far, "(m1) on",  this_new_content);
-console.log("specifically item",items_so_far - 1,"which is", this_new_content[items_so_far - 1]);
+  console.log("               about to push-", element.content, "-as", items_so_far, "(m1) on",  this_new_content);
+ console.log("specifically item",items_so_far - 1,"which is", this_new_content[items_so_far - 1]);
                //     this_new_content[items_so_far - 1].content.push(element.content)
                     this_new_content[items_so_far - 1].content.push({tag: "text", content: element.content})
                   } else if (typeof element.content == "string") {
@@ -955,7 +967,7 @@ console.log("specifically item",items_so_far - 1,"which is", this_new_content[it
                        // empty list, so throw it away
                   }
                 } else if (element.tag == "text") {
-console.log("found text", element.content);   // this can't happen":  see hack below
+// console.log("found text", element.content);   // this can't happen":  see hack below
                     element.content = element.content.replace(/\s*\+\+\+saMePaR\s*/,"");
                 } else {  // some other element, so just save it
                     this_new_content.push({...element})
@@ -1015,8 +1027,15 @@ console.log("found text", element.content);   // this can't happen":  see hack b
 
 export const preprocess = function(just_text) {
 
+    let originaltextX = just_text;
+
+  // non-structural LaTeX (make into a separate function )
+    originaltextX = originaltextX.replace(/\\smallskip/g, "\n");
+    originaltextX = originaltextX.replace(/\\medskip/g, "\n");
+    originaltextX = originaltextX.replace(/\[resume\]/g, "\n");
+
   // Is there any case where trailing spaces (before the \n) are meaningful?
-    let originaltextX = just_text.replace(/ +(\n|$)/g, "\n");
+    originaltextX = originaltextX.replace(/ +(\n|$)/g, "\n");
 
     originaltextX = preprocessAliases(originaltextX);
 
@@ -1025,7 +1044,7 @@ export const preprocess = function(just_text) {
     originaltextX = originaltextX.replace(/-->/g, "\\end{comment}");
 
    // things like {equation*} -> {equation*}
-    originaltextX = originaltextX.replace(/{([a-z]{3,})\*/d,"$1star");
+    originaltextX = originaltextX.replace(/{([a-z]{3,})\*/g,"{$1star");
     originaltextX = originaltextX.replace(/section\*/g,"section");
 
       tags_with_weird_labels.forEach( (tag) => {
@@ -1075,6 +1094,9 @@ export const preprocess = function(just_text) {
    // put attributes on the next line
       const findattributes = new RegExp("([^\\n])(\\n *(" + possibleattributes.join("|") + ") *:)", "g");
       originaltextC = originaltextC.replace(findattributes, "$1\n$2");
+
+// console.log("originaltextC", originaltextC);
+// alert("x");
 
     return originaltextC
 
@@ -1223,7 +1245,7 @@ const splitOnStructure = function(doc, marker, depth=0, maxdepth=2) {
 
         this_doc_sections.forEach(  (element, index) => {
           let element_trimmed = element.trim();
-console.log("element", element_trimmed);
+// console.log("element", element_trimmed);
 
           if (looking_for_section) {
             if (!element_trimmed) { return } // ie, next iteration
