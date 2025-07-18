@@ -80,7 +80,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
       new7 = splitAtDelimiters(new7, ["comment"], 0, 10);
       new7 = splitIntoParagraphs(new7, "all", paragraph_peers);
     console.log("processed text 7", new7);
-         alert("pause 2");
+//         alert("pause 2");
       let new8 = {...new7}
       new8 = extract_lists(new8, "oneline environments", 0,0, "all");
 //  console.log("new8", new8);
@@ -126,12 +126,12 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  alert("tmp5w");
       let tmp5v = extract_lists(tmp5w, "gather li",0,0, tags_containing_paragraphs);
       tmp5v = extract_lists(tmp5v, "split li",0,0, ["ol", "ul"]);
-  console.log("tmp5v", tmp5v);
-  alert("tmp5v");
+//  console.log("tmp5v", tmp5v);
+//  alert("tmp5v");
       const tmp5u = extract_lists(tmp5v, "absorb math",0,0, tags_containing_paragraphs, "", "", wrapper);
 // console.log("tmp5u", tmp5u);
-  console.log("tmp5u", tmp5u);
-  alert("tmp5u");
+//  console.log("tmp5u", tmp5u);
+//  alert("tmp5u");
 
 
 
@@ -171,8 +171,8 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //  alert("tmp5u");
 */
 
- console.log("tmp5z", tmp5z);
-  alert("tmp5z");
+// console.log("tmp5z", tmp5z);
+//  alert("tmp5z");
 
 
       let tmp5s = extract_lists(tmp5z, "statements",0,0, tags_needing_statements);  // statemetns now part of level
@@ -197,7 +197,7 @@ export function fmToPTX(originaltext, wrapper="placeholder"){  // called by inde
 //       console.log("tmp2 again",tmp2 );
 //       console.log("tmp4",tmp4 );
       console.log("tmp5",tmp5 );
- alert("the end");
+// alert("the end");
       const tmp5p = reassemblePreTeXt(tmp5);
 
       return tmp5p
