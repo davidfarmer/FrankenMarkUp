@@ -211,10 +211,11 @@ export function splitLI(anOLUL, depth=0, listsofar=[], marker="") {
    if (anOLUL.content.length > 1) { return anOLUL }
 
    let theLI = anOLUL.content[0];
-//console.log("theLI", theLI);
+console.log("theLI", theLI);
    let theLIcontent = anOLUL.content[0].content;
+console.log("theLIcontent", theLIcontent,"X");
 
-   if (theLIcontent.match(/\n *(\-|\+|\*|[0-9])/)) {
+   if (typeof theLIcontent == "string" && theLIcontent.match(/\n *(\-|\+|\*|[0-9])/)) {
 //       console.log("need to split li:", theLIcontent);
        let split_li = theLIcontent.split(/\n *(\-|\+|\*|[0-9]\.*)/);
        if (split_li < 3) { alert("malformed list items", theLIcontent) }

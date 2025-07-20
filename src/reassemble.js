@@ -11,9 +11,6 @@ let debugtags = "STart";
 
 export const reassemblePreTeXt = function(content) {
 
-// console.log("math",convertMathSnippet("x", "LaTeX") );
-
-//console.log("reassemblePreTeXt of", content);
 if (Array.isArray(content)) {
 // console.log("first content", content[0].content, "III", content[0].content.replace(/\n/,"AAAA"));
 }
@@ -154,7 +151,6 @@ console.log("content", content);
           //   this_new_text = convertMathSnippet(this_new_text.replace(/\n/g, "REtuRn"), "LaTeX");
              this_new_text = convertMathSnippet(this_new_text, "LaTeX");
              this_new_text = this_new_text.replace(/&/g, " \\amp ");
-// console.log("after converting:", this_new_text);
          } else {
                this_new_text = sanitizeXMLmathstring(this_new_text)
          }
