@@ -1,4 +1,4 @@
-# FrankenMarkUp
+# PreTeXt MarkDown
 
 `fmToPTX(text, wrapper)` will return
 ```
